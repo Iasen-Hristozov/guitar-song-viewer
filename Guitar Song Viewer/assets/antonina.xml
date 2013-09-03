@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<song title = "Антонина" author = "ДДТ" language = "Руский">
+   <chords>
+      <chords-couplet id="1">
+         <chords-line>Em C</chords-line>
+         <chords-line>Am H7</chords-line>
+         <chords-line>Em C</chords-line>
+         <chords-line>D G</chords-line>
+      </chords-couplet>
+      <chords-couplet id="Пр.">
+         <chords-line>C D</chords-line>
+         <chords-line>G C</chords-line>
+         <chords-line>Am H</chords-line>
+         <chords-line>Em E7</chords-line>
+         <chords-line>C D</chords-line>
+         <chords-line>G C</chords-line>
+         <chords-line>Am H</chords-line>
+         <chords-line>Em</chords-line>
+      </chords-couplet>
+   </chords>
+   <text>
+      <text-verse id-chords-couplet ="1">
+         <text-line>Антонина обернулась,</text-line>
+         <text-line>Убежала, улетела,</text-line>
+         <text-line>На мгновенье распахнулось</text-line>
+         <text-line>Небо и сгорело тело</text-line>
+      </text-verse>
+         
+      <text-verse id-chords-couplet ="Пр." is-chorus="1">
+         <text-line>Антонина, Антонина,</text-line>
+         <text-line>Ночь кряхтит как злая мина</text-line>
+         <text-line>Наступила, оглянулась</text-line>
+         <text-line>В это время не вернулась</text-line>
+         <text-line>Антонина, Антонина,</text-line>
+         <text-line>Ночь не спит, как злая мина</text-line>
+         <text-line>Наступила, оглянулась</text-line>
+         <text-line>В это время не вернулась</text-line>
+      </text-verse>
+      
+      <text-verse id-chords-couplet ="1">
+         <text-line>Антонина - муж да дети</text-line>
+         <text-line>Чья судьба в тебя вцепилась</text-line>
+         <text-line>Красота на этом свете</text-line>
+         <text-line>Оглянулась и разбилась</text-line>
+      </text-verse>
+      
+      <text-verse id-chords-couplet ="Пр." is-chorus="1">
+         <text-line>Впрочем не было свободы</text-line>
+         <text-line>Обернись и ты прохожий,</text-line>
+         <text-line>Тает снег, дороги-годы</text-line>
+         <text-line>Антонина мы похожи.</text-line>
+         <text-line>Впрочем не было свободы</text-line>
+         <text-line>Обернись и ты прохожий,</text-line>
+         <text-line>Тает снег, дороги-годы</text-line>
+         <text-line>Антонина мы похожи.</text-line>
+      </text-verse>
+      
+      <text-verse id-chords-couplet ="1" >
+         <text-line>Осторожно губ коснулись</text-line>
+         <text-line>Сдули пыль и паутину</text-line>
+         <text-line>И рассыпалась рутина</text-line>
+         <text-line>Антонина ты проснулась</text-line>
+      </text-verse>
+      
+      <text-verse id-chords-couplet ="Пр." is-chorus="1">
+         <text-line>На неведомой планете</text-line>
+         <text-line>На восторженом вокзале</text-line>
+         <text-line>Антонине крылья эти</text-line>
+         <text-line>Все про счастье рассказали.</text-line>
+         <text-line>На неведомой планете</text-line>
+         <text-line>На восторженом вокзале</text-line>
+         <text-line>Антонине крылья эти</text-line>
+         <text-line>Все про счастье рассказали.</text-line>
+      </text-verse>
+      
+      <text-verse id-chords-couplet ="1">
+         <text-line>Антонина обернулась,</text-line>
+         <text-line>Убежала, улетела,</text-line>
+         <text-line>На мгновенье распахнулось</text-line>
+         <text-line>Небо и сгорело тело</text-line>
+      </text-verse>
+      
+      <text-verse id-chords-couplet ="Пр." is-chorus="1">         
+         <text-line>Антонина, Антонина,</text-line>
+         <text-line>Ночь ворчит как злая мина</text-line>
+         <text-line>Наступила, оглянулась</text-line>
+         <text-line>В это время не вернулась</text-line>
+         <text-line>Антонина, Антонина,</text-line>
+         <text-line>Ночь не спит как злая мина</text-line>
+         <text-line>Наступила, оглянулась</text-line>
+         <text-line>В это время не вернулась</text-line>   
+      </text-verse>
+   </text>
+</song>

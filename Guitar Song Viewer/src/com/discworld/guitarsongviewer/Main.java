@@ -1,5 +1,6 @@
 package com.discworld.guitarsongviewer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -19,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -105,6 +107,9 @@ public class Main extends FragmentActivity implements IDataExchange
       //      setContentView(R.layout.activity_main);
 
       updateFromPreferences();
+      
+      File fSongsDir = new File(Environment.getExternalStorageDirectory().toString()+"/" + SONGS_FOLDER);
+      fSongsDir.mkdirs();      
 
       oSong = getSongFromResources();
 //      getSongFromFile("");
@@ -346,106 +351,7 @@ public class Main extends FragmentActivity implements IDataExchange
          e.printStackTrace();
       }
       
-//      int eventType = -1;
-//      int iEnuTextType = 0;
-//      while (eventType != XmlPullParser.END_DOCUMENT) 
-//       {
-//          if(eventType == XmlPullParser.START_TAG) 
-//          { 
-//             String strNode = xmlSong.getName();
-//             if(strNode.equals(TAG_SONG))
-//             {
-//                oSong.sTitle = xmlSong.getAttributeValue(null, ATR_TITLE);
-//                oSong.sAuthor = xmlSong.getAttributeValue(null, ATR_AUTHOR);
-//              
-//                if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_ENGLISH))
-//                   oSong.iEnuLanguage = ENU_LNG_ENGLISH;
-//                else if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_BULGARIAN))
-//                   oSong.iEnuLanguage = ENU_LNG_BULGARIAN;
-//                else if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_RUSSIAN))
-//                   oSong.iEnuLanguage = ENU_LNG_RUSSIAN;
-//             }
-//             else if(strNode.equals(TAG_CHORDS_COUPLET))
-//             {
-//                oChordsCouplet = new CChordsCouplet();
-//                oChordsCouplet.sID = xmlSong.getAttributeValue(null, ATR_ID);
-//             }
-//             else if(strNode.equals(TAG_CHORDS_LINE))
-//             {
-//                oChordsLine = new CChordsLine();
-//                iEnuTextType = ENU_TEXT_TYPE_CHORDS;
-//             }
-//             else if(strNode.equals(TAG_TEXT_LINE))
-//             {
-//                oTextLine = new CTextLine();
-//                iEnuTextType = ENU_TEXT_TYPE_TEXT;
-//             }
-//             else if(strNode.equals(TAG_TEXT_VERSE))
-//             {
-//                oTextVerse = new CTextVerse();
-//                oTextVerse.sChordsCoupletID = xmlSong.getAttributeValue(null, ATR_ID_CHORD_COUPLET);
-//                String sIsChorus = xmlSong.getAttributeValue(null, ATR_ID_IS_CHORUS);
-//                if(sIsChorus == null)
-//                   oTextVerse.bIsChorus = false;
-//                else
-//                   oTextVerse.bIsChorus = Integer.parseInt(sIsChorus) == 1;
-//             }
-////             else
-////                continue;
-//                
-//          }
-//          else if(eventType == XmlPullParser.END_TAG)
-//          {
-//             String strNode = xmlSong.getName();
-//             if(strNode.equals(TAG_CHORDS_LINE))
-//                oChordsCouplet.alChordsLines.add(oChordsLine);
-//             else if(strNode.equals(TAG_CHORDS_COUPLET))
-//                oSong.alChords.add(oChordsCouplet);
-//             else if(strNode.equals(TAG_TEXT_LINE))
-//                oTextVerse.addTextLine(oTextLine);
-//             else if(strNode.equals(TAG_TEXT_VERSE))
-//                oSong.oText.alTextVerses.add(oTextVerse);
-////                oSong.alText.add(oTextVerse);
-//                
-//          }
-//        
-//          else if(eventType == XmlPullParser.TEXT)
-//          {
-//             if(iEnuTextType == ENU_TEXT_TYPE_CHORDS)
-//             {
-//                String ss = xmlSong.getText();
-//                String[] sChords = ss.split(" ");
-//                for(int i = 0; i < sChords.length; i++)
-//                {
-//                   oChord = new CChord(sChords[i]);
-//                   oChordsLine.addChord(oChord);
-//                }
-//             }
-//             else if(iEnuTextType == ENU_TEXT_TYPE_TEXT)
-//             {
-//                oTextLine.sTextLine = xmlSong.getText();
-//             }
-//          }
-//   
-//          try 
-//          {
-////             if(eventType == XmlPullParser.END_TAG)
-////                eventType = xmlSong.nextTag();
-////             else
-////                eventType = xmlSong.next();
-//                eventType = xmlSong.nextToken();
-//          } 
-//          catch (XmlPullParserException e) 
-//          {
-//             e.printStackTrace();
-//          } 
-//          catch (IOException e) 
-//          {
-//             e.printStackTrace();
-//          }
-//       }
-       
-       return oSong;
+      return oSong;
    }   
    
    
