@@ -103,19 +103,28 @@ public class Main extends FragmentActivity implements IDataExchange
       super.onCreate(savedInstanceState);
       super.setContentView(R.layout.activity_main);
 
+      tvTitle = (TextView) findViewById(R.id.tvTitle);
+      tvChords = (TextView) findViewById(R.id.tvChords);
+      
       updateFromPreferences();
       
       File fSongsDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/" + SONGS_FOLDER);
       fSongsDir.mkdirs();      
 
-      oSong = getSongFromResources();
+//      oSong = getSongFromResources();
 //      getSongFromFile("");
+//
+//      setTitle();
+//      
+//      if(iEnuChordsShow == ENU_SHOW_CHORDS_ALL)
+//         setChords();
+//      
+//      //initialsie the pager
+//      this.initialisePaging();      
       
-      tvTitle = (TextView) findViewById(R.id.tvTitle);
-      tvChords = (TextView) findViewById(R.id.tvChords);
+      startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
 
-      //initialsie the pager
-      this.initialisePaging();      
+      
    }
 
    private CSong getSongNew(XmlPullParser xmlSong)
@@ -159,7 +168,6 @@ public class Main extends FragmentActivity implements IDataExchange
                   xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS_LINE);
                   oChordsLine = new CChordsLine();
 
-//                  String ss = xmlSong.getText();
                   String ss = xmlSong.nextText();
                   String[] sChords = ss.split(" ");
                   for(int i = 0; i < sChords.length; i++)
@@ -193,7 +201,6 @@ public class Main extends FragmentActivity implements IDataExchange
                {
                   xmlSong.require(XmlPullParser.START_TAG, null, TAG_TEXT_LINE);
                   oTextLine = new CTextLine();
-//                  oTextLine.sTextLine = xmlSong.getText();
                   oTextLine.sTextLine = xmlSong.nextText();
                   xmlSong.require(XmlPullParser.END_TAG, null, TAG_TEXT_LINE);
                   oTextVerse.addTextLine(oTextLine);
@@ -275,8 +282,6 @@ public class Main extends FragmentActivity implements IDataExchange
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-
-//      return oSong;
    }
    
    @Override
@@ -362,7 +367,6 @@ public class Main extends FragmentActivity implements IDataExchange
       fPage = Fragment.instantiate(this, CTextFragment.class.getName());
       bundle = new Bundle();
       bundle.putInt("index", 0);
-      bundle.putInt("text_size", iTextSize);
       fPage.setArguments(bundle);
       fragments.add(fPage);
       this.mPagerAdapter  = new CPagerAdapter(super.getSupportFragmentManager(), fragments);
@@ -388,7 +392,6 @@ public class Main extends FragmentActivity implements IDataExchange
             fPage = Fragment.instantiate(this, CTextFragment.class.getName());
             bundle = new Bundle();
             bundle.putInt("index", iPageNdx);
-            bundle.putInt("text_size", iTextSize);
             fPage.setArguments(bundle);
             this.mPagerAdapter.addItem(fPage);
          }

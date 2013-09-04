@@ -50,13 +50,9 @@ public class CTextFragment extends Fragment
             return null;
         }
       
-//      String strtext = getArguments().getString("edttext", "");
       iNdx = getArguments().getInt("index", 0);
-//      int iTextSize = getArguments().getInt("text_size", 14);
       int iTextSize = oDataExchange.getTextSize();
-//      iLinesNbr = getArguments().getInt("LinesNbr", 0);
       iLinesNbr = oDataExchange.getLinesNbr();
-//      View vPage = (RelativeLayout)inflater.inflate(R.layout.page, container, false);
       View vPage = inflater.inflate(R.layout.page, container, false);
       tvText = (TextView) vPage.findViewById(R.id.tvText);
       tvText.setTextSize(iTextSize);
@@ -83,39 +79,12 @@ public class CTextFragment extends Fragment
                  tvText.append(oTextVerse.toString());
                  tvText.append("\n\n");
               }
-              
-              
-//              CTextVerse oTextVerse;
-//              int iTextSize = 0;
-//              int iPageNdx = 0;
-//              int iTextVerseNdx = 0;
-//              iPageNdx = getId();
-//              alText = getArguments().getParcelableArrayList("verse");
-//              
-//              tvText.setText(null);
-//              do
-//              {
-//                 oTextVerse = alText.get(iTextVerseNdx);
-//                 if(iTextSize + oTextVerse.alTextLines.size() <= iLinesNbr)
-//                 {
-//                    tvText.append(oTextVerse.toString());
-//                    iTextSize += oTextVerse.alTextLines.size();
-//
-//                    if(iTextSize + 1 < iLinesNbr)
-//                    {
-//                       tvText.append("\n\n");
-//                       iTextSize++;
-//                    }
-//                 }
-//                 iTextVerseNdx++;
-//              }while(iTextSize + alText.get(iTextVerseNdx).alTextLines.size() <= iLinesNbr);
            }
        });         
       }
       else
       {
          alText = oDataExchange.getPage(iNdx);
-//         alText = getArguments().getParcelableArrayList("verse");         
          
          tvText.setTextSize(iTextSize);
          tvText.setText(null);
@@ -125,31 +94,6 @@ public class CTextFragment extends Fragment
             tvText.append("\n\n");
          }
       }
-//      else
-//      {
-//         int iPageNdx = getId();
-//         
-//         alText = getArguments().getParcelableArrayList("verse");
-//         
-//         tvText.setText(null);
-//         for(CTextVerse oTextVerse : alText)
-//         {
-//            tvText.append(oTextVerse.toString());
-//            tvText.append("\n\n");
-//         }
-   //      }
-//      alText = oDataExchange.getPage(iNdx);
-//       
-//      tvText.setText(null);
-//      for(CTextVerse oTextVerse : alText)
-//      {
-//         tvText.append(oTextVerse.toString());
-//         tvText.append("\n\n");
-//      }
-      
-      
-//      tvText.setText(strtext);
-      
       return vPage;
    }
    
@@ -159,41 +103,4 @@ public class CTextFragment extends Fragment
       super.onAttach(activity);
       oDataExchange = (IDataExchange) activity;
    }
-   
-   public void setTextSize(int iTextSize)
-   {
-      tvText.setText("HIHI");
-      tvText.setTextSize(iTextSize);
-      int iHeight = tvText.getHeight();
-      int iLinesHeght = tvText.getLineHeight();
-      iLinesNbr = iHeight / iLinesHeght;      
-      
-//      ViewTreeObserver vto = tvText.getViewTreeObserver();
-//      vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() 
-//      {
-//          public void onGlobalLayout() 
-//          {
-//             ViewTreeObserver obs = tvText.getViewTreeObserver();
-//             obs.removeGlobalOnLayoutListener(this);              
-//             int iHeight = tvText.getHeight();
-//             int iLinesHeght = tvText.getLineHeight();
-//             iLinesNbr = iHeight / iLinesHeght;
-//             oDataExchange.setLinesNbr(iLinesNbr);
-//             
-//             alText = oDataExchange.getPage(iNdx);
-//             
-//             tvText.setText(null);
-//             for(CTextVerse oTextVerse : alText)
-//             {
-//                tvText.append(oTextVerse.toString());
-//                tvText.append("\n\n");
-//             }
-//             
-//             
-//          }
-//      });               
-      
-   }
-   
-   
 }
