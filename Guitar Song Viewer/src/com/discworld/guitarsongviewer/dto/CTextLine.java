@@ -1,4 +1,4 @@
-package com.discworld.dto;
+package com.discworld.guitarsongviewer.dto;
 
 import java.io.Serializable;
 
