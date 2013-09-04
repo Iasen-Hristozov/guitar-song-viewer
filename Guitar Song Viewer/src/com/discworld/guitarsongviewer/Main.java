@@ -29,14 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.discworld.dto.CChord;
-import com.discworld.dto.CChordsVerse;
-import com.discworld.dto.CChordsLine;
-import com.discworld.dto.CSong;
-import com.discworld.dto.CTextLine;
-import com.discworld.dto.CTextVerse;
-import com.discworld.dto.CTextVersesSet;
-import com.discworld.dto.IDataExchange;
+import com.discworld.guitarsongviewer.dto.*;
 
 public class Main extends FragmentActivity implements IDataExchange
 {
