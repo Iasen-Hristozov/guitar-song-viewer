@@ -8,4 +8,6 @@ public interface IDataExchange
    public int getLinesNbr();
    public ArrayList<CTextVerse> getPage(int iNdx);
    public int getTextSize();
+   public int getEnuDisplayChords();
+   public CChordsVerse getChordsVerse(String sID);
 }

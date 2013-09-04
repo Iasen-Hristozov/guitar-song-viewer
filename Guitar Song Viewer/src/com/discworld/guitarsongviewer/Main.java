@@ -26,10 +26,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.discworld.dto.CChord;
-import com.discworld.dto.CChordsCouplet;
+import com.discworld.dto.CChordsVerse;
 import com.discworld.dto.CChordsLine;
 import com.discworld.dto.CSong;
 import com.discworld.dto.CTextLine;
@@ -70,10 +71,10 @@ public class Main extends FragmentActivity implements IDataExchange
                             ENU_TEXT_TYPE_CHORDS = 1,
                             ENU_TEXT_TYPE_TEXT = 2;
 
-   private final static int ENU_SHOW_CHORDS_NONE = 1,
-                            ENU_SHOW_CHORDS_ALL = 0,
-                            ENU_SHOW_CHORDS_RELATED = 2,
-                            ENU_SHOW_CHORDS_ABOVE = 3;
+   public final static int ENU_DISPLAY_CHORDS_NONE = 1,
+                           ENU_DISPLAY_CHORDS_ALL = 0,
+                           ENU_DISPLAY_CHORDS_RELATED = 2,
+                           ENU_DISPLAY_CHORDS_ABOVE = 3;
    
    
    protected static final int   SHOW_PREFERENCES = 1,
@@ -82,7 +83,7 @@ public class Main extends FragmentActivity implements IDataExchange
 
    private int iLinesNbr = 0,
                iTextSize = 12,
-               iEnuChordsShow = 0;
+               iEnuDisplayChords = 0;
    
    private CSong oSong;
    
@@ -131,7 +132,7 @@ public class Main extends FragmentActivity implements IDataExchange
    {
       CSong oSong = new CSong();
       
-      CChordsCouplet oChordsCouplet = new CChordsCouplet();
+      CChordsVerse oChordsCouplet = new CChordsVerse();
       CChordsLine oChordsLine = new CChordsLine();
       CChord oChord;
     
@@ -160,7 +161,7 @@ public class Main extends FragmentActivity implements IDataExchange
             while (xmlSong.nextTag() == XmlPullParser.START_TAG) 
             {
                xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS_COUPLET);
-               oChordsCouplet = new CChordsCouplet();
+               oChordsCouplet = new CChordsVerse();
                oChordsCouplet.sID = xmlSong.getAttributeValue(null, ATR_ID);
                
                while(xmlSong.nextTag() == XmlPullParser.START_TAG) 
@@ -190,7 +191,7 @@ public class Main extends FragmentActivity implements IDataExchange
                xmlSong.require(XmlPullParser.START_TAG, null, TAG_TEXT_VERSE);
                
                oTextVerse = new CTextVerse();
-               oTextVerse.sChordsCoupletID = xmlSong.getAttributeValue(null, ATR_ID_CHORD_COUPLET);
+               oTextVerse.sChordsVerseID = xmlSong.getAttributeValue(null, ATR_ID_CHORD_COUPLET);
                String sIsChorus = xmlSong.getAttributeValue(null, ATR_ID_IS_CHORUS);
                if(sIsChorus == null)
                   oTextVerse.bIsChorus = false;
@@ -265,7 +266,7 @@ public class Main extends FragmentActivity implements IDataExchange
          
          setTitle();
          
-         if(iEnuChordsShow == ENU_SHOW_CHORDS_ALL)
+         if(iEnuDisplayChords == ENU_DISPLAY_CHORDS_ALL)
             setChords();
          
       } catch(FileNotFoundException e)
@@ -344,7 +345,6 @@ public class Main extends FragmentActivity implements IDataExchange
             String sFile = extras.getString("file", "");
             if(!sFile.isEmpty())
             {
-//               oSong = getSongFromFile(sFile);
                getSongFromFile(sFile);
                if(mPagerAdapter != null)
                {
@@ -455,13 +455,16 @@ public class Main extends FragmentActivity implements IDataExchange
       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
       
       
-      iEnuChordsShow = Integer.parseInt(prefs.getString(Preferences.PREF_SHOW_CHORDS, "0"));
+      iEnuDisplayChords = Integer.parseInt(prefs.getString(Preferences.PREF_DISPLAY_CHORDS, "0"));
       int iTextSize = Integer.parseInt(prefs.getString(Preferences.PREF_TEXT_SIZE, "16"));
       
       if(this.iTextSize != iTextSize)
-      {
          this.iTextSize = iTextSize;
-      }
+      
+      if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
+         tvChords.setVisibility(View.GONE);
+      else
+         tvChords.setVisibility(View.VISIBLE);
    }
 
    @Override
@@ -478,10 +481,26 @@ public class Main extends FragmentActivity implements IDataExchange
    private void setChords()
    {
       tvChords.setText(null);
-      for(CChordsCouplet oChordsCouplet: oSong.alChords)
+      for(CChordsVerse oChordsVerse: oSong.alChords)
       {
-         tvChords.append(oChordsCouplet.toString());
+         tvChords.append(oChordsVerse.toString());
          tvChords.append("\n\n");
       }
+   }
+
+   @Override
+   public int getEnuDisplayChords()
+   {
+      return iEnuDisplayChords;
+   }
+
+   @Override
+   public CChordsVerse getChordsVerse(String sID)
+   {
+      for(CChordsVerse oChordsVerse: oSong.alChords)
+         if(oChordsVerse.sID.equals(sID))
+            return oChordsVerse;
+      
+      return null;
    }
 }

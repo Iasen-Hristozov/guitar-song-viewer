@@ -2,18 +2,18 @@ package com.discworld.dto;
 
 import java.util.ArrayList;
 
-public class CChordsCouplet
+public class CChordsVerse
 {
    public String sID;
    public ArrayList<CChordsLine> alChordsLines;
    
-   public CChordsCouplet()
+   public CChordsVerse()
    {
       sID = "";
       alChordsLines = new ArrayList<CChordsLine>();
    }
    
-   public CChordsCouplet(String sID, ArrayList<CChordsLine> alChordsLines)
+   public CChordsVerse(String sID, ArrayList<CChordsLine> alChordsLines)
    {
       this.sID = sID;
       this.alChordsLines = alChordsLines;

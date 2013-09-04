@@ -13,7 +13,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.discworld.dto.CChord;
-import com.discworld.dto.CChordsCouplet;
+import com.discworld.dto.CChordsVerse;
 import com.discworld.dto.CChordsLine;
 import com.discworld.dto.CSong;
 import com.discworld.dto.CTextLine;

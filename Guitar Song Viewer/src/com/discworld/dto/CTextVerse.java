@@ -1,7 +1,6 @@
 package com.discworld.dto;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,13 +8,13 @@ import android.os.Parcelable;
 public class CTextVerse implements Parcelable
 {
    public boolean bIsChorus;
-   public String sChordsCoupletID;
+   public String sChordsVerseID;
    public ArrayList<CTextLine> alTextLines;
    
    public CTextVerse()
    {
       bIsChorus = false;
-      sChordsCoupletID = "";
+      sChordsVerseID = "";
       alTextLines = new ArrayList<CTextLine>();
    }
    
@@ -24,7 +23,7 @@ public class CTextVerse implements Parcelable
                      boolean bIsChorus)
    {
       this.bIsChorus = bIsChorus;
-      this.sChordsCoupletID = sChordsCoupletID;
+      this.sChordsVerseID = sChordsCoupletID;
       this.alTextLines = alTextLines;
    }
    
@@ -55,7 +54,7 @@ public class CTextVerse implements Parcelable
    public void writeToParcel(Parcel dest, int flags)
    {
       dest.writeInt(bIsChorus ? 1 : 0);
-      dest.writeString(sChordsCoupletID);
+      dest.writeString(sChordsVerseID);
       dest.writeArray(alTextLines.toArray());
    }
    
@@ -92,7 +91,7 @@ public class CTextVerse implements Parcelable
          * Reconstruct from the Parcel
          */
       bIsChorus = source.readInt() == 1? true : false;
-      sChordsCoupletID = source.readString();
+      sChordsVerseID = source.readString();
 //      alTextLines = Arrays.asList(source.readParcelableArray(CTextLine.class.getClassLoader()));
       alTextLines = source.readArrayList(CTextLine.class.getClassLoader());
 //      alTextLines = new ArrayList<CTextLine>(Arrays.asList(source.readArray(CTextLine.class.getClassLoader())));

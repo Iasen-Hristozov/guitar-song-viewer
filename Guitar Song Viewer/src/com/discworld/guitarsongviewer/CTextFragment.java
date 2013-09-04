@@ -2,6 +2,7 @@ package com.discworld.guitarsongviewer;
 
 import java.util.ArrayList;
 
+import com.discworld.dto.CChordsVerse;
 import com.discworld.dto.CTextVerse;
 import com.discworld.dto.IDataExchange;
 
@@ -25,13 +26,14 @@ public class CTextFragment extends Fragment
 {
    private IDataExchange oDataExchange;
    
-   private int iLinesNbr;
-   
-   private int iNdx;
+   private int iLinesNbr,   
+               iNdx,
+               iEnuDisplayChords;
    
    private ArrayList<CTextVerse> alText;
    
-   private TextView tvText; 
+   private TextView tvText,
+                    tvChords; 
    
    /** (non-Javadoc)
     * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -48,7 +50,7 @@ public class CTextFragment extends Fragment
             // just run the code below, where we would create and return
             // the view hierarchy; it would just never be used.
             return null;
-        }
+      }
       
       iNdx = getArguments().getInt("index", 0);
       int iTextSize = oDataExchange.getTextSize();
@@ -56,6 +58,16 @@ public class CTextFragment extends Fragment
       View vPage = inflater.inflate(R.layout.page, container, false);
       tvText = (TextView) vPage.findViewById(R.id.tvText);
       tvText.setTextSize(iTextSize);
+      tvChords = (TextView) vPage.findViewById(R.id.tvChords);
+
+      if((iEnuDisplayChords = oDataExchange.getEnuDisplayChords()) != Main.ENU_DISPLAY_CHORDS_RELATED)
+         tvChords.setVisibility(View.GONE);
+      else
+      {
+         tvChords.setVisibility(View.VISIBLE);
+         tvChords.setTextSize(iTextSize);
+      }
+
       if(iLinesNbr == 0)
       {
        //set the adapter that will create the individual pages
@@ -73,12 +85,7 @@ public class CTextFragment extends Fragment
               
               alText = oDataExchange.getPage(iNdx);
               
-              tvText.setText(null);
-              for(CTextVerse oTextVerse : alText)
-              {
-                 tvText.append(oTextVerse.toString());
-                 tvText.append("\n\n");
-              }
+              setLyrics();
            }
        });         
       }
@@ -87,14 +94,28 @@ public class CTextFragment extends Fragment
          alText = oDataExchange.getPage(iNdx);
          
          tvText.setTextSize(iTextSize);
-         tvText.setText(null);
-         for(CTextVerse oTextVerse : alText)
-         {
-            tvText.append(oTextVerse.toString());
-            tvText.append("\n\n");
-         }
+
+         setLyrics();
       }
       return vPage;
+   }
+   
+   private void setLyrics()
+   {
+      CChordsVerse oChordsVerse; 
+      
+      tvText.setText(null);
+      tvChords.setText(null);
+      for(CTextVerse oTextVerse : alText)
+      {
+         tvText.append(oTextVerse.toString() + "\n\n");
+         
+         if(iEnuDisplayChords == Main.ENU_DISPLAY_CHORDS_RELATED)
+         {
+            oChordsVerse = oDataExchange.getChordsVerse(oTextVerse.sChordsVerseID);
+            tvChords.append(oChordsVerse.toString() + "\n\n");
+         }
+      }      
    }
    
    @Override

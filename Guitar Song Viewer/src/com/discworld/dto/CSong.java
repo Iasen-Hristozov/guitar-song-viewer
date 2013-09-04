@@ -7,7 +7,7 @@ public class CSong
    public String sTitle;
    public String sAuthor;
    public int iEnuLanguage;
-   public ArrayList<CChordsCouplet> alChords;
+   public ArrayList<CChordsVerse> alChords;
 //   public ArrayList<CTextVerse> alText;
    public CTextVersesSet oText;
    
@@ -16,7 +16,7 @@ public class CSong
       sTitle = "";
       sAuthor = "";
       iEnuLanguage = 0;
-      alChords = new ArrayList<CChordsCouplet>();
+      alChords = new ArrayList<CChordsVerse>();
 //      alText = new ArrayList<CTextVerse>();
       oText = new CTextVersesSet();
    }
