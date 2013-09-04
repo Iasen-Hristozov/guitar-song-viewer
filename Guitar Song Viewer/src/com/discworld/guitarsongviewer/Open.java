@@ -12,12 +12,12 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import com.discworld.dto.CChord;
-import com.discworld.dto.CChordsVerse;
-import com.discworld.dto.CChordsLine;
-import com.discworld.dto.CSong;
-import com.discworld.dto.CTextLine;
-import com.discworld.dto.CTextVerse;
+import com.discworld.guitarsongviewer.dto.CChord;
+import com.discworld.guitarsongviewer.dto.CChordsLine;
+import com.discworld.guitarsongviewer.dto.CChordsVerse;
+import com.discworld.guitarsongviewer.dto.CSong;
+import com.discworld.guitarsongviewer.dto.CTextLine;
+import com.discworld.guitarsongviewer.dto.CTextVerse;
 
 import android.app.ListActivity;
 import android.content.Intent;
