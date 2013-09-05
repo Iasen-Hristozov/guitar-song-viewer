@@ -45,6 +45,8 @@ public class Main extends FragmentActivity implements IDataExchange
                               ATR_TITLE = "title",
                               ATR_AUTHOR = "author",
                               ATR_LANGUAGE = "language",
+                              ATR_CHORD_NAME = "name",
+                              ATR_CHORD_POSITION = "pos",
                               TAG_CHORDS = "chords",
                               TAG_CHORDS_COUPLET = "chords-couplet",
                               TAG_CHORDS_LINE = "chords-line",
@@ -56,9 +58,9 @@ public class Main extends FragmentActivity implements IDataExchange
                               ATR_ID_CHORD_COUPLET = "id-chords-couplet",
                               ATR_ID_IS_CHORUS = "is-chorus";
                               
-   public final static String LNG_ENGLISH = "english",
-                              LNG_BULGARIAN = "български",
-                              LNG_RUSSIAN = "руский";
+   public final static String LNG_ENGLISH = "en",
+                              LNG_BULGARIAN = "bg",
+                              LNG_RUSSIAN = "ru";
    
    private final static int ENU_TEXT_TYPE_UNKNOWN = 0,
                             ENU_TEXT_TYPE_CHORDS = 1,
@@ -105,20 +107,18 @@ public class Main extends FragmentActivity implements IDataExchange
       File fSongsDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/" + SONGS_FOLDER);
       fSongsDir.mkdirs();      
 
-//      oSong = getSongFromResources();
+      oSong = getSongFromResources();
 //      getSongFromFile("");
-//
-//      setTitle();
-//      
-//      if(iEnuChordsShow == ENU_SHOW_CHORDS_ALL)
-//         setChords();
-//      
-//      //initialsie the pager
-//      this.initialisePaging();      
-      
-      startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
 
+      setTitle();
       
+      if(iEnuDisplayChords == ENU_DISPLAY_CHORDS_ALL)
+         setChords();
+      
+      //initialsie the pager
+      this.initialisePaging();      
+      
+//      startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
    }
 
    private CSong getSongNew(XmlPullParser xmlSong)
@@ -162,13 +162,23 @@ public class Main extends FragmentActivity implements IDataExchange
                   xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS_LINE);
                   oChordsLine = new CChordsLine();
 
-                  String ss = xmlSong.nextText();
-                  String[] sChords = ss.split(" ");
-                  for(int i = 0; i < sChords.length; i++)
+                  int aa;
+                  while((aa = xmlSong.nextTag()) == XmlPullParser.START_TAG) 
                   {
-                     oChord = new CChord(sChords[i]);
+                     xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORD);
+                     oChord = new CChord(xmlSong.getAttributeValue(null, ATR_CHORD_NAME));
+                     oChord.iPosition = Integer.valueOf(xmlSong.getAttributeValue(null, ATR_CHORD_POSITION));
                      oChordsLine.addChord(oChord);
+//                     xmlSong.require(XmlPullParser.END_TAG, null, null);
+                     xmlSong.nextTag();
                   }
+//                  String ss = xmlSong.nextText();
+//                  String[] sChords = ss.split(" ");
+//                  for(int i = 0; i < sChords.length; i++)
+//                  {
+//                     oChord = new CChord(sChords[i]);
+//                     oChordsLine.addChord(oChord);
+//                  }
                   xmlSong.require(XmlPullParser.END_TAG, null, TAG_CHORDS_LINE);
                   oChordsCouplet.alChordsLines.add(oChordsLine);
                }
@@ -220,7 +230,7 @@ public class Main extends FragmentActivity implements IDataExchange
    
    private CSong getSongFromResources()
    {
-      XmlResourceParser xmlSong = getResources().getXml(R.xml.antonina);
+      XmlResourceParser xmlSong = getResources().getXml(R.xml.antonina_2);
       CSong oSong = null;
       try
       {
