@@ -211,7 +211,7 @@ public class SongEditor extends JFrame implements ActionListener
             alVerses.add(tsVerses[i]);
       }
       
-      int a = 1;
+//      int a = 1;
    }
 
 }
