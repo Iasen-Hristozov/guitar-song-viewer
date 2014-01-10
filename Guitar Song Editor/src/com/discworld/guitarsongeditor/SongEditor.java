@@ -74,6 +74,8 @@ public class SongEditor extends JFrame implements ActionListener
       }
    }
    
+  
+   
    private ArrayList<CChordsTextPair> alChordsTextPairs;
    private JComboBox comboBox;
    private JPanel panel_2;
