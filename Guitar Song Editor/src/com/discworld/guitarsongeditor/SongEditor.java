@@ -20,6 +20,8 @@ import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.SwingConstants;
 import javax.swing.SpringLayout;
@@ -27,6 +29,17 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
+
+import com.discworld.guitarsongeditor.dto.CChord;
+import com.discworld.guitarsongeditor.dto.CChordsLine;
+import com.discworld.guitarsongeditor.dto.CChordsVerse;
+import com.discworld.guitarsongeditor.dto.CSong;
+import com.discworld.guitarsongeditor.dto.CTextLine;
+import com.discworld.guitarsongeditor.dto.CTextVerse;
+import javax.swing.JComboBox;
+import java.awt.FlowLayout;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
 
 public class SongEditor extends JFrame implements ActionListener
 {
@@ -44,8 +57,28 @@ public class SongEditor extends JFrame implements ActionListener
    private JLabel lblAuthor;
    private String sSong;
    private ArrayList<String> alVerses;
+   private CSong oSong;
    
+   private Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
+                   ptrChord = Pattern.compile("[A-H]");
 
+   private class CChordsTextPair
+   {
+      public String sChordsLine;
+      public String sTextLine;
+      
+      public CChordsTextPair()
+      {
+         sChordsLine = "";
+         sTextLine = "";
+      }
+   }
+   
+   private ArrayList<CChordsTextPair> alChordsTextPairs;
+   private JComboBox comboBox;
+   private JPanel panel_2;
+   private JLabel lblNewLabel;
+   
    /**
     * Launch the application.
     */
@@ -110,6 +143,21 @@ public class SongEditor extends JFrame implements ActionListener
       panel.add(txtAuthor);
       txtAuthor.setColumns(10);
       
+      panel_2 = new JPanel();
+      panel_2.setAlignmentX(Component.LEFT_ALIGNMENT);
+      panel.add(panel_2);
+      panel_2.setLayout(new BorderLayout(0, 0));
+      
+      lblNewLabel = new JLabel("Language  ");
+      lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+      panel_2.add(lblNewLabel, BorderLayout.WEST);
+      
+      comboBox = new JComboBox();
+      comboBox.setMaximumRowCount(3);
+      comboBox.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
+      lblNewLabel.setLabelFor(comboBox);
+      panel_2.add(comboBox, BorderLayout.CENTER);
+      
       container.add(pnlRawText);
             
       panel_1 = new JPanel();
@@ -119,6 +167,7 @@ public class SongEditor extends JFrame implements ActionListener
 //      container.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
             
       txtSong = new JTextArea(0, 20);
+      txtSong.setFont(new Font("Courier New", Font.PLAIN, 12));
             
       JScrollPane scrSong = new JScrollPane(txtSong,
                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -184,20 +233,138 @@ public class SongEditor extends JFrame implements ActionListener
    
    private void convertSongToXml()
    {
+      Matcher mtcText;
 //      sSong.
       getVerses();
+
+      if(alVerses.isEmpty())
+         return;
+      
+      oSong = new CSong();
       for(String sVerse: alVerses)
       {
-         ArrayList<String> alVerseLines = getLinesFromVerse(sVerse); 
+//         ArrayList<String> alVerseLines = getLinesFromVerse(sVerse);
+         String tsVerseLines[] = getLinesFromVerse(sVerse);
+
+         int iOffset = getVerseOffset(tsVerseLines);
+
+         if(iOffset != 0)
+         {
+            for(int i = 0; i < tsVerseLines.length; i++)
+               tsVerseLines[i] = tsVerseLines[i].substring(iOffset);
+         }
+         CChordsTextPair oChordsTextPair = null;
+         alChordsTextPairs = new ArrayList<CChordsTextPair>();
+         for(int i = 0; i < tsVerseLines.length; i++)
+         {
+            mtcText = ptrText.matcher(tsVerseLines[i]);
+            if(!mtcText.find())
+            {
+               oChordsTextPair = new CChordsTextPair();
+               oChordsTextPair.sChordsLine = tsVerseLines[i];
+            }
+            else
+            {
+               if(oChordsTextPair == null)
+                  oChordsTextPair = new CChordsTextPair();
+               oChordsTextPair.sTextLine = tsVerseLines[i];
+               alChordsTextPairs.add(oChordsTextPair);
+               oChordsTextPair = null;
+            }
+         }
+         
+         CTextVerse oTextVerse = null;
+         CTextLine oTextLine = null;
+         CChordsLine oChordsLine = null;
+         CChordsVerse oChordsVerse = null;
+         CChord oChord = null;
+         
+         for(CChordsTextPair oChordsTextPair2 : alChordsTextPairs)
+         {
+            if(!oChordsTextPair2.sChordsLine.isEmpty())
+            {
+               oChordsLine = new CChordsLine();
+               
+               String tsChords[] = oChordsTextPair2.sChordsLine.split(" ");
+               for(int i = 0; i < tsChords.length; i++)
+               {
+                  if(!tsChords[i].isEmpty())
+                  {
+                     oChord = new CChord(tsChords[i]);
+                     oChordsLine.addChord(oChord);      
+                  }
+               }
+               
+               if(oChordsVerse == null)
+                  oChordsVerse = new CChordsVerse();
+               
+               oChordsVerse.alChordsLines.add(oChordsLine);
+            }
+            
+            if(!oChordsTextPair2.sTextLine.isEmpty())
+            {
+               oTextLine = new CTextLine();
+               oTextLine.sTextLine = oChordsTextPair2.sTextLine;
+               if(oTextVerse == null)
+                  oTextVerse = new CTextVerse();
+               oTextVerse.alTextLines.add(oTextLine);
+            }
+         }
+         if(oChordsVerse != null)
+         {
+            oChordsVerse.sID = String.valueOf(oSong.alChords.size());
+            oSong.alChords.add(oChordsVerse);
+         }
+         if(oTextVerse != null)
+         {
+            if(oChordsVerse != null)
+               oTextVerse.sChordsVerseID = oChordsVerse.sID;
+            oSong.oText.alTextVerses.add(oTextVerse);
+         }
       }
       
+      int a = 1;
    }
    
-   private ArrayList<String> getLinesFromVerse(String sVerse)
+   private int getVerseOffset(String[] tsVerseLines)
    {
-      String sLines[] = sVerse.split("\n");
+      int iOffset = 0;
 
-      return null;
+      Matcher matcher;            
+      
+      for(int i = 0; i < tsVerseLines.length; i++)
+      {
+//         if(tsVerseLines[i].matches("[^A-Hmoldurs0-9]"))
+//         if(tsVerseLines[i].matches("[^A-H]"))
+         matcher = ptrText.matcher(tsVerseLines[i]);
+         if(matcher.find())
+         {
+            iOffset = getOffset(tsVerseLines[i]);
+            break;
+         }
+      }      
+      return iOffset; 
+   }
+   
+   private int getOffset(String string)
+   {
+      int iOffset = 0;
+      for(int i = 0; i < string.length(); i++)
+      {
+         if(string.charAt(i) == ' ')
+            iOffset++;
+         else if(string.charAt(i) == '\n')
+            continue;
+         else
+            break;
+      }
+      return iOffset;
+   }
+
+   //   private ArrayList<String> getLinesFromVerse(String sVerse)
+   private String[] getLinesFromVerse(String sVerse)
+   {
+      return sVerse.split("\n");
    }
 
    private void getVerses()
