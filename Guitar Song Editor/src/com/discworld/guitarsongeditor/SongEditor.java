@@ -39,6 +39,9 @@ import com.discworld.guitarsongeditor.dto.CTextVerse;
 import javax.swing.JComboBox;
 import java.awt.FlowLayout;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import java.awt.Font;
 
 public class SongEditor extends JFrame implements ActionListener
@@ -60,8 +63,16 @@ public class SongEditor extends JFrame implements ActionListener
    private CSong oSong;
    
    private Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
-                   ptrChord = Pattern.compile("[A-H]");
+                   ptrChord = Pattern.compile("[A-H]"),
+                   ptrChordEnd = Pattern.compile("[ A-H]"),
+                   ptrSylablesBG = Pattern.compile("[ÀÚÎÓÅÈÞßÜàúîóåèþÿü]"),
+                   ptrSylablesRU = Pattern.compile("[ÀÚÎÓÅÈÞßÜÝÛàúîóåèþÿüûý]"),
+                   ptrLngRU = Pattern.compile("[ÝÛûý]"),
+                   ptrLngEN = Pattern.compile("[AEIOUYariouy]");
 
+   private Matcher mtcText,
+                   mtcChords;
+   
    private class CChordsTextPair
    {
       public String sChordsLine;
@@ -77,7 +88,7 @@ public class SongEditor extends JFrame implements ActionListener
   
    
    private ArrayList<CChordsTextPair> alChordsTextPairs;
-   private JComboBox comboBox;
+   private JComboBox cbxLanguage;
    private JPanel panel_2;
    private JLabel lblNewLabel;
    
@@ -154,11 +165,11 @@ public class SongEditor extends JFrame implements ActionListener
       lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
       panel_2.add(lblNewLabel, BorderLayout.WEST);
       
-      comboBox = new JComboBox();
-      comboBox.setMaximumRowCount(3);
-      comboBox.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
-      lblNewLabel.setLabelFor(comboBox);
-      panel_2.add(comboBox, BorderLayout.CENTER);
+      cbxLanguage = new JComboBox();
+      cbxLanguage.setMaximumRowCount(3);
+      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
+      lblNewLabel.setLabelFor(cbxLanguage);
+      panel_2.add(cbxLanguage, BorderLayout.CENTER);
       
       container.add(pnlRawText);
             
@@ -170,7 +181,43 @@ public class SongEditor extends JFrame implements ActionListener
             
       txtSong = new JTextArea(0, 20);
       txtSong.setFont(new Font("Courier New", Font.PLAIN, 12));
+      
+      txtSong.getDocument().addDocumentListener( new DocumentListener() 
+      {
+         @Override
+         public void changedUpdate(DocumentEvent arg0)
+         {
+            // TODO Auto-generated method stub
             
+         }
+
+         @Override
+         public void insertUpdate(DocumentEvent arg0)
+         {
+            mtcText = ptrLngRU.matcher(txtSong.getText());
+            if(mtcText.find())
+            {
+               cbxLanguage.setSelectedIndex(2);
+               return;
+            }
+            mtcText = ptrLngEN.matcher(txtSong.getText());
+            if(mtcText.find())
+            {
+               cbxLanguage.setSelectedIndex(0);
+               return;
+            }
+            cbxLanguage.setSelectedIndex(1);
+         }
+
+         @Override
+         public void removeUpdate(DocumentEvent arg0)
+         {
+            // TODO Auto-generated method stub
+         }
+      });      
+      
+      
+      
       JScrollPane scrSong = new JScrollPane(txtSong,
                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -223,9 +270,11 @@ public class SongEditor extends JFrame implements ActionListener
       
       if(oSource == btnConvert)
       {
-         txtXml.setText(txtSong.getText());
          sSong = txtSong.getText();
-         convertSongToXml();
+
+         convertSongStringToObject();
+         
+         txtXml.setText(oSong.generateXml());
       }
       else if(oSource == btnGenerate)
       {
@@ -233,9 +282,8 @@ public class SongEditor extends JFrame implements ActionListener
       }
    }
    
-   private void convertSongToXml()
+   private void convertSongStringToObject()
    {
-      Matcher mtcText;
 //      sSong.
       getVerses();
 
@@ -243,6 +291,11 @@ public class SongEditor extends JFrame implements ActionListener
          return;
       
       oSong = new CSong();
+
+      oSong.sTitle = txtTitle.getText();
+      oSong.sAuthor = txtAuthor.getText();
+      oSong.iEnuLanguage = cbxLanguage.getSelectedIndex() + 1;
+      
       for(String sVerse: alVerses)
       {
 //         ArrayList<String> alVerseLines = getLinesFromVerse(sVerse);
@@ -286,6 +339,44 @@ public class SongEditor extends JFrame implements ActionListener
             if(!oChordsTextPair2.sChordsLine.isEmpty())
             {
                oChordsLine = new CChordsLine();
+
+               // =========================================================
+               int iSlbNdx = 0;
+               mtcChords = ptrChord.matcher(oChordsTextPair2.sChordsLine);
+               if(mtcChords.find())
+               {
+                  int iCrdBgn = mtcChords.start();
+//                  int iCrdEnd = mtcChords.end();
+                  mtcChords = ptrChordEnd.matcher(oChordsTextPair2.sChordsLine);
+                  mtcChords.find(iCrdBgn+1);
+                  int iCrdEnd = mtcChords.start();
+                  
+                  switch(oSong.iEnuLanguage)
+                  {
+                     case CSong.ENU_LNG_EN:
+                        
+                     break;
+                     
+                     case CSong.ENU_LNG_BG:
+                        mtcText = ptrSylablesBG.matcher(oChordsTextPair2.sTextLine);      
+                     break;
+                     
+                     case CSong.ENU_LNG_RU:
+                        mtcText = ptrSylablesRU.matcher(oChordsTextPair2.sTextLine);      
+                     break;
+                  }
+                  
+                  if(mtcText.find())
+                  {
+                     if(mtcText.start() >= iCrdBgn)
+                     {
+                        oChord = new CChord(oChordsTextPair2.sChordsLine.substring(iCrdBgn, iCrdEnd));
+                        oChord.iPosition = iSlbNdx;
+                     }
+                        
+                  }
+               }
+               // =========================================================
                
                String tsChords[] = oChordsTextPair2.sChordsLine.split(" ");
                for(int i = 0; i < tsChords.length; i++)
@@ -324,8 +415,6 @@ public class SongEditor extends JFrame implements ActionListener
             oSong.oText.alTextVerses.add(oTextVerse);
          }
       }
-      
-      int a = 1;
    }
    
    private int getVerseOffset(String[] tsVerseLines)
