@@ -121,7 +121,7 @@ public class Main extends FragmentActivity implements IDataExchange
 //      startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
    }
 
-   private CSong getSongNew(XmlPullParser xmlSong)
+   private CSong getSong(XmlPullParser xmlSong)
    {
       CSong oSong = new CSong();
       
@@ -235,7 +235,7 @@ public class Main extends FragmentActivity implements IDataExchange
       try
       {
          xmlSong.next();
-         oSong = getSongNew(xmlSong);
+         oSong = getSong(xmlSong);
       } catch(XmlPullParserException e)
       {
          // TODO Auto-generated catch block
@@ -265,7 +265,7 @@ public class Main extends FragmentActivity implements IDataExchange
          InputStream in = getApplicationContext().getAssets().open("antonina.xml");
          xmlSong.setInput(in, null);
          
-         oSong = getSongNew(xmlSong);
+         oSong = getSong(xmlSong);
          
          setTitle();
          
