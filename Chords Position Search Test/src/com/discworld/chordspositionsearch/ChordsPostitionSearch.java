@@ -91,7 +91,7 @@ class LyricHyphenator
 
 public class ChordsPostitionSearch
 {
-   final static int iEnuLanguage = CSong.ENU_LNG_EN;
+   final static int iEnuLanguage = CSong.ENU_LNG_RU;
 
    final static Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
                         ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})"),
@@ -115,16 +115,16 @@ public class ChordsPostitionSearch
       
 //      oChordsTextPair2.sChordsLine = "     Em       C";
 //      oChordsTextPair2.sChordsLine = "Em       C";
-//      oChordsTextPair2.sChordsLine = "     EmA      C";      
-      //      oChordsTextPair2.sTextLine = "Антонина обернулась,";
+      oChordsTextPair2.sChordsLine = "     EmA      C        EmA";      
+      oChordsTextPair2.sTextLine = "Антонина обернулась,";
 
 //      oChordsTextPair2.sChordsLine = "G   C           D          G";      
 //      oChordsTextPair2.sTextLine = "How many roads must a man walk down";
 //      oChordsTextPair2.sChordsLine = "G      C             D  G";      
 //      oChordsTextPair2.sTextLine = "Yes, `n` how many times must the cannon balls fly";
 //      oChordsTextPair2.sChordsLine = "C  G";      
-      oChordsTextPair2.sChordsLine = "C  G                               EmA";      
-      oChordsTextPair2.sTextLine = "Before they`re forever banned?";
+//      oChordsTextPair2.sChordsLine = "C  G                               EmA";      
+//      oChordsTextPair2.sTextLine = "Before they`re forever banned?";
 //      oChordsTextPair2.sChordsLine = "    C   D       G           Em";      
 //      oChordsTextPair2.sTextLine = "The answer, my friend, is blowin` in the wind,  ";
       
@@ -204,61 +204,7 @@ public class ChordsPostitionSearch
 //      
 //      sRes = sLyricHyphenatorRequest("republic");
       
-      Hyphenator oHyphenator= new Hyphenator();
-      
-      oHyphenator.setErrorHandler(new ErrorHandler() 
-      {
-         public void debug(String guard,String s) 
-         {}
-         public void info(String s)
-         {
-            System.err.println(s);
-         }
-         public void warning(String s)
-         {
-            System.err.println("WARNING: "+s);
-         }
-         public void error(String s)
-         {
-            System.err.println("ERROR: "+s);
-         }
-         public void exception(String s, Exception e)
-         {
-            System.err.println("ERROR: "+s); e.printStackTrace(); 
-         }
-         public boolean isDebugged(String guard)
-         {
-            return false;
-         }
-      });
-      
-      try
-      {
-         
-         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyphen.tex")));
-//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-en-us.tex")));
-//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-en-gb.tex")));
-//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-bg.tex")));
-         
-      } 
-      catch(FileNotFoundException e)
-      {
-         e.printStackTrace();
-      } 
-      catch(IOException e)
-      {
-         e.printStackTrace();
-      }
-      
-//      try {
-//         h.loadTable(table,codelist);
-//         table.close();
-//       } catch(java.io.IOException e) {
-//         System.err.println("error loading hyphenation table: "+e.toString());
-//         System.exit(1);
-//       }
-      
-//      String hyphenated_word=oHyphenator.hyphenate("родина");
+      Hyphenator oHyphenator = initHyphenator();
       
       mtcText = ptrEngWord1.matcher(oChordsTextPair.sTextLine);
       
@@ -353,9 +299,9 @@ public class ChordsPostitionSearch
       return null;
    }
    
-   Hyphenator initHyphenator()
+   static Hyphenator initHyphenator()
    {
-      Hyphenator oHyphenator= new Hyphenator();
+      Hyphenator oHyphenator = new Hyphenator();
       
       oHyphenator.setErrorHandler(new ErrorHandler() 
       {
@@ -403,6 +349,52 @@ public class ChordsPostitionSearch
       
       return oHyphenator;
    }
+   
+   static Hyphenator initHyphenator(String sHyphen)
+   {
+      Hyphenator oHyphenator = new Hyphenator();
+      
+      oHyphenator.setErrorHandler(new ErrorHandler() 
+      {
+         public void debug(String guard,String s) 
+         {}
+         public void info(String s)
+         {
+            System.err.println(s);
+         }
+         public void warning(String s)
+         {
+            System.err.println("WARNING: "+s);
+         }
+         public void error(String s)
+         {
+            System.err.println("ERROR: "+s);
+         }
+         public void exception(String s, Exception e)
+         {
+            System.err.println("ERROR: "+s); e.printStackTrace(); 
+         }
+         public boolean isDebugged(String guard)
+         {
+            return false;
+         }
+      });
+      
+      try
+      {
+         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/" + sHyphen)));
+      } 
+      catch(FileNotFoundException e)
+      {
+         e.printStackTrace();
+      } 
+      catch(IOException e)
+      {
+         e.printStackTrace();
+      }
+      
+      return oHyphenator;
+   }   
    
    static String sLyricHyphenatorRequest(String sText)
    {
@@ -503,20 +495,32 @@ public class ChordsPostitionSearch
       {
          iCrdBgn = mtcChords.start();
          iCrdEnd = mtcChords.end();
-       
-       
-         while(mtcText.find())
+         
+         oChord = new CChord(oChordsTextPair.sChordsLine.substring(iCrdBgn, iCrdEnd));
+         
+         if(iCrdBgn < oChordsTextPair.sTextLine.length())
+         
          {
-            if(mtcText.start() >= iCrdBgn)
-            {
-               oChord = new CChord(oChordsTextPair.sChordsLine.substring(iCrdBgn, iCrdEnd));
-               oChord.iPosition = iSlbNdx++;
-               oChordsLine.addChord(oChord);
-               break;
+            while(mtcText.find())
+            {            
+               if(mtcText.start() >= iCrdBgn)
+               {
+                  oChord.iPosition = iSlbNdx++;
+                  oChordsLine.addChord(oChord);
+                  break;
+               }
+               iSlbNdx++;
             }
-            iSlbNdx ++;
          }
-      }      
+         else
+         {
+            if(oChordsLine.alChords.isEmpty() || oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition >=0)
+               oChord.iPosition = -1;
+            else 
+               oChord.iPosition = oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition - 1;
+            oChordsLine.addChord(oChord);
+         }
+      }
       
       return oChordsLine;
    }
