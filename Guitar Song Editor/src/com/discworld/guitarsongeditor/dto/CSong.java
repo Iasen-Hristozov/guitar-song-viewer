@@ -22,6 +22,9 @@ public class CSong
                                TAG_CHORDS_VERSE = "chords-couplet",
                                ATR_ID = "id",
                                TAG_CHORDS_LINE = "chords-line",
+                               TAG_CHORD = "chord",
+                               ATR_NAME = "name",
+                               ATR_POS = "pos",
                                TAG_TEXT = "text",
                                TAG_TEXT_VERSE = "text-verse",
                                TAG_TEXT_LINE = "text-line",
@@ -35,9 +38,13 @@ public class CSong
                                PAD_CTG = "   ",
                                PAD_VERSE = "      ",
                                PAD_LINE = "         ",
+                               PAD_CHORD = "            ",
                                NEW_LINE = "\n",
                                CRD_VERSE = PAD_VERSE + TAG_OPEN + TAG_CHORDS_VERSE  + " " + ATR_ID + " = \"%s\"" + TAG_END + NEW_LINE,
-                               CRD_LINE = PAD_LINE + TAG_OPEN + TAG_CHORDS_LINE + TAG_END + "%s" + TAG_CLOSE + TAG_CHORDS_LINE + TAG_END + NEW_LINE,
+//                               CRD_LINE = PAD_LINE + TAG_OPEN + TAG_CHORDS_LINE + TAG_END + "%s" + TAG_CLOSE + TAG_CHORDS_LINE + TAG_END + NEW_LINE,
+                               CRD_LINE = PAD_LINE + TAG_OPEN + TAG_CHORDS_LINE + TAG_END + NEW_LINE,
+                               CRD_LINE_CLOSE = PAD_LINE + TAG_CLOSE + TAG_CHORDS_LINE + TAG_END + NEW_LINE,
+                               CRD_CHORD = PAD_CHORD + TAG_OPEN + TAG_CHORD + " " +  ATR_NAME + " = \"%s\" " + ATR_POS + " = \"%s\" /" + TAG_END + NEW_LINE,
                                CRD_VERSE_CLOSE = PAD_VERSE + TAG_CLOSE + TAG_CHORDS_VERSE  + TAG_END + NEW_LINE + NEW_LINE,
                                CRD_OPEN = PAD_CTG + TAG_OPEN + TAG_CHORDS + TAG_END + NEW_LINE,
                                CRD_CLOSE = PAD_CTG + TAG_CLOSE + TAG_CHORDS + TAG_END + NEW_LINE + NEW_LINE,
@@ -47,6 +54,21 @@ public class CSong
                                TXT_VERSE_CLOSE = PAD_VERSE + TAG_CLOSE + TAG_TEXT_VERSE  + TAG_END + NEW_LINE + NEW_LINE,
                                TXT_LINE = PAD_LINE + TAG_OPEN + TAG_TEXT_LINE + TAG_END + "%s" + TAG_CLOSE + TAG_TEXT_LINE + TAG_END + NEW_LINE,
                                SONG_CLOSE = TAG_CLOSE + TAG_SONG + TAG_END;
+/*                               
+                               CRD_VERSE = "      <" + TAG_CHORDS_VERSE  + " " + ATR_ID + " = \"%s\">\n",
+                               CRD_LINE = "         <" + TAG_CHORDS_LINE + ">\n",
+                               CRD_LINE_CLOSE = "         </" + TAG_CHORDS_LINE + ">\n",
+                               CRD_CHORD = "            <" + TAG_CHORD + " " +  ATR_NAME + " = \"%s\" " + ATR_POS + " = \"%s\" />\n",
+                               CRD_VERSE_CLOSE = "      </" + TAG_CHORDS_VERSE  + ">\n",
+                               CRD_OPEN = "            <" + TAG_CHORDS + ">\n",
+                               CRD_CLOSE = "            </" + TAG_CHORDS + ">\n\n",
+                               TXT_OPEN = "   <" + TAG_TEXT +  ">\n",
+                               TXT_CLOSE = "   </" + TAG_TEXT + ">\n",
+                               TXT_VERSE = "      <" + TAG_TEXT_VERSE + " " + ATR_CHORDS_VERSE_ID + " = \"%s\">\n",
+                               TXT_VERSE_CLOSE = "      </" + TAG_TEXT_VERSE  + ">\n\n",
+                               TXT_LINE = "         <" + TAG_TEXT_LINE + ">%s</" + TAG_TEXT_LINE + ">\n",
+                               SONG_CLOSE = "<" + TAG_SONG + ">";
+ */
    
    public final static int ENU_LNG_UNDEFINED = 0,
                            ENU_LNG_EN = 1,
@@ -93,7 +115,12 @@ public class CSong
             sSongXml += String.format(CRD_VERSE, oChordsVerse.sID);
             for(CChordsLine oChordsLine: oChordsVerse.alChordsLines)
             {
-               sSongXml += String.format(CRD_LINE, oChordsLine.toString().replace(", ", " "));
+//             sSongXml += String.format(CRD_LINE, oChordsLine.toString().replace(", ", " "));
+               sSongXml += CRD_LINE;
+               for(CChord oChord: oChordsLine.alChords)
+                  sSongXml += String.format(CRD_CHORD, oChord.sName, oChord.iPosition);
+               
+               sSongXml += CRD_LINE_CLOSE;
             }
             sSongXml += CRD_VERSE_CLOSE;
          }
