@@ -108,6 +108,10 @@ public class SongEditor extends JFrame implements ActionListener
    private JComboBox cbxLanguage;
    private JPanel panel_2;
    private JLabel lblNewLabel;
+   private JPanel panel_3;
+   private JTextField txtURL;
+   private JButton btnGet;
+   private JLabel lblUrl;
    
    /**
     * Launch the application.
@@ -157,6 +161,20 @@ public class SongEditor extends JFrame implements ActionListener
       panel = new JPanel();
       pnlRawText.add(panel, BorderLayout.NORTH);
       panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+      
+      lblUrl = new JLabel("URL");
+      panel.add(lblUrl);
+      
+      panel_3 = new JPanel();
+      panel.add(panel_3);
+      panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
+      
+      txtURL = new JTextField();
+      panel_3.add(txtURL);
+      txtURL.setColumns(10);
+      
+      btnGet = new JButton("Get");
+      panel_3.add(btnGet);
       
       lblTitle = new JLabel("Title");
       lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
