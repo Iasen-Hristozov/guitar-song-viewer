@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -117,6 +118,8 @@ public class SongEditor extends JFrame implements ActionListener
    private JTextField txtURL;
    private JButton btnGet;
    private JLabel lblUrl;
+   private JPanel panel_4;
+   private JButton btnSave;
    
    /**
     * Launch the application.
@@ -300,6 +303,14 @@ public class SongEditor extends JFrame implements ActionListener
       
       container.add(pnlXmlText);
       
+      panel_4 = new JPanel();
+      pnlXmlText.add(panel_4, BorderLayout.NORTH);
+      
+//      btnSave = new JButton("Save");
+      ImageIcon iiSave = new ImageIcon("/res/drawable/save.png");
+      btnSave = new JButton(new ImageIcon("D:\\Iasen\\!PROJECTS\\Android\\Guitar Song Editor\\res\\drawable\\save.png"));
+      panel_4.add(btnSave);
+      
       this.setSize(427, 370);
       this.setVisible(true);
    }
@@ -382,8 +393,9 @@ public class SongEditor extends JFrame implements ActionListener
             while ((inputLine = in.readLine()) != null) 
                sbResponse.append(inputLine + "\n");
 //            int inputChar;
-//            while ((inputChar =in.read()) != 0)
-//               sbResponse.append(inputChar);
+//            while ((inputChar = in.read()) != -1)
+//               sbResponse.append((char)inputChar);
+//            sResponse = sbResponse.toString();
 //            txtSong.setText(sResponse);            
             in.close();
         
