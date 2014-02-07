@@ -28,6 +28,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -83,10 +86,12 @@ public class SongEditor extends JFrame implements ActionListener
                                 ptrLngEN = Pattern.compile("[AEIOUYaeiouy]"),
                                 ptrEngWord1 = Pattern.compile("\\w+");
    
+   private 
    final static int             ENU_HPN_UKN = 0,
                                 ENU_HPN_LCL = 1,
                                 ENU_HPN_INT_LRC_HPN = 2;
-   
+
+   private final static String URL_FLS_VMS = "falshivim-vmeste.ru";        
    private Matcher mtcText,
                    mtcChords;
    
@@ -170,10 +175,12 @@ public class SongEditor extends JFrame implements ActionListener
       panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
       
       txtURL = new JTextField();
+      txtURL.setText("http://www.falshivim-vmeste.ru/songs/827193600.html");
       panel_3.add(txtURL);
       txtURL.setColumns(10);
       
       btnGet = new JButton("Get");
+      btnGet.addActionListener(this);
       panel_3.add(btnGet);
       
       lblTitle = new JLabel("Title");
@@ -277,7 +284,6 @@ public class SongEditor extends JFrame implements ActionListener
       btnGenerate = new JButton("<<");
       verticalBox.add(btnGenerate);
       btnGenerate.setAlignmentX(Component.CENTER_ALIGNMENT);
-
       btnGenerate.addActionListener(this);
             
       txtXml = new JTextArea(5, 20);
@@ -316,8 +322,113 @@ public class SongEditor extends JFrame implements ActionListener
       {
          
       }
+      else if(oSource == btnGet)
+      {
+         getSongFromURL(txtURL.getText());
+      }
    }
    
+   private void getSongFromURL(String sURL)
+   {
+      if(sURL.contains(URL_FLS_VMS))
+      {
+         getSongFromFalshivimVmeste(sURL);
+      }
+      
+   }
+
+   private void getSongFromFalshivimVmeste(String sURL)
+   {
+      final String USER_AGENT = "Mozilla/5.0",
+                   sTitleNameBgn = "<h1>",
+                   sTitleNameEnd = "</h1>",
+                   sTitleBgn = "Аккорды песни ",
+                   sAuthorBgn = " (",
+                   sAuthorEnd = ")",
+                   sTextBgn = "<pre class=textsong>",
+                   sTextEnd = "</pre>",
+                   sUrlParameters = "inputText=";
+  
+      String       sResponse, 
+                   sHyphenatedText = null;
+  
+      URL          oURL;
+  
+      DataOutputStream wr;
+  
+      BufferedReader   in; 
+  
+      HttpURLConnection oHTTPConn;
+  
+      try
+      {
+         oURL = new URL(sURL);
+         oHTTPConn = (HttpURLConnection) oURL.openConnection();
+
+         // optional default is GET
+         oHTTPConn.setRequestMethod("GET");
+     
+         // add reuqest header
+         oHTTPConn.setRequestProperty("User-Agent", USER_AGENT);
+     
+         if(oHTTPConn.getResponseCode() == 200)
+         {
+            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream(), "UTF-8"));
+//            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream()));
+        
+            String inputLine;
+            StringBuffer sbResponse = new StringBuffer();
+    
+            while ((inputLine = in.readLine()) != null) 
+               sbResponse.append(inputLine + "\n");
+//            int inputChar;
+//            while ((inputChar =in.read()) != 0)
+//               sbResponse.append(inputChar);
+//            txtSong.setText(sResponse);            
+            in.close();
+        
+            sResponse = sbResponse.toString();
+
+            // Get song title and author
+            int iTtlNmBgn = sResponse.indexOf(sTitleNameBgn);
+            int iTtlNmEnd = sResponse.indexOf(sTitleNameEnd);
+            String sTtlNm = sResponse.substring(iTtlNmBgn + sTitleNameBgn.length(), iTtlNmEnd);
+            
+            // Get and set song title
+            int iTtlBgn = sTtlNm.indexOf(sTitleBgn);
+            int iTtlEnd = sTtlNm.indexOf(sAuthorBgn);
+            String sTitle = sTtlNm.substring(iTtlBgn + sTitleBgn.length(), iTtlEnd);
+            txtTitle.setText(sTitle);
+            
+            // Get and set song author
+            int iAthEnd = sTtlNm.indexOf(sAuthorEnd);
+            String sAuthor = sTtlNm.substring(iTtlEnd + sAuthorBgn.length(), iAthEnd);
+            txtAuthor.setText(sAuthor);
+            
+            // Get and set song text
+            int iTxtBgn =  sResponse.indexOf(sTextBgn);
+            int iTxtEnd =  sResponse.indexOf(sTextEnd);
+            String sText = sResponse.substring(iTxtBgn + sTextBgn.length(), iTxtEnd);
+            txtSong.setText(sText);
+         }
+      } 
+      catch(MalformedURLException e)
+      {
+         e.printStackTrace();
+      } 
+      catch(ProtocolException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      } 
+      catch(IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+  
+   }
+
    private void convertSongStringToObject()
    {
 //      sSong.
@@ -398,58 +509,6 @@ public class SongEditor extends JFrame implements ActionListener
                }
                else
                   oChordsLine = getChordsLineCyr(oChordsTextPair2);               
-               
-
-               // =========================================================
-               // Parse the chords - name and position
-//               oChordsLine = new CChordsLine();
-//               int iSlbNdx = 0;
-//               mtcChords = ptrChord.matcher(oChordsTextPair2.sChordsLine);
-//               
-//               if(mtcChords.find())
-//               {
-//                  int iCrdBgn = mtcChords.start();
-////                  int iCrdEnd = mtcChords.end();
-//                  mtcChords = ptrChordEnd.matcher(oChordsTextPair2.sChordsLine);
-//                  mtcChords.find(iCrdBgn+1);
-//                  int iCrdEnd = mtcChords.start();
-//                  
-//                  switch(oSong.iEnuLanguage)
-//                  {
-//                     case CSong.ENU_LNG_EN:
-//                        
-//                     break;
-//                     
-//                     case CSong.ENU_LNG_BG:
-//                        mtcText = ptrSylablesBG.matcher(oChordsTextPair2.sTextLine);      
-//                     break;
-//                     
-//                     case CSong.ENU_LNG_RU:
-//                        mtcText = ptrSylablesRU.matcher(oChordsTextPair2.sTextLine);      
-//                     break;
-//                  }
-//                  
-//                  if(mtcText.find())
-//                  {
-//                     if(mtcText.start() >= iCrdBgn)
-//                     {
-//                        oChord = new CChord(oChordsTextPair2.sChordsLine.substring(iCrdBgn, iCrdEnd));
-//                        oChord.iPosition = iSlbNdx;
-//                     }
-//                        
-//                  }
-//               }
-//               // =========================================================
-//               
-//               String tsChords[] = oChordsTextPair2.sChordsLine.split(" ");
-//               for(int i = 0; i < tsChords.length; i++)
-//               {
-//                  if(!tsChords[i].isEmpty())
-//                  {
-//                     oChord = new CChord(tsChords[i]);
-//                     oChordsLine.addChord(oChord);      
-//                  }
-//               }
                
                // Create a new chords verse id it doesn't exists and add the chords line to it. 
                if(oChordsVerse == null)
@@ -618,24 +677,12 @@ public class SongEditor extends JFrame implements ActionListener
       
       CChordsLine oChordsLine = new CChordsLine();
       
-      
-//      LyricHyphenator oLyricHyphenator = new LyricHyphenator();
-//      
-//      String sRes = oLyricHyphenator.getResult("hyphenation");
-//      
-//      sRes = oLyricHyphenator.getResult("republic");
-
-//      String sRes = sLyricHyphenatorRequest("hyphenation");
-//      
-//      sRes = sLyricHyphenatorRequest("republic");
-      
       Hyphenator oHyphenator = initHyphenator();
       
       mtcText = ptrEngWord1.matcher(oChordsTextPair.sTextLine);
       
       String hyphenated_word,
              word;
-//      String tsSylables[];
       
       iCrdEnd = 0;
       
