@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -21,27 +23,24 @@ import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.SwingConstants;
-import javax.swing.SpringLayout;
 
 import net.davidashen.text.Hyphenator;
 import net.davidashen.util.ErrorHandler;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
@@ -57,8 +56,10 @@ import java.awt.FlowLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileFilter;
 
 import java.awt.Font;
+import javax.swing.Icon;
 
 public class SongEditor extends JFrame implements ActionListener
 {
@@ -74,7 +75,8 @@ public class SongEditor extends JFrame implements ActionListener
    private JPanel panel_1;
    private JTextField txtAuthor;
    private JLabel lblAuthor;
-   private String sSong;
+   private String sSong,
+                  xmlSong;
    private ArrayList<String> alVerses;
    private CSong oSong;
    
@@ -118,8 +120,9 @@ public class SongEditor extends JFrame implements ActionListener
    private JTextField txtURL;
    private JButton btnGet;
    private JLabel lblUrl;
-   private JPanel panel_4;
+   private JPanel pnlXmlButtons;
    private JButton btnSave;
+   private JButton btnPreview;
    
    /**
     * Launch the application.
@@ -303,13 +306,25 @@ public class SongEditor extends JFrame implements ActionListener
       
       container.add(pnlXmlText);
       
-      panel_4 = new JPanel();
-      pnlXmlText.add(panel_4, BorderLayout.NORTH);
+      pnlXmlButtons = new JPanel();
+      pnlXmlText.add(pnlXmlButtons, BorderLayout.NORTH);
       
 //      btnSave = new JButton("Save");
       ImageIcon iiSave = new ImageIcon("/res/drawable/save.png");
+      pnlXmlButtons.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
       btnSave = new JButton(new ImageIcon("D:\\Iasen\\!PROJECTS\\Android\\Guitar Song Editor\\res\\drawable\\save.png"));
-      panel_4.add(btnSave);
+      btnSave.setMargin(new Insets(0, 0, 0, 0));
+      btnSave.setToolTipText("Save");
+      btnSave.addActionListener(this);
+      btnSave.setEnabled(false);
+      pnlXmlButtons.add(btnSave);
+      
+      btnPreview = new JButton(new ImageIcon("D:\\Iasen\\!PROJECTS\\Android\\Guitar Song Editor\\res\\drawable\\preview.png"));
+      btnPreview.setEnabled(false);
+      btnPreview.setToolTipText("Preview");
+      btnPreview.addActionListener(this);
+      btnPreview.setMargin(new Insets(0, 0, 0, 0));
+      pnlXmlButtons.add(btnPreview);
       
       this.setSize(427, 370);
       this.setVisible(true);
@@ -327,7 +342,11 @@ public class SongEditor extends JFrame implements ActionListener
          // Convert string to CSong object
          convertSongStringToObject();
          
-         txtXml.setText(oSong.generateXml());
+         xmlSong = oSong.generateXml();
+         
+         txtXml.setText(xmlSong);
+         btnSave.setEnabled(true);
+         btnPreview.setEnabled(true);
       }
       else if(oSource == btnGenerate)
       {
@@ -337,8 +356,61 @@ public class SongEditor extends JFrame implements ActionListener
       {
          getSongFromURL(txtURL.getText());
       }
+      else if(oSource == btnSave)
+      {
+         saveSongXml(xmlSong);
+      }
+      else if(oSource == btnPreview)
+      {
+         JFrame frame = new JFrame ("Preview");
+         frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+         frame.getContentPane().add (new Preview());
+         frame.pack();
+         frame.setVisible (true);         
+      }
    }
    
+   private void saveSongXml(String xmlSong)
+   {
+      JFileChooser fileChooser = new JFileChooser();
+      fileChooser.setSelectedFile(new File(oSong.sAuthor + " - " + oSong.sTitle + ".xml"));
+      FileFilter ffXml = new ExtensionFileFilter("XML", new String[] { "xml" });
+      fileChooser.setFileFilter(ffXml);
+      if (fileChooser.showSaveDialog(SongEditor.this) == JFileChooser.APPROVE_OPTION) 
+      {
+         File oFile = fileChooser.getSelectedFile();
+         String sPar = oFile.getParent();
+         String sFile = oFile.getName();
+         if(!sFile.toLowerCase().endsWith(".xml"))
+            sFile += ".xml";
+
+         oFile = new File(sPar + "\\" + sFile);
+         if(oFile.exists() && !oFile.isDirectory()) 
+         {
+            int dialogResult = JOptionPane.showConfirmDialog (null, "File Exists. Would You Like to Overwrite it", "Warning", JOptionPane.YES_NO_OPTION);
+            if(dialogResult == JOptionPane.NO_OPTION)
+               return;
+         }         
+         try
+         {
+            PrintWriter writer = new PrintWriter(sPar + "\\" + sFile, "UTF-8");
+            writer.print(xmlSong);
+            writer.close();
+         
+         } 
+         catch(FileNotFoundException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         } 
+         catch(UnsupportedEncodingException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+      }   
+   }
+
    private void getSongFromURL(String sURL)
    {
       if(sURL.contains(URL_FLS_VMS))
