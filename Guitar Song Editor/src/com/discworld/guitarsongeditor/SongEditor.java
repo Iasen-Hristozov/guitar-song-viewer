@@ -363,7 +363,7 @@ public class SongEditor extends JFrame implements ActionListener
       else if(oSource == btnPreview)
       {
          JFrame frame = new JFrame ("Preview");
-         frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+         frame.setDefaultCloseOperation (JFrame.HIDE_ON_CLOSE);
          frame.getContentPane().add (new Preview());
          frame.pack();
          frame.setVisible (true);         
