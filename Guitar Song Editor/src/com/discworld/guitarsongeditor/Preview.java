@@ -14,10 +14,12 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -28,6 +30,8 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.rtf.RTFEditorKit;
 
+import rtf.AdvancedRTFEditorKit;
+
 public class Preview extends JPanel implements ActionListener
 {
    private JButton   btnXptRTF,
@@ -36,6 +40,7 @@ public class Preview extends JPanel implements ActionListener
    
    private JTextPane epSong;
    
+   AdvancedRTFEditorKit kit1;
    public Preview() 
    {
       setLayout(new BorderLayout(0, 0));
@@ -63,6 +68,9 @@ public class Preview extends JPanel implements ActionListener
       
 //      epSong = new JTextPane("text/html", "");
       epSong = new JTextPane();
+//      kit1 = new AdvancedRTFEditorKit();      
+//      epSong.setEditorKit(kit1);
+      
 //      epSong = new JEditorPane();
       JScrollPane scrollPane = new JScrollPane(epSong);
       scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -73,8 +81,7 @@ public class Preview extends JPanel implements ActionListener
       
 //      epSong.setText("test <b>TEST</b> <h1>HHHH</H1>");
       epSong.setContentType("text/rtf");
-      epSong.setText("{\\rtf1 \\qc\\fs36HelloWorld! \\par\\fs24\\ql {\\i This} is formatted {\\b\\i Text}.}");
-
+      epSong.setText("{\\rtf1 \\fs36\\qc HelloWorld! \\par\\fs24\\qr {\\i This} is formatted {\\b\\i Text}.}");
    }
 
    @Override
@@ -106,10 +113,13 @@ public class Preview extends JPanel implements ActionListener
 
    private void exportToRtf() throws IOException, BadLocationException
    {
-//      final StringWriter out = new StringWriter();
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      final StringWriter out = new StringWriter();
+//      ByteArrayOutputStream out = new ByteArrayOutputStream();
+//      BufferedWriter out = new BufferedWriter(new FileWriter("C:\\Temp\\test.rtf"));
       Document doc = epSong.getDocument();
-      RTFEditorKit kit = new RTFEditorKit();
+//      RTFEditorKit kit = new RTFEditorKit();
+      AdvancedRTFEditorKit kit = new AdvancedRTFEditorKit();
+//      HTMLEditorKit kit = new HTMLEditorKit();
       kit.write(out, doc, doc.getStartPosition().getOffset(), doc.getLength());
       out.close();
 
@@ -119,10 +129,13 @@ public class Preview extends JPanel implements ActionListener
          rtfContent = rtfContent.replaceAll("Monospaced", "Courier New");
          final StringBuffer rtfContentBuffer = new StringBuffer(rtfContent);
          final int endProlog = rtfContentBuffer.indexOf("\n\n");
-         // set a good Line Space and no Space Before or Space After each paragraph
-         rtfContentBuffer.insert(endProlog, "\n\\sl240");
-         rtfContentBuffer.insert(endProlog, "\n\\sb0\\sa0");
-         rtfContent = rtfContentBuffer.toString();
+         if(endProlog > -1)
+         {
+            // set a good Line Space and no Space Before or Space After each paragraph
+            rtfContentBuffer.insert(endProlog, "\n\\sl240");
+            rtfContentBuffer.insert(endProlog, "\n\\sb0\\sa0");
+            rtfContent = rtfContentBuffer.toString();
+         }
       }
 
       final File file = new File("C:\\Temp\\test.rtf");
