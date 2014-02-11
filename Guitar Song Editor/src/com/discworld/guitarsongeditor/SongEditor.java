@@ -320,7 +320,8 @@ public class SongEditor extends JFrame implements ActionListener
       pnlXmlButtons.add(btnSave);
       
       btnPreview = new JButton(new ImageIcon("D:\\Iasen\\!PROJECTS\\Android\\Guitar Song Editor\\res\\drawable\\preview.png"));
-      btnPreview.setEnabled(false);
+      btnPreview.setText("XPT");
+      btnPreview.setEnabled(true);
       btnPreview.setToolTipText("Preview");
       btnPreview.addActionListener(this);
       btnPreview.setMargin(new Insets(0, 0, 0, 0));
