@@ -34,6 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.text.BadLocationException;
@@ -42,6 +43,8 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.rtf.RTFEditorKit;
 
+import com.discworld.guitarsongeditor.dto.CChordsTextPairVerse;
+import com.discworld.guitarsongeditor.dto.CChordsVerse;
 import com.discworld.guitarsongeditor.dto.CSong;
 import com.itextpdf.awt.DefaultFontMapper;
 import com.itextpdf.awt.DefaultFontMapper.BaseFontParameters;
@@ -119,7 +122,12 @@ public class Preview extends JPanel implements ActionListener, ISetSong
    @Override
    public void setSong(CSong oSong)
    {
+      ArrayList<CChordsTextPairVerse> alChordsTextVerses; 
       this.oSong = oSong;
+      
+      alChordsTextVerses = oSong.getChordsTextVerses();
+      
+      int a = 1;
    }
    
    @Override

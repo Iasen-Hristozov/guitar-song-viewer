@@ -47,6 +47,7 @@ import javax.swing.JLabel;
 
 import com.discworld.guitarsongeditor.dto.CChord;
 import com.discworld.guitarsongeditor.dto.CChordsLine;
+import com.discworld.guitarsongeditor.dto.CChordsTextPair;
 import com.discworld.guitarsongeditor.dto.CChordsVerse;
 import com.discworld.guitarsongeditor.dto.CSong;
 import com.discworld.guitarsongeditor.dto.CTextLine;
@@ -97,20 +98,6 @@ public class SongEditor extends JFrame implements ActionListener
    private final static String URL_FLS_VMS = "falshivim-vmeste.ru";        
    private Matcher mtcText,
                    mtcChords;
-   
-   private class CChordsTextPair
-   {
-      public String sChordsLine;
-      public String sTextLine;
-      
-      public CChordsTextPair()
-      {
-         sChordsLine = "";
-         sTextLine = "";
-      }
-   }
-   
-  
    
    private ArrayList<CChordsTextPair> alChordsTextPairs;
    private JComboBox cbxLanguage;
@@ -328,6 +315,33 @@ public class SongEditor extends JFrame implements ActionListener
       
       this.setSize(427, 370);
       this.setVisible(true);
+
+      //===============================================================
+      // For test purposes only. Remove it before release
+      
+      getSongFromURL(txtURL.getText());
+      
+      sSong = txtSong.getText();
+
+      // Convert string to CSong object
+      convertSongStringToObject();
+      
+      xmlSong = oSong.generateXml();
+      
+      txtXml.setText(xmlSong);
+      btnSave.setEnabled(true);
+      btnPreview.setEnabled(true);
+      
+      
+      Preview oPreview = new Preview();
+      JFrame frame = new JFrame ("Preview");
+      frame.setDefaultCloseOperation (JFrame.HIDE_ON_CLOSE);
+      frame.getContentPane().add (new Preview());
+      frame.pack();
+      frame.setVisible (true);
+      oPreview.setSong(oSong);      
+      //===============================================================
+      
    }
 
    @Override
@@ -619,6 +633,8 @@ public class SongEditor extends JFrame implements ActionListener
          {
             oChordsVerse.sID = String.valueOf(oSong.alChords.size());
             oSong.alChords.add(oChordsVerse);
+            
+            oSong.htChordsIdNdx.put(oChordsVerse.sID, oSong.alChords.size()-1);
          }
          
          // If exists text verse assign ID and add to the song.

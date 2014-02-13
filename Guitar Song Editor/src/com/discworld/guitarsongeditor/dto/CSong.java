@@ -1,6 +1,9 @@
 package com.discworld.guitarsongeditor.dto;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.plaf.SliderUI;
 
@@ -12,6 +15,9 @@ public class CSong
    public ArrayList<CChordsVerse> alChords;
 //   public ArrayList<CTextVerse> alText;
    public CTextVersesSet oText;
+   
+   public Hashtable<String, CChordsVerse> htChords;
+   public Hashtable<String, Integer> htChordsIdNdx;
    
    private final static String XML_ID = "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
                                TAG_SONG = "song",
@@ -83,6 +89,7 @@ public class CSong
       alChords = new ArrayList<CChordsVerse>();
 //      alText = new ArrayList<CTextVerse>();
       oText = new CTextVersesSet();
+      htChordsIdNdx = new Hashtable<String, Integer>();
    }
    
    public String generateXml()
@@ -145,5 +152,137 @@ public class CSong
       sSongXml += SONG_CLOSE;
       
       return sSongXml;
+   }
+
+   public ArrayList<CChordsTextPairVerse> getChordsTextVerses()
+   {
+      String sChordsLine;
+      
+      CTextLine oTextLine;
+      
+      CChordsLine oChordsLine;
+      
+      CChordsTextPairVerse oChordsTextPairVerse;
+      
+      CChordsTextPair oChordsTextPair;
+      
+      ArrayList<CChordsTextPairVerse> alChordsTextVerses = new ArrayList<CChordsTextPairVerse>();
+      
+      
+      for(CTextVerse oTextVerse: oText.alTextVerses)
+      {
+         oChordsTextPairVerse = new CChordsTextPairVerse();
+         
+         Integer iChrdNdx1 = htChordsIdNdx.get("5");
+         
+         Integer iChrdNdx = htChordsIdNdx.get(oTextVerse.sChordsVerseID);
+         
+         CChordsVerse oChordsVerse1 = alChords.get(iChrdNdx);
+         
+         
+         for(CChordsVerse oChordsVerse: alChords)
+         {
+            
+            if(oChordsVerse.sID.equals(oTextVerse.sChordsVerseID))
+            {
+//               oChordsTextPairVerse = new CChordsTextPairVerse();
+               
+               for(int i = 0; i < oTextVerse.alTextLines.size(); i++)
+               {
+                  oTextLine = oTextVerse.alTextLines.get(i);
+                  oChordsLine = oChordsVerse.alChordsLines.get(i);
+                  
+                  sChordsLine = getChordsLineString(oTextLine.sTextLine, oChordsLine);
+                  
+                  oChordsTextPair = new CChordsTextPair(oTextLine.sTextLine, sChordsLine);
+                  oChordsTextPairVerse.add(oChordsTextPair);
+               }
+               
+//               alChordsTextVerses.add(oChordsTextPairVerse);
+            }
+         }
+         alChordsTextVerses.add(oChordsTextPairVerse);
+      }
+      
+      return alChordsTextVerses;
+   }
+
+   private String getChordsLineString(String sTextLine, CChordsLine oChordsLine)
+   {
+      String sChordsLine;
+      if(iEnuLanguage == ENU_LNG_EN)
+         sChordsLine = getChordsLineStringEn(sTextLine, oChordsLine);
+      else
+         sChordsLine = getChordsLineStringCyr(sTextLine, oChordsLine);
+      return sChordsLine;
+   }
+
+   private String getChordsLineStringCyr(String sTextLine, CChordsLine oChordsLine)
+   {
+      int iSlbNdx = 0,
+          iCrdBgn = 0,
+          iCrdEnd = 0;
+      
+      String sChordsLine = "";
+           
+      Matcher   mtcText,
+                mtcChords;
+           
+      final Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
+                    ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})"),
+//                    ptrChordEnd = Pattern.compile("[ A-H]"),
+                    ptrSylablesBG = Pattern.compile("[ÀÚÎÓÅÈÞßÜàúîóåèþÿ]"),
+                    ptrSylablesRU = Pattern.compile("[ÀÚÎÓÅÈÞßÜÝÛàúîóåèþÿûý¸]");
+           
+           
+//           CChord oChord;
+           
+      switch(iEnuLanguage)
+      {
+         case ENU_LNG_BG:
+            mtcText = ptrSylablesBG.matcher(sTextLine);      
+         break;
+              
+         default:
+         case ENU_LNG_RU:
+            mtcText = ptrSylablesRU.matcher(sTextLine);      
+         break;
+      }
+           
+      String sTmp;
+//      mtcChords = ptrChord.matcher(oChordsTextPair.sChordsLine);           
+      for(CChord oChord: oChordsLine.alChords)
+      {
+         if(oChord.iPosition >= 0)
+         {
+            while(mtcText.find(iCrdEnd))
+            {
+               iCrdEnd = mtcText.end();
+                    
+               if(iSlbNdx == oChord.iPosition)
+               {
+                  iCrdBgn = mtcText.start();
+                  sTmp = String.format("%1$" +  (iCrdBgn - sChordsLine.length() + oChord.sName.length()) + "s", oChord.sName);
+                  sChordsLine += sTmp;
+                  iSlbNdx++;
+                  break;
+               }
+               
+               iSlbNdx++;
+            }
+         }
+         else
+         {
+                 
+         }
+      }
+           
+      return sChordsLine;
+   }
+
+   private String getChordsLineStringEn(String sTextLine, CChordsLine oChordsLine)
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }
