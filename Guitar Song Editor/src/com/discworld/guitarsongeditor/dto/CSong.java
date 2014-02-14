@@ -173,34 +173,55 @@ public class CSong
       {
          oChordsTextPairVerse = new CChordsTextPairVerse();
          
-         Integer iChrdNdx1 = htChordsIdNdx.get("5");
-         
          Integer iChrdNdx = htChordsIdNdx.get(oTextVerse.sChordsVerseID);
          
-         CChordsVerse oChordsVerse1 = alChords.get(iChrdNdx);
-         
-         
-         for(CChordsVerse oChordsVerse: alChords)
+         if(iChrdNdx != null)
          {
+            CChordsVerse oChordsVerse = alChords.get(iChrdNdx);
             
-            if(oChordsVerse.sID.equals(oTextVerse.sChordsVerseID))
+            for(int i = 0; i < oTextVerse.alTextLines.size(); i++)
             {
-//               oChordsTextPairVerse = new CChordsTextPairVerse();
+               oTextLine = oTextVerse.alTextLines.get(i);
+               oChordsLine = oChordsVerse.alChordsLines.get(i);
                
-               for(int i = 0; i < oTextVerse.alTextLines.size(); i++)
-               {
-                  oTextLine = oTextVerse.alTextLines.get(i);
-                  oChordsLine = oChordsVerse.alChordsLines.get(i);
-                  
-                  sChordsLine = getChordsLineString(oTextLine.sTextLine, oChordsLine);
-                  
-                  oChordsTextPair = new CChordsTextPair(oTextLine.sTextLine, sChordsLine);
-                  oChordsTextPairVerse.add(oChordsTextPair);
-               }
+               sChordsLine = getChordsLineString(oTextLine.sTextLine, oChordsLine);
                
-//               alChordsTextVerses.add(oChordsTextPairVerse);
-            }
+               oChordsTextPair = new CChordsTextPair(oTextLine.sTextLine, sChordsLine);
+               oChordsTextPairVerse.add(oChordsTextPair);
+            }            
          }
+         else
+         {
+            for(CTextLine oTextLine2: oTextVerse.alTextLines)
+            {
+               oChordsTextPair = new CChordsTextPair(oTextLine2.sTextLine);
+               oChordsTextPairVerse.add(oChordsTextPair);
+            }
+            
+         }
+         
+         
+//         for(CChordsVerse oChordsVerse: alChords)
+//         {
+//            
+//            if(oChordsVerse.sID.equals(oTextVerse.sChordsVerseID))
+//            {
+////               oChordsTextPairVerse = new CChordsTextPairVerse();
+//               
+//               for(int i = 0; i < oTextVerse.alTextLines.size(); i++)
+//               {
+//                  oTextLine = oTextVerse.alTextLines.get(i);
+//                  oChordsLine = oChordsVerse.alChordsLines.get(i);
+//                  
+//                  sChordsLine = getChordsLineString(oTextLine.sTextLine, oChordsLine);
+//                  
+//                  oChordsTextPair = new CChordsTextPair(oTextLine.sTextLine, sChordsLine);
+//                  oChordsTextPairVerse.add(oChordsTextPair);
+//               }
+//               
+////               alChordsTextVerses.add(oChordsTextPairVerse);
+//            }
+//         }
          alChordsTextVerses.add(oChordsTextPairVerse);
       }
       
@@ -225,13 +246,9 @@ public class CSong
       
       String sChordsLine = "";
            
-      Matcher   mtcText,
-                mtcChords;
+      Matcher   mtcText;
            
-      final Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
-                    ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})"),
-//                    ptrChordEnd = Pattern.compile("[ A-H]"),
-                    ptrSylablesBG = Pattern.compile("[ÀÚÎÓÅÈÞßÜàúîóåèþÿ]"),
+      final Pattern ptrSylablesBG = Pattern.compile("[ÀÚÎÓÅÈÞßÜàúîóåèþÿ]"),
                     ptrSylablesRU = Pattern.compile("[ÀÚÎÓÅÈÞßÜÝÛàúîóåèþÿûý¸]");
            
            
@@ -273,11 +290,21 @@ public class CSong
          }
          else
          {
-                 
+            sTmp = paddedLeftString(((sChordsLine.length() < sTextLine.length() ?  sTextLine.length() - sChordsLine.length() : 0) + oChord.sName.length() + 1), oChord.sName);
+//            if(sChordsLine.length() < sTextLine.length())
+//               sTmp = paddedLeftString((sTextLine.length() - sChordsLine.length() + oChord.sName.length() + 1), oChord.sName);
+//            else
+//               sTmp = paddedLeftString(oChord.sName.length() + 1, oChord.sName);
+            sChordsLine += sTmp;
          }
       }
            
       return sChordsLine;
+   }
+   
+   private String paddedLeftString(int iPad, String s)
+   {
+      return String.format("%1$" +  iPad + "s", s);
    }
 
    private String getChordsLineStringEn(String sTextLine, CChordsLine oChordsLine)

@@ -43,6 +43,7 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.rtf.RTFEditorKit;
 
+import com.discworld.guitarsongeditor.dto.CChordsTextPair;
 import com.discworld.guitarsongeditor.dto.CChordsTextPairVerse;
 import com.discworld.guitarsongeditor.dto.CChordsVerse;
 import com.discworld.guitarsongeditor.dto.CSong;
@@ -59,6 +60,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import rtf.AdvancedRTFEditorKit;
 import java.awt.Font;
 
+//public class Preview extends JPanel implements ActionListener, ISetSong
 public class Preview extends JPanel implements ActionListener, ISetSong
 {
    /**
@@ -116,10 +118,10 @@ public class Preview extends JPanel implements ActionListener, ISetSong
       
 //      epSong.setText("test <b>TEST</b> <h1>HHHH</H1>");
       tpSong.setContentType("text/rtf");
-      tpSong.setText("{\\rtf1 \\fs36\\qc HelloWorld! \\par\\fs24\\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
+//      tpSong.setText("{\\rtf1 \\fs36\\qc HelloWorld! \\par\\fs24\\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
    }
 
-   @Override
+//   @Override
    public void setSong(CSong oSong)
    {
       ArrayList<CChordsTextPairVerse> alChordsTextVerses; 
@@ -127,7 +129,25 @@ public class Preview extends JPanel implements ActionListener, ISetSong
       
       alChordsTextVerses = oSong.getChordsTextVerses();
       
-      int a = 1;
+//      tpSong.setText("{\\rtf1 \\fs36\\qc HelloWorld! \\par\\fs24\\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");      
+//      tpSong.setText(oSong.sAuthor);
+//      tpSong.setText("{\\rtf1 \\fs36\\qc " + oSong.sAuthor + " - " + oSong.sTitle + "} ");
+      String sSong = "{\\rtf1 \\fs32\\qc\\b " + oSong.sAuthor + " - " + oSong.sTitle + "\\par\\fs28\\ql\\b0 "; 
+      
+      for(CChordsTextPairVerse oChordsTextPairVerse: alChordsTextVerses)
+      {
+         for(CChordsTextPair oChordsTextPair: oChordsTextPairVerse.alChordsTextPairs)
+         {
+            if(!oChordsTextPair.sChordsLine.isEmpty())
+               sSong += "\\par " + oChordsTextPair.sChordsLine;
+            sSong += "\\par " + oChordsTextPair.sTextLine;
+         }
+         sSong += "\\par ";
+      }
+      
+      sSong += "} ";
+      
+      tpSong.setText(sSong);
    }
    
    @Override
@@ -295,9 +315,11 @@ public class Preview extends JPanel implements ActionListener, ISetSong
          if(oFile == null)
             return;
          
-         final StringWriter out = new StringWriter();
+//         final StringWriter out = new StringWriter();
+         final ByteArrayOutputStream out = new ByteArrayOutputStream();
          Document doc = tpSong.getDocument();
-         AdvancedRTFEditorKit kit = new AdvancedRTFEditorKit();
+//         AdvancedRTFEditorKit kit = new AdvancedRTFEditorKit();
+         RTFEditorKit kit = new RTFEditorKit();
          kit.write(out, doc, doc.getStartPosition().getOffset(), doc.getLength());
          out.close();
 
@@ -327,6 +349,7 @@ public class Preview extends JPanel implements ActionListener, ISetSong
    {
       File oFile = null;
       JFileChooser oFileChooser = new JFileChooser();
+      oFileChooser.setSelectedFile(new File(oSong.sAuthor + " - " + oSong.sTitle + "." + sFileExtension));
       ExtensionFileFilter oExtensionFileFilter = new ExtensionFileFilter(sFileType, new String[] { sFileExtension });
       oFileChooser.setFileFilter(oExtensionFileFilter);
       oFileChooser.setMultiSelectionEnabled(false);

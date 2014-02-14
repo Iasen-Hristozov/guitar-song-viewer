@@ -321,25 +321,25 @@ public class SongEditor extends JFrame implements ActionListener
       
       getSongFromURL(txtURL.getText());
       
-      sSong = txtSong.getText();
-
-      // Convert string to CSong object
-      convertSongStringToObject();
+//      sSong = txtSong.getText();
+//
+//      // Convert string to CSong object
+//      convertSongStringToObject();
+//      
+//      xmlSong = oSong.generateXml();
+//      
+//      txtXml.setText(xmlSong);
+//      btnSave.setEnabled(true);
+//      btnPreview.setEnabled(true);
       
-      xmlSong = oSong.generateXml();
       
-      txtXml.setText(xmlSong);
-      btnSave.setEnabled(true);
-      btnPreview.setEnabled(true);
-      
-      
-      Preview oPreview = new Preview();
-      JFrame frame = new JFrame ("Preview");
-      frame.setDefaultCloseOperation (JFrame.HIDE_ON_CLOSE);
-      frame.getContentPane().add (new Preview());
-      frame.pack();
-      frame.setVisible (true);
-      oPreview.setSong(oSong);      
+//      Preview oPreview = new Preview();
+//      JFrame frame = new JFrame ("Preview");
+//      frame.setDefaultCloseOperation (JFrame.HIDE_ON_CLOSE);
+//      frame.getContentPane().add (new Preview());
+//      frame.pack();
+//      frame.setVisible (true);
+//      oPreview.setSong(oSong);      
       //===============================================================
       
    }
@@ -379,7 +379,7 @@ public class SongEditor extends JFrame implements ActionListener
          Preview oPreview = new Preview();
          JFrame frame = new JFrame ("Preview");
          frame.setDefaultCloseOperation (JFrame.HIDE_ON_CLOSE);
-         frame.getContentPane().add (new Preview());
+         frame.getContentPane().add (oPreview);
          frame.pack();
          frame.setVisible (true);
          oPreview.setSong(oSong);

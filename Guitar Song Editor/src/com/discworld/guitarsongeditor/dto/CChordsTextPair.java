@@ -16,10 +16,16 @@ public class CChordsTextPair
       this.sTextLine = sTextLine;
       this.sChordsLine = sChordsLine;
    }
+
+   public CChordsTextPair(String sTextLine)
+   {
+      this.sTextLine = sTextLine;
+      this.sChordsLine = "";
+   }
    
    @Override
    public String toString()
    {
-      return sChordsLine + "\n" + sTextLine; 
+      return (sChordsLine.isEmpty() ? "" : sChordsLine + "\n") + sTextLine; 
    }
 }
