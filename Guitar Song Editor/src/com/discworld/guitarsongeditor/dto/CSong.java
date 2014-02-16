@@ -1,11 +1,24 @@
 package com.discworld.guitarsongeditor.dto;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.plaf.SliderUI;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class CSong
 {
@@ -154,6 +167,62 @@ public class CSong
       return sSongXml;
    }
 
+   public void getFromXml(String xmlSong)
+   {
+      //Get the DOM Builder Factory
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+      try
+      {
+         //Get the DOM Builder
+         //Load and Parse the XML document
+         //document contains the complete XML as a Tree.
+         
+         DocumentBuilder builder = factory.newDocumentBuilder();
+         Document document = builder.parse(new ByteArrayInputStream(xmlSong.getBytes("UTF-8")));
+         //Iterating through the nodes and extracting the data.
+         Node root = document.getDocumentElement().getFirstChild();
+         if(root instanceof Element)
+         {
+            sTitle = root.getAttributes().getNamedItem("title").getNodeValue();
+            sAuthor = root.getAttributes().getNamedItem("author").getNodeValue();
+            switch(root.getAttributes().getNamedItem("language").getNodeValue())
+            {
+               case LANG_BG :
+                  iEnuLanguage = ENU_LNG_BG;
+               break;
+               
+               case LANG_RU:
+                  iEnuLanguage = ENU_LNG_RU;
+               break;
+               
+               case LANG_EN:
+               default:
+                  iEnuLanguage = ENU_LNG_EN;
+               break;            
+            }
+         }
+            
+//         for (int i = 0; i < root.getLength(); i++) 
+//         {
+//            //We have encountered an <employee> tag.
+//            Node node = root.item(i);
+//         }
+      } catch(ParserConfigurationException e1)
+      {
+         // TODO Auto-generated catch block
+         e1.printStackTrace();
+      } catch(SAXException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      } catch(IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      } 
+   }
+   
    public ArrayList<CChordsTextPairVerse> getChordsTextVerses()
    {
       String sChordsLine;
