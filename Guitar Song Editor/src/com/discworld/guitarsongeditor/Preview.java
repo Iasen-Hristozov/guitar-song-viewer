@@ -104,7 +104,7 @@ public class Preview extends JPanel implements ActionListener, ISetSong
       
 //      epSong = new JTextPane("text/html", "");
       tpSong = new JTextPane();
-      tpSong.setFont(new Font("Courier New", Font.PLAIN, 11));
+      tpSong.setFont(new Font("Courier New", Font.PLAIN, 14));
 //      kit1 = new AdvancedRTFEditorKit();      
 //      epSong.setEditorKit(kit1);
       
@@ -129,8 +129,6 @@ public class Preview extends JPanel implements ActionListener, ISetSong
       
       alChordsTextVerses = oSong.getChordsTextVerses();
       
-//      tpSong.setText("{\\rtf1 \\fs36\\qc HelloWorld! \\par\\fs24\\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");      
-//      tpSong.setText(oSong.sAuthor);
 //      tpSong.setText("{\\rtf1 \\fs36\\qc " + oSong.sAuthor + " - " + oSong.sTitle + "} ");
       String sSong = "{\\rtf1 \\fs32\\qc\\b " + oSong.sAuthor + " - " + oSong.sTitle + "\\par\\fs28\\ql\\b0 "; 
       

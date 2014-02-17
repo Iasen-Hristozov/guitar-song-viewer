@@ -3,6 +3,7 @@ package com.discworld.guitarsongeditor;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -68,8 +70,7 @@ public class SongEditor extends JFrame implements ActionListener
    private JTextArea txtSong,
                       txtXml;
    private JPanel pnlRawText, pnlXmlText, pnlBtn;
-   private JButton btnConvert, btnGenerate;
-   private Component rigidArea;
+   private JButton btnConvert;
    private Box verticalBox;
    private JTextField txtTitle;
    private JLabel lblTitle;
@@ -111,6 +112,9 @@ public class SongEditor extends JFrame implements ActionListener
    private JPanel pnlXmlButtons;
    private JButton btnSave;
    private JButton btnPreview;
+   private JPanel panel_4;
+   private JPanel panel_5;
+   private JPanel panel_6;
    
    /**
     * Launch the application.
@@ -161,11 +165,17 @@ public class SongEditor extends JFrame implements ActionListener
       pnlRawText.add(panel, BorderLayout.NORTH);
       panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
       
+      panel_4 = new JPanel();
+      panel.add(panel_4);
+      panel_4.setLayout(new BorderLayout(0, 0));
+      
       lblUrl = new JLabel("URL");
-      panel.add(lblUrl);
+      panel_4.add(lblUrl, BorderLayout.NORTH);
+      lblUrl.setAlignmentX(Component.CENTER_ALIGNMENT);
+      lblUrl.setLabelFor(txtURL);
       
       panel_3 = new JPanel();
-      panel.add(panel_3);
+      panel_4.add(panel_3, BorderLayout.SOUTH);
       panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
       
       txtURL = new JTextField();
@@ -177,19 +187,29 @@ public class SongEditor extends JFrame implements ActionListener
       btnGet.addActionListener(this);
       panel_3.add(btnGet);
       
+      panel_5 = new JPanel();
+      panel.add(panel_5);
+      panel_5.setLayout(new BorderLayout(0, 0));
+      
       lblTitle = new JLabel("Title");
+      panel_5.add(lblTitle, BorderLayout.WEST);
       lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
-      panel.add(lblTitle);
+      lblTitle.setLabelFor(txtTitle);
       
       txtTitle = new JTextField();
-      panel.add(txtTitle);
+      panel_5.add(txtTitle, BorderLayout.SOUTH);
       txtTitle.setColumns(20);
       
+      panel_6 = new JPanel();
+      panel.add(panel_6);
+      panel_6.setLayout(new BorderLayout(0, 0));
+      
       lblAuthor = new JLabel("Author");
-      panel.add(lblAuthor);
+      panel_6.add(lblAuthor, BorderLayout.WEST);
+      lblAuthor.setHorizontalAlignment(SwingConstants.LEFT);
       
       txtAuthor = new JTextField();
-      panel.add(txtAuthor);
+      panel_6.add(txtAuthor, BorderLayout.SOUTH);
       txtAuthor.setColumns(10);
       
       panel_2 = new JPanel();
@@ -272,13 +292,6 @@ public class SongEditor extends JFrame implements ActionListener
       verticalBox.add(btnConvert);
       btnConvert.setAlignmentX(Component.CENTER_ALIGNMENT);
       btnConvert.addActionListener(this);
-      
-      rigidArea = Box.createRigidArea(new Dimension(0, 5));
-      verticalBox.add(rigidArea);
-      btnGenerate = new JButton("<<");
-      verticalBox.add(btnGenerate);
-      btnGenerate.setAlignmentX(Component.CENTER_ALIGNMENT);
-      btnGenerate.addActionListener(this);
             
       txtXml = new JTextArea(5, 20);
 
@@ -300,14 +313,14 @@ public class SongEditor extends JFrame implements ActionListener
 //      btnSave = new JButton("Save");
       ImageIcon iiSave = new ImageIcon("/res/drawable/save.png");
       pnlXmlButtons.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-      btnSave = new JButton(new ImageIcon("D:\\Iasen\\!PROJECTS\\Android\\Guitar Song Editor\\res\\drawable\\save.png"));
+      btnSave = new JButton(new ImageIcon(SongEditor.class.getResource("/icons/save.png")));
       btnSave.setMargin(new Insets(0, 0, 0, 0));
       btnSave.setToolTipText("Save");
       btnSave.addActionListener(this);
       btnSave.setEnabled(false);
       pnlXmlButtons.add(btnSave);
       
-      btnPreview = new JButton(new ImageIcon("D:\\Iasen\\!PROJECTS\\Android\\Guitar Song Editor\\res\\drawable\\preview.png"));
+      btnPreview = new JButton(new ImageIcon(SongEditor.class.getResource("/icons/preview.png")));
       btnPreview.setEnabled(true);
       btnPreview.setToolTipText("Preview");
       btnPreview.addActionListener(this);
@@ -316,11 +329,11 @@ public class SongEditor extends JFrame implements ActionListener
       
       this.setSize(427, 370);
       this.setVisible(true);
-
       //===============================================================
       // For test purposes only. Remove it before release
       
       getSongFromURL(txtURL.getText());
+      
       
 //      sSong = txtSong.getText();
 //
@@ -363,10 +376,6 @@ public class SongEditor extends JFrame implements ActionListener
          btnSave.setEnabled(true);
          btnPreview.setEnabled(true);
       }
-      else if(oSource == btnGenerate)
-      {
-         
-      }
       else if(oSource == btnGet)
       {
          getSongFromURL(txtURL.getText());
@@ -379,11 +388,14 @@ public class SongEditor extends JFrame implements ActionListener
       {
          Preview oPreview = new Preview();
          JFrame frame = new JFrame ("Preview");
+//         JDialog frame = new JDialog(this, "Preview", true);
+//         frame.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
          frame.setDefaultCloseOperation (JFrame.HIDE_ON_CLOSE);
          frame.getContentPane().add (oPreview);
          frame.pack();
          frame.setVisible (true);
-         oSong.getFromXml(txtSong.getText());
+         
+         oSong = new CSong(txtXml.getText());
          oPreview.setSong(oSong);
       }
    }

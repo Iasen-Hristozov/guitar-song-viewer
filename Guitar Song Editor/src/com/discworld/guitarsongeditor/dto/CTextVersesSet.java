@@ -15,6 +15,11 @@ public class CTextVersesSet
       alTextVerses = new ArrayList<CTextVerse>();
    }
    
+   public void add(CTextVerse oTextVerse)
+   {
+      alTextVerses.add(oTextVerse);
+   }
+   
    @Override
    public String toString()
    {

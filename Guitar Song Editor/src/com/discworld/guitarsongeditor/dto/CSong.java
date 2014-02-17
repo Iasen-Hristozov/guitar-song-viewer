@@ -1,6 +1,8 @@
 package com.discworld.guitarsongeditor.dto;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
@@ -18,6 +20,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class CSong
@@ -96,6 +99,11 @@ public class CSong
    
    public CSong()
    {
+      init();
+   }
+   
+   private void init()
+   {
       sTitle = "";
       sAuthor = "";
       iEnuLanguage = 0;
@@ -167,8 +175,35 @@ public class CSong
       return sSongXml;
    }
 
-   public void getFromXml(String xmlSong)
+   public CSong(String xmlSong)
    {
+      Element  eChords,
+               eText;
+      
+      NodeList nlChordsVerses,
+               nlChordsLines,
+               nlChords,
+               nlTextVerses,
+               nlTextLines;
+      
+      Node  ndChordsVerse,
+            ndChordsLine,
+            ndChord,
+            ndTextVerse,
+            ndTextLine;
+      
+      CChordsVerse oChordsVerse;
+      
+      CChordsLine oChordsLine;
+      
+      CChord oChord;
+      
+      CTextVerse oTextVerse;
+      
+      CTextLine oTextLine;
+      
+      init();
+      
       //Get the DOM Builder Factory
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -179,44 +214,109 @@ public class CSong
          //document contains the complete XML as a Tree.
          
          DocumentBuilder builder = factory.newDocumentBuilder();
-         Document document = builder.parse(new ByteArrayInputStream(xmlSong.getBytes("UTF-8")));
+//         InputSource is = new InputSource(xmlSong);
+         InputSource is = new InputSource();
+         is.setCharacterStream(new StringReader(xmlSong));
+         
+         Document document = builder.parse(is);
          //Iterating through the nodes and extracting the data.
-         Node root = document.getDocumentElement().getFirstChild();
-         if(root instanceof Element)
+         Element eRoot = document.getDocumentElement();
+//         Node root = document.getDocumentElement().getFirstChild();
+         sTitle = eRoot.getAttributes().getNamedItem(ATR_TITLE).getNodeValue();
+         sAuthor = eRoot.getAttributes().getNamedItem(ATR_AUTHOR).getNodeValue();
+         switch(eRoot.getAttributes().getNamedItem(ATR_LANG).getNodeValue())
          {
-            sTitle = root.getAttributes().getNamedItem("title").getNodeValue();
-            sAuthor = root.getAttributes().getNamedItem("author").getNodeValue();
-            switch(root.getAttributes().getNamedItem("language").getNodeValue())
+            case LANG_BG :
+               iEnuLanguage = ENU_LNG_BG;
+            break;
+            
+            case LANG_RU:
+               iEnuLanguage = ENU_LNG_RU;
+            break;
+            
+            case LANG_EN:
+            default:
+               iEnuLanguage = ENU_LNG_EN;
+            break;            
+         }
+         
+//         NodeList nl = eRoot.getChildNodes();
+//       Node ndChords = nlChords.item(0); 
+
+         eChords = (Element)eRoot.getElementsByTagName(TAG_CHORDS).item(0);
+         
+         nlChordsVerses = eChords.getElementsByTagName(TAG_CHORDS_VERSE);
+         for(int i = 0; i < nlChordsVerses.getLength(); i++)
+         {
+            ndChordsVerse =  nlChordsVerses.item(i);
+            if(ndChordsVerse instanceof Element)
             {
-               case LANG_BG :
-                  iEnuLanguage = ENU_LNG_BG;
-               break;
+               oChordsVerse = new CChordsVerse();
+               oChordsVerse.sID = ndChordsVerse.getAttributes().getNamedItem(ATR_ID).getNodeValue();
+               nlChordsLines = ((Element) ndChordsVerse).getElementsByTagName(TAG_CHORDS_LINE);
+               for(int j = 0; j < nlChordsLines.getLength(); j++)
+               {
+                  ndChordsLine = nlChordsLines.item(j);
+                  if(ndChordsLine instanceof Element)
+                  {
+                     oChordsLine = new CChordsLine();
+                     
+                     nlChords = ((Element) ndChordsLine).getElementsByTagName(TAG_CHORD);
+                     for(int k = 0; k < nlChords.getLength(); k++)
+                     {
+                        ndChord = nlChords.item(k);
+                        if(ndChord instanceof Element)
+                        {
+                           oChord = new CChord(); 
+                           oChord.sName = ((Element) ndChord).getAttribute(ATR_NAME);
+                           oChord.iPosition = Integer.valueOf(((Element) ndChord).getAttribute(ATR_POS));
+                           oChordsLine.alChords.add(oChord);
+                        }
+                     }
+                     oChordsVerse.alChordsLines.add(oChordsLine);
+                  }
+               }
                
-               case LANG_RU:
-                  iEnuLanguage = ENU_LNG_RU;
-               break;
-               
-               case LANG_EN:
-               default:
-                  iEnuLanguage = ENU_LNG_EN;
-               break;            
+               alChords.add(oChordsVerse);
+               htChordsIdNdx.put(oChordsVerse.sID, alChords.size()-1);               
             }
          }
-            
-//         for (int i = 0; i < root.getLength(); i++) 
-//         {
-//            //We have encountered an <employee> tag.
-//            Node node = root.item(i);
-//         }
-      } catch(ParserConfigurationException e1)
-      {
-         // TODO Auto-generated catch block
-         e1.printStackTrace();
-      } catch(SAXException e)
+         
+         eText = (Element) eRoot.getElementsByTagName(TAG_TEXT).item(0);
+         nlTextVerses = eText.getElementsByTagName(TAG_TEXT_VERSE);
+         for(int i = 0; i < nlTextVerses.getLength(); i++)
+         {
+            ndTextVerse = nlTextVerses.item(i);
+            if(ndTextVerse instanceof Element)
+            {
+               oTextVerse = new CTextVerse();
+               oTextVerse.sChordsVerseID = ((Element) ndTextVerse).getAttribute(ATR_CHORDS_VERSE_ID);
+               nlTextLines = ((Element) ndTextVerse).getElementsByTagName(TAG_TEXT_LINE);
+               for(int j = 0; j < nlTextLines.getLength(); j++)
+               {
+                  ndTextLine = nlTextLines.item(j);
+                  if(ndTextLine instanceof Element)
+                  {
+                     oTextLine = new CTextLine(ndTextLine.getTextContent());
+                     oTextVerse.addTextLine(oTextLine);
+                  }
+               }
+               oText.alTextVerses.add(oTextVerse);
+            }
+         }
+
+      } 
+      catch(ParserConfigurationException e)
       {
          // TODO Auto-generated catch block
          e.printStackTrace();
-      } catch(IOException e)
+      } 
+      catch(SAXException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      } 
+      catch(IOException e)
       {
          // TODO Auto-generated catch block
          e.printStackTrace();
