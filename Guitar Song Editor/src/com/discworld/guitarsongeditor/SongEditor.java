@@ -75,7 +75,7 @@ public class SongEditor extends JFrame implements ActionListener
    private JTextField txtTitle;
    private JLabel lblTitle;
    private JPanel panel;
-   private JPanel panel_1;
+   private JPanel pnlSong;
    private JTextField txtAuthor;
    private JLabel lblAuthor;
    private String sSong,
@@ -103,8 +103,8 @@ public class SongEditor extends JFrame implements ActionListener
    
    private ArrayList<CChordsTextPair> alChordsTextPairs;
    private JComboBox cbxLanguage;
-   private JPanel panel_2;
-   private JLabel lblNewLabel;
+   private JPanel pnlLang;
+   private JLabel lblLang;
    private JPanel panel_3;
    private JTextField txtURL;
    private JButton btnGet;
@@ -112,9 +112,9 @@ public class SongEditor extends JFrame implements ActionListener
    private JPanel pnlXmlButtons;
    private JButton btnSave;
    private JButton btnPreview;
-   private JPanel panel_4;
-   private JPanel panel_5;
-   private JPanel panel_6;
+   private JPanel pnlURL;
+   private JPanel pnlTitle;
+   private JPanel pnlAuthor;
    
    /**
     * Launch the application.
@@ -165,17 +165,17 @@ public class SongEditor extends JFrame implements ActionListener
       pnlRawText.add(panel, BorderLayout.NORTH);
       panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
       
-      panel_4 = new JPanel();
-      panel.add(panel_4);
-      panel_4.setLayout(new BorderLayout(0, 0));
+      pnlURL = new JPanel();
+      panel.add(pnlURL);
+      pnlURL.setLayout(new BorderLayout(0, 0));
       
       lblUrl = new JLabel("URL");
-      panel_4.add(lblUrl, BorderLayout.NORTH);
+      pnlURL.add(lblUrl, BorderLayout.NORTH);
       lblUrl.setAlignmentX(Component.CENTER_ALIGNMENT);
       lblUrl.setLabelFor(txtURL);
       
       panel_3 = new JPanel();
-      panel_4.add(panel_3, BorderLayout.SOUTH);
+      pnlURL.add(panel_3, BorderLayout.SOUTH);
       panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
       
       txtURL = new JTextField();
@@ -187,51 +187,51 @@ public class SongEditor extends JFrame implements ActionListener
       btnGet.addActionListener(this);
       panel_3.add(btnGet);
       
-      panel_5 = new JPanel();
-      panel.add(panel_5);
-      panel_5.setLayout(new BorderLayout(0, 0));
+      pnlTitle = new JPanel();
+      panel.add(pnlTitle);
+      pnlTitle.setLayout(new BorderLayout(0, 0));
       
       lblTitle = new JLabel("Title");
-      panel_5.add(lblTitle, BorderLayout.WEST);
+      pnlTitle.add(lblTitle, BorderLayout.WEST);
       lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
       lblTitle.setLabelFor(txtTitle);
       
       txtTitle = new JTextField();
-      panel_5.add(txtTitle, BorderLayout.SOUTH);
+      pnlTitle.add(txtTitle, BorderLayout.SOUTH);
       txtTitle.setColumns(20);
       
-      panel_6 = new JPanel();
-      panel.add(panel_6);
-      panel_6.setLayout(new BorderLayout(0, 0));
+      pnlAuthor = new JPanel();
+      panel.add(pnlAuthor);
+      pnlAuthor.setLayout(new BorderLayout(0, 0));
       
       lblAuthor = new JLabel("Author");
-      panel_6.add(lblAuthor, BorderLayout.WEST);
+      pnlAuthor.add(lblAuthor, BorderLayout.WEST);
       lblAuthor.setHorizontalAlignment(SwingConstants.LEFT);
       
       txtAuthor = new JTextField();
-      panel_6.add(txtAuthor, BorderLayout.SOUTH);
+      pnlAuthor.add(txtAuthor, BorderLayout.SOUTH);
       txtAuthor.setColumns(10);
       
-      panel_2 = new JPanel();
-      panel_2.setAlignmentX(Component.LEFT_ALIGNMENT);
-      panel.add(panel_2);
-      panel_2.setLayout(new BorderLayout(0, 0));
+      pnlLang = new JPanel();
+      pnlLang.setAlignmentX(Component.LEFT_ALIGNMENT);
+      panel.add(pnlLang);
+      pnlLang.setLayout(new BorderLayout(0, 0));
       
-      lblNewLabel = new JLabel("Language  ");
-      lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-      panel_2.add(lblNewLabel, BorderLayout.WEST);
+      lblLang = new JLabel("Language  ");
+      lblLang.setHorizontalAlignment(SwingConstants.LEFT);
+      pnlLang.add(lblLang, BorderLayout.WEST);
       
       cbxLanguage = new JComboBox();
       cbxLanguage.setMaximumRowCount(3);
       cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
-      lblNewLabel.setLabelFor(cbxLanguage);
-      panel_2.add(cbxLanguage, BorderLayout.CENTER);
+      lblLang.setLabelFor(cbxLanguage);
+      pnlLang.add(cbxLanguage, BorderLayout.CENTER);
       
       container.add(pnlRawText);
             
-      panel_1 = new JPanel();
-      pnlRawText.add(panel_1, BorderLayout.CENTER);
-      panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
+      pnlSong = new JPanel();
+      pnlRawText.add(pnlSong, BorderLayout.CENTER);
+      pnlSong.setLayout(new BoxLayout(pnlSong, BoxLayout.Y_AXIS));
             
 //      container.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
             
@@ -277,7 +277,7 @@ public class SongEditor extends JFrame implements ActionListener
       JScrollPane scrSong = new JScrollPane(txtSong,
                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-      panel_1.add(scrSong);
+      pnlSong.add(scrSong);
       
       pnlBtn = new JPanel();
       pnlBtn.setBounds(10, 10, 10, 10);
