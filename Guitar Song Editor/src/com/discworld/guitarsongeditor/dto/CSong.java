@@ -1,5 +1,6 @@
 package com.discworld.guitarsongeditor.dto;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -15,6 +16,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
+
+import net.davidashen.text.Hyphenator;
+import net.davidashen.util.ErrorHandler;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -96,6 +100,11 @@ public class CSong
                            ENU_LNG_EN = 1,
                            ENU_LNG_BG = 2,
                            ENU_LNG_RU = 3;
+   
+   public final static int ENU_HPN_UKN = 0,
+                           ENU_HPN_LCL = 1,
+                           ENU_HPN_LCL_ITEXT = 2,
+                           ENU_HPN_INT_LRC_HPN = 3;   
    
    public CSong()
    {
@@ -413,15 +422,13 @@ public class CSong
           iCrdBgn = 0,
           iCrdEnd = 0;
       
-      String sChordsLine = "";
+      String sChordsLine = "",
+             sTmp;
            
       Matcher   mtcText;
            
       final Pattern ptrSylablesBG = Pattern.compile("[ÀÚÎÓÅÈÞßÜàúîóåèþÿ]"),
                     ptrSylablesRU = Pattern.compile("[ÀÚÎÓÅÈÞßÜÝÛàúîóåèþÿûý¸]");
-           
-           
-//           CChord oChord;
            
       switch(iEnuLanguage)
       {
@@ -435,7 +442,6 @@ public class CSong
          break;
       }
            
-      String sTmp;
 //      mtcChords = ptrChord.matcher(oChordsTextPair.sChordsLine);           
       for(CChord oChord: oChordsLine.alChords)
       {
@@ -448,7 +454,8 @@ public class CSong
                if(iSlbNdx == oChord.iPosition)
                {
                   iCrdBgn = mtcText.start();
-                  sTmp = String.format("%1$" +  (iCrdBgn - sChordsLine.length() + oChord.sName.length()) + "s", oChord.sName);
+                  sTmp = paddedLeftString((iCrdBgn - sChordsLine.length() + oChord.sName.length()), oChord.sName);
+//                  sTmp = String.format("%1$" +  (iCrdBgn - sChordsLine.length() + oChord.sName.length()) + "s", oChord.sName);
                   sChordsLine += sTmp;
                   iSlbNdx++;
                   break;
@@ -476,9 +483,181 @@ public class CSong
       return String.format("%1$" +  iPad + "s", s);
    }
 
+   static Hyphenator initHyphenator()
+   {
+      Hyphenator oHyphenator = new Hyphenator();
+      
+      oHyphenator.setErrorHandler(new ErrorHandler() 
+      {
+         public void debug(String guard,String s) 
+         {}
+         public void info(String s)
+         {
+            System.err.println(s);
+         }
+         public void warning(String s)
+         {
+            System.err.println("WARNING: "+s);
+         }
+         public void error(String s)
+         {
+            System.err.println("ERROR: "+s);
+         }
+         public void exception(String s, Exception e)
+         {
+            System.err.println("ERROR: "+s); e.printStackTrace(); 
+         }
+         public boolean isDebugged(String guard)
+         {
+            return false;
+         }
+      });
+      
+      try
+      {
+         
+         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyphen.tex")));
+//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-en-us.tex")));
+//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-en-gb.tex")));
+//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-bg.tex")));
+         
+      } 
+      catch(FileNotFoundException e)
+      {
+         e.printStackTrace();
+      } 
+      catch(IOException e)
+      {
+         e.printStackTrace();
+      }
+      
+      return oHyphenator;
+   }
+
    private String getChordsLineStringEn(String sTextLine, CChordsLine oChordsLine)
    {
-      // TODO Auto-generated method stub
+      String sChordsLine = "",
+             sTmp;
+      
+      CEnglishHyphenator oHyphenator = new CEnglishHyphenator(CEnglishHyphenator.ENU_HPN_INT_LRC_HPN);
+      
+      for(CChord oChord: oChordsLine.alChords)
+      {
+         if(oChord.iPosition >= 0)
+         {
+            
+         }
+         else
+         {
+            sTmp = paddedLeftString(((sChordsLine.length() < sTextLine.length() ?  sTextLine.length() - sChordsLine.length() : 0) + oChord.sName.length() + 1), oChord.sName);
+            sChordsLine += sTmp;
+         }
+      }      
+      
+      int      iSlbNdx = 0,
+               iCrdBgn = 0,
+               iCrdEnd = 0;
+      
+      String   tsSylables[];
+      
+      ArrayList<String> alSyllables = new ArrayList<>();
+      
+      Matcher   mtcText,
+                mtcChords;
+      
+      CChord    oChord;
+      
+      
+      mtcText = ptrEngWord1.matcher(oChordsTextPair.sTextLine);
+      
+      String hyphenated_word,
+             word;
+      
+      iCrdEnd = 0;
+      
+      while(mtcText.find(iCrdEnd))
+      {
+         iCrdBgn = mtcText.start();
+         if(iCrdBgn != iCrdEnd)
+         {
+            alSyllables.add(oChordsTextPair.sTextLine.substring(iCrdEnd, iCrdBgn));
+         }
+         iCrdEnd = mtcText.end();
+         
+         word = oChordsTextPair.sTextLine.substring(iCrdBgn, iCrdEnd);
+         
+         switch(iEnuHyphenator)
+         {
+            case ENU_HPN_UKN:
+            case ENU_HPN_LCL:
+            default:
+               hyphenated_word = oHyphenator.hyphenate(word);
+               tsSylables = hyphenated_word.split("­");
+            break;
+            
+            case ENU_HPN_INT_LRC_HPN:
+               hyphenated_word = sLyricHyphenatorRequest(word);
+               tsSylables = hyphenated_word.split("-");
+            break;
+         }
+         for(int i = 0; i < tsSylables.length; i++)
+         {
+            alSyllables.add(tsSylables[i]);
+         }
+         System.out.println(hyphenated_word); 
+      }
+      
+      int i = 0,
+          iPos = 0,
+          iLstPos = 0;
+      
+      String sSyllable;
+      iCrdEnd = 0;
+      
+      mtcChords = ptrChord.matcher(oChordsTextPair.sChordsLine);
+      while(mtcChords.find(iCrdEnd))
+      {
+         iCrdBgn = mtcChords.start();
+         iCrdEnd = mtcChords.end();
+         
+         oChord = new CChord(oChordsTextPair.sChordsLine.substring(iCrdBgn, iCrdEnd));
+         
+         if(iCrdBgn < oChordsTextPair.sTextLine.length())
+         {
+            for(i = iLstPos; i < alSyllables.size(); i++)
+            {
+               sSyllable = alSyllables.get(i);
+               if(sSyllable.matches("[\\W]"))
+                  continue;
+               else
+               {
+                  if(iPos >= iCrdBgn)
+                  {
+                     oChord.iPosition = iSlbNdx++;
+                     oChordsLine.addChord(oChord);
+                     iLstPos = i + 1;
+                     break;
+                  }
+                  iSlbNdx++;
+               }
+               iPos += sSyllable.length();
+            }
+         }
+         else
+         {
+            if(oChordsLine.alChords.isEmpty() || oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition >=0)
+               oChord.iPosition = -1;
+            else 
+               oChord.iPosition = oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition - 1;
+            oChordsLine.addChord(oChord);
+         }
+      }      
+      
+//      hyphenated_word = oHyphenator.hyphenate("they`re");
+//      System.out.println(hyphenated_word); 
+      
+      
+//      return oChordsLine;
       return null;
    }
 }
