@@ -6,6 +6,13 @@
 	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="lib" path="/Hyphenator Test/Hyphenator.jar" sourcepath="/Hyphenator Test"/>
 	<classpathentry kind="lib" path="D:/Iasen/!PROJECTS/Android/Guitar Song Editor/rtfkit_nosrc.jar"/>
-	<classpathentry kind="lib" path="D:/Iasen/!PROJECTS/Android/Guitar Song Editor/itextpdf-5.4.5.jar"/>
+	<classpathentry kind="lib" path="lib/autocomplete.jar"/>
+	<classpathentry kind="lib" path="lib/rsyntaxtextarea.jar"/>
+	<classpathentry kind="lib" path="lib/itext-hyph-xml-5.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/itextpdf-5.5.0.jar" sourcepath="lib/itextpdf-5.5.0-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/D:/Iasen/%21PROJECTS/Android/Guitar Song Editor/lib/itextpdf-5.5.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
