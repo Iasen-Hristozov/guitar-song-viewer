@@ -146,6 +146,7 @@ public class Preview extends JPanel implements ActionListener, ISetSong
       sSong += "} ";
       
       tpSong.setText(sSong);
+      tpSong.setCaretPosition(0);
    }
    
    @Override

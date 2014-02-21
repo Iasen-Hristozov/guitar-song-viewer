@@ -3,8 +3,6 @@ package com.discworld.guitarsongeditor;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,11 +10,9 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -25,11 +21,9 @@ import javax.swing.SwingUtilities;
 
 import java.awt.Component;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -43,9 +37,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.SwingConstants;
 
-import net.davidashen.text.Hyphenator;
-import net.davidashen.util.ErrorHandler;
-import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
 
@@ -57,7 +48,6 @@ import com.discworld.guitarsongeditor.dto.CEnglishHyphenator;
 import com.discworld.guitarsongeditor.dto.CSong;
 import com.discworld.guitarsongeditor.dto.CTextLine;
 import com.discworld.guitarsongeditor.dto.CTextVerse;
-import com.itextpdf.text.pdf.hyphenation.Hyphenation;
 
 import javax.swing.JComboBox;
 import java.awt.FlowLayout;
@@ -67,7 +57,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 
 import java.awt.Font;
-import javax.swing.Icon;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -75,6 +64,11 @@ import org.fife.ui.rtextarea.*;
 
 public class SongEditor extends JFrame implements ActionListener
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 7937537729513348982L;
+   
    private JTextArea txtSong;
 //                      txtXml;
    private JPanel pnlRawText, pnlXmlText, pnlBtn;
@@ -98,18 +92,18 @@ public class SongEditor extends JFrame implements ActionListener
                                 ptrSylablesRU = Pattern.compile("[ÀÚÎÓÅÈÞßÜÝÛàúîóåèþÿûý¸]"),
                                 ptrLngRU = Pattern.compile("[ÝÛûý]"),
                                 ptrLngEN = Pattern.compile("[AEIOUYaeiouy]"),
-                                ptrEngWord1 = Pattern.compile("\\w+");
+                                ptrEngWord = Pattern.compile("\\w+");
    
-   private 
-   final static int             ENU_HPN_UKN = 0,
-                                ENU_HPN_LCL = 1,
-                                ENU_HPN_INT_LRC_HPN = 2;
+   
+// private final static int             ENU_HPN_UKN = 0,
+//                                ENU_HPN_LCL = 1,
+//                                ENU_HPN_INT_LRC_HPN = 2;
 
    private final static String URL_FLS_VMS = "falshivim-vmeste.ru";        
-   private Matcher mtcText,
-                   mtcChords;
+   private Matcher mtcText;
    
    private ArrayList<CChordsTextPair> alChordsTextPairs;
+   @SuppressWarnings("rawtypes")
    private JComboBox cbxLanguage;
    private JPanel pnlLang;
    private JLabel lblLang;
@@ -159,6 +153,7 @@ public class SongEditor extends JFrame implements ActionListener
    /**
     * Initialize the contents of the frame.
     */
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    private void initialize()
    {
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -187,9 +182,12 @@ public class SongEditor extends JFrame implements ActionListener
       panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
       
       txtURL = new JTextField();
-      txtURL.setText("http://www.falshivim-vmeste.ru/songs/827193600.html");
+//      txtURL.setText("http://www.falshivim-vmeste.ru/songs/827193600.html");
+      txtURL.setText("http://www.falshivim-vmeste.ru/songs/104457600.html");
+      txtURL.setCaretPosition(0);
       panel_3.add(txtURL);
       txtURL.setColumns(10);
+      
       
       btnGet = new JButton("Get");
       btnGet.addActionListener(this);
@@ -231,7 +229,8 @@ public class SongEditor extends JFrame implements ActionListener
       
       cbxLanguage = new JComboBox();
       cbxLanguage.setMaximumRowCount(3);
-      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
+//      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
+      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "Áúëãàðñêè", "Ðóñêèé"}));
       lblLang.setLabelFor(cbxLanguage);
       pnlLang.add(cbxLanguage, BorderLayout.CENTER);
       
@@ -283,8 +282,8 @@ public class SongEditor extends JFrame implements ActionListener
       
       
       JScrollPane scrSong = new JScrollPane(txtSong,
-               JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-               JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                                            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
       pnlSong.add(scrSong);
       
       pnlBtn = new JPanel();
@@ -336,7 +335,7 @@ public class SongEditor extends JFrame implements ActionListener
       pnlXmlButtons.add(btnSave);
       
       btnPreview = new JButton(new ImageIcon(SongEditor.class.getResource("/icons/preview.png")));
-      btnPreview.setEnabled(true);
+      btnPreview.setEnabled(false);
       btnPreview.setToolTipText("Preview");
       btnPreview.addActionListener(this);
       btnPreview.setMargin(new Insets(0, 0, 0, 0));
@@ -348,14 +347,14 @@ public class SongEditor extends JFrame implements ActionListener
       // For test purposes only. Remove it before release
       
       getSongFromURL(txtURL.getText());
-      txtSong.setSelectionStart(0);
+      txtSong.setCaretPosition(0);
       
 //      com.itextpdf.text.pdf.hyphenation.Hyphenator h = new com.itextpdf.text.pdf.hyphenation.Hyphenator("en", "US", 2, 2);
 //      Hyphenation s = h.hyphenate("hyphenation");
-      com.itextpdf.text.pdf.hyphenation.Hyphenator h = new com.itextpdf.text.pdf.hyphenation.Hyphenator("de", "DE", 2, 2);
-      Hyphenation s = h.hyphenate("Leistungsscheinziffer");
-
-      System.out.println(s);
+//      com.itextpdf.text.pdf.hyphenation.Hyphenator h = new com.itextpdf.text.pdf.hyphenation.Hyphenator("de", "DE", 2, 2);
+//      Hyphenation s = h.hyphenate("Leistungsscheinziffer");
+//
+//      System.out.println(s);
       
       
       
@@ -398,6 +397,7 @@ public class SongEditor extends JFrame implements ActionListener
          
 //         txtXml.setText(xmlSong);
          txtXml.setText(xmlSong);
+         txtXml.setCaretPosition(0);
          btnSave.setEnabled(true);
          btnPreview.setEnabled(true);
       }
@@ -416,6 +416,7 @@ public class SongEditor extends JFrame implements ActionListener
 //         JDialog frame = new JDialog(this, "Preview", true);
 //         frame.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
          frame.setDefaultCloseOperation (JFrame.HIDE_ON_CLOSE);
+         oPreview.setEnabled(false);
          frame.getContentPane().add (oPreview);
          frame.pack();
          frame.setVisible (true);
@@ -484,15 +485,11 @@ public class SongEditor extends JFrame implements ActionListener
                    sAuthorBgn = " (",
                    sAuthorEnd = ")",
                    sTextBgn = "<pre class=textsong>",
-                   sTextEnd = "</pre>",
-                   sUrlParameters = "inputText=";
+                   sTextEnd = "</pre>";
   
-      String       sResponse, 
-                   sHyphenatedText = null;
+      String       sResponse;
   
       URL          oURL;
-  
-      DataOutputStream wr;
   
       BufferedReader   in; 
   
@@ -538,17 +535,20 @@ public class SongEditor extends JFrame implements ActionListener
             int iTtlEnd = sTtlNm.indexOf(sAuthorBgn);
             String sTitle = sTtlNm.substring(iTtlBgn + sTitleBgn.length(), iTtlEnd);
             txtTitle.setText(sTitle);
+            txtTitle.setCaretPosition(0);
             
             // Get and set song author
             int iAthEnd = sTtlNm.indexOf(sAuthorEnd);
             String sAuthor = sTtlNm.substring(iTtlEnd + sAuthorBgn.length(), iAthEnd);
             txtAuthor.setText(sAuthor);
+            txtTitle.setCaretPosition(0);
             
             // Get and set song text
             int iTxtBgn =  sResponse.indexOf(sTextBgn);
             int iTxtEnd =  sResponse.indexOf(sTextEnd);
             String sText = sResponse.substring(iTxtBgn + sTextBgn.length(), iTxtEnd);
             txtSong.setText(sText);
+            txtSong.setCaretPosition(0);
          }
       } 
       catch(MalformedURLException e)
@@ -639,7 +639,7 @@ public class SongEditor extends JFrame implements ActionListener
                {
                   try
                   {
-                     oChordsLine = getChordsLineEn(oChordsTextPair2, ENU_HPN_INT_LRC_HPN);
+                     oChordsLine = getChordsLineEn(oChordsTextPair2);
                   } 
                   catch(Exception e)
                   {
@@ -802,13 +802,19 @@ public class SongEditor extends JFrame implements ActionListener
       return oChordsLine;
    }   
 
-   static CChordsLine getChordsLineEn(CChordsTextPair oChordsTextPair, final int iEnuHyphenator) throws Exception 
+   static CChordsLine getChordsLineEn(CChordsTextPair oChordsTextPair) throws Exception 
    {
       int      iSlbNdx = 0,
-               iCrdBgn = 0,
-               iCrdEnd = 0;
+               iBgn = 0,
+               iEnd = 0,
+               i = 0,
+               iPos = 0,
+               iNxtSlb = 0;
       
-      String   tsSylables[];
+      String   sSyllable,
+               tsSylables[],
+               word,
+               hyphenated_word;
       
       ArrayList<String> alSyllables = new ArrayList<>();
       
@@ -822,23 +828,16 @@ public class SongEditor extends JFrame implements ActionListener
 //      Hyphenator oHyphenator = initHyphenator();
       CEnglishHyphenator oHyphenator = new CEnglishHyphenator(CEnglishHyphenator.ENU_HPN_INT_LRC_HPN);
       
-      mtcText = ptrEngWord1.matcher(oChordsTextPair.sTextLine);
+      mtcText = ptrEngWord.matcher(oChordsTextPair.sTextLine);
       
-      String hyphenated_word,
-             word;
-      
-      iCrdEnd = 0;
-      
-      while(mtcText.find(iCrdEnd))
+      while(mtcText.find(iEnd))
       {
-         iCrdBgn = mtcText.start();
-         if(iCrdBgn != iCrdEnd)
-         {
-            alSyllables.add(oChordsTextPair.sTextLine.substring(iCrdEnd, iCrdBgn));
-         }
-         iCrdEnd = mtcText.end();
+         iBgn = mtcText.start();
+         if(iBgn != iEnd)
+            alSyllables.add(oChordsTextPair.sTextLine.substring(iEnd, iBgn));
+         iEnd = mtcText.end();
          
-         word = oChordsTextPair.sTextLine.substring(iCrdBgn, iCrdEnd);
+         word = oChordsTextPair.sTextLine.substring(iBgn, iEnd);
 
          hyphenated_word = oHyphenator.hyphenate(word);
          tsSylables = hyphenated_word.split("-");
@@ -857,47 +856,46 @@ public class SongEditor extends JFrame implements ActionListener
 //               tsSylables = hyphenated_word.split("-");
 //            break;
 //         }
-         for(int i = 0; i < tsSylables.length; i++)
-         {
-            alSyllables.add(tsSylables[i]);
-         }
+         for(int j = 0; j < tsSylables.length; j++)
+            alSyllables.add(tsSylables[j]);
+
          System.out.println(hyphenated_word); 
       }
       
-      int i = 0,
-          iPos = 0,
-          iLstPos = 0;
-      
-      String sSyllable;
-      iCrdEnd = 0;
+      iEnd = 0;
       
       mtcChords = ptrChord.matcher(oChordsTextPair.sChordsLine);
-      while(mtcChords.find(iCrdEnd))
+      while(mtcChords.find(iEnd))
       {
-         iCrdBgn = mtcChords.start();
-         iCrdEnd = mtcChords.end();
+         iBgn = mtcChords.start();
+         iEnd = mtcChords.end();
          
-         oChord = new CChord(oChordsTextPair.sChordsLine.substring(iCrdBgn, iCrdEnd));
+         oChord = new CChord(oChordsTextPair.sChordsLine.substring(iBgn, iEnd));
          
-         if(iCrdBgn < oChordsTextPair.sTextLine.length())
+         if(iBgn < oChordsTextPair.sTextLine.length())
          {
-            for(i = iLstPos; i < alSyllables.size(); i++)
+            for(i = iNxtSlb; i < alSyllables.size(); i++)
+//            for(; i < alSyllables.size(); i++)
             {
                sSyllable = alSyllables.get(i);
                if(sSyllable.matches("[\\W]"))
+               {
+                  iPos += sSyllable.length();
                   continue;
+               }
                else
                {
-                  if(iPos >= iCrdBgn)
+                  if((iPos >= iBgn) || (iPos < iBgn  && iBgn < iPos + sSyllable.length()))
                   {
                      oChord.iPosition = iSlbNdx++;
                      oChordsLine.addChord(oChord);
-                     iLstPos = i + 1;
+                     iNxtSlb = i + 1;
+                     iPos += sSyllable.length();
                      break;
                   }
+                  iPos += sSyllable.length();
                   iSlbNdx++;
                }
-               iPos += sSyllable.length();
             }
          }
          else

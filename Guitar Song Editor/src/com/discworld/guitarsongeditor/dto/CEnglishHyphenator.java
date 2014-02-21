@@ -135,6 +135,8 @@ public class CEnglishHyphenator
             sResponse = sbResponse.toString();
             
             sHyphenatedText = sResponse.substring(sResponse.indexOf(sTextBgn) + sTextBgn.length(), sResponse.indexOf(sTextEnd));
+            if(sHyphenatedText.isEmpty())
+               sHyphenatedText = sText;
          }
       } 
       catch(MalformedURLException e)
@@ -178,49 +180,49 @@ public class CEnglishHyphenator
       return sHyphenatedWord;
    }
 
-   private static Hyphenator initHyphenator(String sHyphen)
-   {
-      Hyphenator oHyphenator = new Hyphenator();
-      
-      oHyphenator.setErrorHandler(new ErrorHandler() 
-      {
-         public void debug(String guard,String s) 
-         {}
-         public void info(String s)
-         {
-            System.err.println(s);
-         }
-         public void warning(String s)
-         {
-            System.err.println("WARNING: "+s);
-         }
-         public void error(String s)
-         {
-            System.err.println("ERROR: "+s);
-         }
-         public void exception(String s, Exception e)
-         {
-            System.err.println("ERROR: "+s); e.printStackTrace(); 
-         }
-         public boolean isDebugged(String guard)
-         {
-            return false;
-         }
-      });
-      
-      try
-      {
-         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/" + sHyphen)));
-      } 
-      catch(FileNotFoundException e)
-      {
-         e.printStackTrace();
-      } 
-      catch(IOException e)
-      {
-         e.printStackTrace();
-      }
-      
-      return oHyphenator;
-   }   
+//   private static Hyphenator initHyphenator(String sHyphen)
+//   {
+//      Hyphenator oHyphenator = new Hyphenator();
+//      
+//      oHyphenator.setErrorHandler(new ErrorHandler() 
+//      {
+//         public void debug(String guard,String s) 
+//         {}
+//         public void info(String s)
+//         {
+//            System.err.println(s);
+//         }
+//         public void warning(String s)
+//         {
+//            System.err.println("WARNING: "+s);
+//         }
+//         public void error(String s)
+//         {
+//            System.err.println("ERROR: "+s);
+//         }
+//         public void exception(String s, Exception e)
+//         {
+//            System.err.println("ERROR: "+s); e.printStackTrace(); 
+//         }
+//         public boolean isDebugged(String guard)
+//         {
+//            return false;
+//         }
+//      });
+//      
+//      try
+//      {
+//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/" + sHyphen)));
+//      } 
+//      catch(FileNotFoundException e)
+//      {
+//         e.printStackTrace();
+//      } 
+//      catch(IOException e)
+//      {
+//         e.printStackTrace();
+//      }
+//      
+//      return oHyphenator;
+//   }   
 }
