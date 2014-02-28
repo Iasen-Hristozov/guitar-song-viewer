@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +11,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import com.discworld.guitarsongviewer.dto.CChord;
-import com.discworld.guitarsongviewer.dto.CChordsLine;
-import com.discworld.guitarsongviewer.dto.CChordsVerse;
-import com.discworld.guitarsongviewer.dto.CSong;
-import com.discworld.guitarsongviewer.dto.CTextLine;
-import com.discworld.guitarsongviewer.dto.CTextVerse;
-
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;

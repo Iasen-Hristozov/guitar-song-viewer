@@ -2,8 +2,8 @@ package com.discworld.guitarsongviewer;
 
 import java.util.ArrayList;
 
-import com.discworld.guitarsongviewer.dto.CChordsVerse;
-import com.discworld.guitarsongviewer.dto.CTextVerse;
+import com.discworld.guitarsonglib.CChordsVerse;
+import com.discworld.guitarsonglib.CTextVerse;
 import com.discworld.guitarsongviewer.dto.IDataExchange;
 
 import android.app.Activity;

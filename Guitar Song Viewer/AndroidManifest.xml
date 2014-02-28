@@ -4,12 +4,12 @@
    android:versionCode="1"
    android:versionName="1.0.1.1" >
 
-    <uses-sdk
-        android:minSdkVersion="10" />
-
 <!--     <uses-sdk -->
-<!--         android:minSdkVersion="10" -->
-<!--         android:targetSdkVersion="17" /> -->
+<!--         android:minSdkVersion="12" /> -->
+
+    <uses-sdk
+        android:minSdkVersion="12"
+        android:targetSdkVersion="17" />
     
     
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />    

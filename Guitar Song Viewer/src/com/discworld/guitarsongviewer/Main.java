@@ -1,6 +1,8 @@
 package com.discworld.guitarsongviewer;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +31,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.discworld.guitarsonglib.CChord;
+import com.discworld.guitarsonglib.CChordsLine;
+import com.discworld.guitarsonglib.CChordsVerse;
+import com.discworld.guitarsonglib.CSong;
+import com.discworld.guitarsonglib.CTextLine;
+import com.discworld.guitarsonglib.CTextVerse;
+import com.discworld.guitarsonglib.CTextVersesSet;
 import com.discworld.guitarsongviewer.dto.*;
 
 public class Main extends FragmentActivity implements IDataExchange
@@ -106,7 +115,7 @@ public class Main extends FragmentActivity implements IDataExchange
       
       File fSongsDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/" + SONGS_FOLDER);
       fSongsDir.mkdirs();      
-
+      
       oSong = getSongFromResources();
 //      getSongFromFile("");
 
@@ -228,19 +237,29 @@ public class Main extends FragmentActivity implements IDataExchange
       return oSong;
    }   
    
-   private CSong getSongFromResources()
+   private CSong getSongFromResources() 
    {
-      XmlResourceParser xmlSong = getResources().getXml(R.xml.antonina_2);
-      CSong oSong = null;
+//      XmlResourceParser xmlSong = getResources().getXml(R.xml.antonina_2);
       try
       {
-         xmlSong.next();
-         oSong = getSong(xmlSong);
-      } catch(XmlPullParserException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      } catch(IOException e)
+         InputStream oInputStream = getResources().openRawResource(R.raw.antonina_2);
+   
+         byte[] b = new byte[oInputStream.available()];
+         oInputStream.read(b);
+         String xmlSomg = new String(b, "UTF-8");
+         
+         oSong = new CSong(xmlSomg);
+         
+//         CSong oSong = null;
+//         xmlSong.next();
+//         oSong = getSong(xmlSong);
+      } 
+//      catch(XmlPullParserException e)
+//      {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//      } 
+      catch(IOException e)
       {
          // TODO Auto-generated catch block
          e.printStackTrace();
@@ -255,17 +274,25 @@ public class Main extends FragmentActivity implements IDataExchange
    {
       try
       {
-         XmlPullParserFactory oXmlPullParserFactory = XmlPullParserFactory.newInstance();
+//         XmlPullParserFactory oXmlPullParserFactory = XmlPullParserFactory.newInstance();
+//         
+//         oXmlPullParserFactory.setValidating(false);
+//         XmlPullParser xmlSong = oXmlPullParserFactory.newPullParser();
+//
+//         xmlSong.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+//
+//         InputStream oInputStream = getApplicationContext().getAssets().open("antonina.xml");
+//         xmlSong.setInput(oInputStream, null);
+//         oSong = getSong(xmlSong);
          
-         oXmlPullParserFactory.setValidating(false);
-         XmlPullParser xmlSong = oXmlPullParserFactory.newPullParser();
-
-         xmlSong.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-
-         InputStream in = getApplicationContext().getAssets().open("antonina.xml");
-         xmlSong.setInput(in, null);
+//         InputStream oInputStream = getApplicationContext().getAssets().open(sFile);
+         InputStream oInputStream =  new BufferedInputStream(new FileInputStream(sFile));
          
-         oSong = getSong(xmlSong);
+         byte[] b = new byte[oInputStream.available()];
+         oInputStream.read(b);
+         String xmlSomg = new String(b, "UTF-8");
+         
+         oSong = new CSong(xmlSomg);
          
          setTitle();
          
@@ -277,11 +304,12 @@ public class Main extends FragmentActivity implements IDataExchange
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      catch(XmlPullParserException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      } catch(IOException e)
+//      catch(XmlPullParserException e)
+//      {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//      } 
+      catch(IOException e)
       {
          // TODO Auto-generated catch block
          e.printStackTrace();
