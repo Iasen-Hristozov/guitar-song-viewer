@@ -10,15 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -31,13 +26,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.discworld.guitarsonglib.CChord;
-import com.discworld.guitarsonglib.CChordsLine;
+import com.discworld.guitarsonglib.CChordsTextPairVerse;
 import com.discworld.guitarsonglib.CChordsVerse;
 import com.discworld.guitarsonglib.CSong;
-import com.discworld.guitarsonglib.CTextLine;
 import com.discworld.guitarsonglib.CTextVerse;
 import com.discworld.guitarsonglib.CTextVersesSet;
+import com.discworld.guitarsonglib.CVerse;
 import com.discworld.guitarsongviewer.dto.*;
 
 public class Main extends FragmentActivity implements IDataExchange
@@ -91,7 +85,9 @@ public class Main extends FragmentActivity implements IDataExchange
    
    private CSong oSong;
    
-   ArrayList<CTextVersesSet> alPages;
+//   ArrayList<CTextVersesSet> alPages;
+   ArrayList<CVerseSet> alPages;
+   ArrayList<CChordsTextPairVerseSet> alPages1;
 
    LayoutInflater inflater;   //Used to create individual pages
    
@@ -130,112 +126,112 @@ public class Main extends FragmentActivity implements IDataExchange
 //      startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
    }
 
-   private CSong getSong(XmlPullParser xmlSong)
-   {
-      CSong oSong = new CSong();
-      
-      CChordsVerse oChordsCouplet = new CChordsVerse();
-      CChordsLine oChordsLine = new CChordsLine();
-      CChord oChord;
-    
-      CTextLine oTextLine = new CTextLine(); 
-      CTextVerse oTextVerse = new CTextVerse();
-      
-      try
-      {
-//         xmlSong.nextTag();
+//   private CSong getSong(XmlPullParser xmlSong)
+//   {
+//      CSong oSong = new CSong();
+//      
+//      CChordsVerse oChordsCouplet = new CChordsVerse();
+//      CChordsLine oChordsLine = new CChordsLine();
+//      CChord oChord;
+//    
+//      CTextLine oTextLine = new CTextLine(); 
+//      CTextVerse oTextVerse = new CTextVerse();
+//      
+//      try
+//      {
+////         xmlSong.nextTag();
+////         xmlSong.next();
 //         xmlSong.next();
-         xmlSong.next();
-         xmlSong.require(XmlPullParser.START_TAG, null, TAG_SONG);
-         oSong.sTitle = xmlSong.getAttributeValue(null, ATR_TITLE);
-         oSong.sAuthor = xmlSong.getAttributeValue(null, ATR_AUTHOR);
-       
-         if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_ENGLISH))
-            oSong.iEnuLanguage = ENU_LNG_ENGLISH;
-         else if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_BULGARIAN))
-            oSong.iEnuLanguage = ENU_LNG_BULGARIAN;
-         else if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_RUSSIAN))
-            oSong.iEnuLanguage = ENU_LNG_RUSSIAN;
-         
-         while (xmlSong.nextTag() == XmlPullParser.START_TAG) 
-         {
-            xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS);
-            while (xmlSong.nextTag() == XmlPullParser.START_TAG) 
-            {
-               xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS_COUPLET);
-               oChordsCouplet = new CChordsVerse();
-               oChordsCouplet.sID = xmlSong.getAttributeValue(null, ATR_ID);
-               
-               while(xmlSong.nextTag() == XmlPullParser.START_TAG) 
-               {
-                  xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS_LINE);
-                  oChordsLine = new CChordsLine();
-
-                  int aa;
-                  while((aa = xmlSong.nextTag()) == XmlPullParser.START_TAG) 
-                  {
-                     xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORD);
-                     oChord = new CChord(xmlSong.getAttributeValue(null, ATR_CHORD_NAME));
-                     oChord.iPosition = Integer.valueOf(xmlSong.getAttributeValue(null, ATR_CHORD_POSITION));
-                     oChordsLine.addChord(oChord);
-//                     xmlSong.require(XmlPullParser.END_TAG, null, null);
-                     xmlSong.nextTag();
-                  }
-//                  String ss = xmlSong.nextText();
-//                  String[] sChords = ss.split(" ");
-//                  for(int i = 0; i < sChords.length; i++)
+//         xmlSong.require(XmlPullParser.START_TAG, null, TAG_SONG);
+//         oSong.sTitle = xmlSong.getAttributeValue(null, ATR_TITLE);
+//         oSong.sAuthor = xmlSong.getAttributeValue(null, ATR_AUTHOR);
+//       
+//         if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_ENGLISH))
+//            oSong.iEnuLanguage = ENU_LNG_ENGLISH;
+//         else if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_BULGARIAN))
+//            oSong.iEnuLanguage = ENU_LNG_BULGARIAN;
+//         else if(xmlSong.getAttributeValue(null, ATR_LANGUAGE).equalsIgnoreCase(LNG_RUSSIAN))
+//            oSong.iEnuLanguage = ENU_LNG_RUSSIAN;
+//         
+//         while (xmlSong.nextTag() == XmlPullParser.START_TAG) 
+//         {
+//            xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS);
+//            while (xmlSong.nextTag() == XmlPullParser.START_TAG) 
+//            {
+//               xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS_COUPLET);
+//               oChordsCouplet = new CChordsVerse();
+//               oChordsCouplet.sID = xmlSong.getAttributeValue(null, ATR_ID);
+//               
+//               while(xmlSong.nextTag() == XmlPullParser.START_TAG) 
+//               {
+//                  xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORDS_LINE);
+//                  oChordsLine = new CChordsLine();
+//
+//                  int aa;
+//                  while((aa = xmlSong.nextTag()) == XmlPullParser.START_TAG) 
 //                  {
-//                     oChord = new CChord(sChords[i]);
+//                     xmlSong.require(XmlPullParser.START_TAG, null, TAG_CHORD);
+//                     oChord = new CChord(xmlSong.getAttributeValue(null, ATR_CHORD_NAME));
+//                     oChord.iPosition = Integer.valueOf(xmlSong.getAttributeValue(null, ATR_CHORD_POSITION));
 //                     oChordsLine.addChord(oChord);
+////                     xmlSong.require(XmlPullParser.END_TAG, null, null);
+//                     xmlSong.nextTag();
 //                  }
-                  xmlSong.require(XmlPullParser.END_TAG, null, TAG_CHORDS_LINE);
-                  oChordsCouplet.alChordsLines.add(oChordsLine);
-               }
-               xmlSong.require(XmlPullParser.END_TAG, null, TAG_CHORDS_COUPLET);
-               oSong.alChords.add(oChordsCouplet);
-               
-            }
-            xmlSong.require(XmlPullParser.END_TAG, null, TAG_CHORDS);
-            xmlSong.nextTag();
-            xmlSong.require(XmlPullParser.START_TAG, null, TAG_TEXT);
-            while(xmlSong.nextTag() == XmlPullParser.START_TAG) 
-            {
-               xmlSong.require(XmlPullParser.START_TAG, null, TAG_TEXT_VERSE);
-               
-               oTextVerse = new CTextVerse();
-               oTextVerse.sChordsVerseID = xmlSong.getAttributeValue(null, ATR_ID_CHORD_COUPLET);
-               String sIsChorus = xmlSong.getAttributeValue(null, ATR_ID_IS_CHORUS);
-               if(sIsChorus == null)
-                  oTextVerse.bIsChorus = false;
-               else
-                  oTextVerse.bIsChorus = Integer.parseInt(sIsChorus) == 1;
-               
-               while(xmlSong.nextTag() == XmlPullParser.START_TAG)
-               {
-                  xmlSong.require(XmlPullParser.START_TAG, null, TAG_TEXT_LINE);
-                  oTextLine = new CTextLine();
-                  oTextLine.sTextLine = xmlSong.nextText();
-                  xmlSong.require(XmlPullParser.END_TAG, null, TAG_TEXT_LINE);
-                  oTextVerse.addTextLine(oTextLine);
-               }
-               xmlSong.require(XmlPullParser.END_TAG, null, TAG_TEXT_VERSE);
-               oSong.oText.alTextVerses.add(oTextVerse);
-            }
-            xmlSong.require(XmlPullParser.END_TAG, null, TAG_TEXT);
-         }
-         xmlSong.require(XmlPullParser.END_TAG, null, TAG_SONG);         
-      } 
-      catch(XmlPullParserException e)
-      {
-         e.printStackTrace();
-      } 
-      catch(IOException e)
-      {
-         e.printStackTrace();
-      }
-      
-      return oSong;
-   }   
+////                  String ss = xmlSong.nextText();
+////                  String[] sChords = ss.split(" ");
+////                  for(int i = 0; i < sChords.length; i++)
+////                  {
+////                     oChord = new CChord(sChords[i]);
+////                     oChordsLine.addChord(oChord);
+////                  }
+//                  xmlSong.require(XmlPullParser.END_TAG, null, TAG_CHORDS_LINE);
+//                  oChordsCouplet.alChordsLines.add(oChordsLine);
+//               }
+//               xmlSong.require(XmlPullParser.END_TAG, null, TAG_CHORDS_COUPLET);
+//               oSong.alChords.add(oChordsCouplet);
+//               
+//            }
+//            xmlSong.require(XmlPullParser.END_TAG, null, TAG_CHORDS);
+//            xmlSong.nextTag();
+//            xmlSong.require(XmlPullParser.START_TAG, null, TAG_TEXT);
+//            while(xmlSong.nextTag() == XmlPullParser.START_TAG) 
+//            {
+//               xmlSong.require(XmlPullParser.START_TAG, null, TAG_TEXT_VERSE);
+//               
+//               oTextVerse = new CTextVerse();
+//               oTextVerse.sChordsVerseID = xmlSong.getAttributeValue(null, ATR_ID_CHORD_COUPLET);
+//               String sIsChorus = xmlSong.getAttributeValue(null, ATR_ID_IS_CHORUS);
+//               if(sIsChorus == null)
+//                  oTextVerse.bIsChorus = false;
+//               else
+//                  oTextVerse.bIsChorus = Integer.parseInt(sIsChorus) == 1;
+//               
+//               while(xmlSong.nextTag() == XmlPullParser.START_TAG)
+//               {
+//                  xmlSong.require(XmlPullParser.START_TAG, null, TAG_TEXT_LINE);
+//                  oTextLine = new CTextLine();
+//                  oTextLine.sTextLine = xmlSong.nextText();
+//                  xmlSong.require(XmlPullParser.END_TAG, null, TAG_TEXT_LINE);
+//                  oTextVerse.addTextLine(oTextLine);
+//               }
+//               xmlSong.require(XmlPullParser.END_TAG, null, TAG_TEXT_VERSE);
+//               oSong.oText.alTextVerses.add(oTextVerse);
+//            }
+//            xmlSong.require(XmlPullParser.END_TAG, null, TAG_TEXT);
+//         }
+//         xmlSong.require(XmlPullParser.END_TAG, null, TAG_SONG);         
+//      } 
+//      catch(XmlPullParserException e)
+//      {
+//         e.printStackTrace();
+//      } 
+//      catch(IOException e)
+//      {
+//         e.printStackTrace();
+//      }
+//      
+//      return oSong;
+//   }   
    
    private CSong getSongFromResources() 
    {
@@ -434,35 +430,72 @@ public class Main extends FragmentActivity implements IDataExchange
    private void preparePages()
    {
       int iTextSize = 0,
-      iTextVerseNdx = 0;
+      iNdx = 0;
 
-      CTextVerse oTextVerse;
+//      CTextVerse oTextVerse;
       
-      CTextVersesSet oPage = new CTextVersesSet();
+//      CTextVersesSet oPage = new CTextVersesSet();
+      CVerseSet oPage = new CVerseSet();
    
-      alPages = new ArrayList<CTextVersesSet>();
-      for(iTextVerseNdx = 0; iTextVerseNdx < oSong.oText.alTextVerses.size(); iTextVerseNdx++)
+//      alPages = new ArrayList<CTextVersesSet>();
+      alPages = new ArrayList<CVerseSet>();
+      
+//      for(iNdx = 0; iNdx < oSong.oText.alTextVerses.size(); iNdx++)
+//      {
+//         oTextVerse = oSong.oText.alTextVerses.get(iNdx);
+//         if(iTextSize != 0)
+//            iTextSize++;
+//         iTextSize += oTextVerse.alTextLines.size();
+//         if(iTextSize > iLinesNbr)
+//         {
+//            alPages.add(oPage);
+//         
+////            oPage = new CTextVersesSet();
+//            oPage = new CVerseSet();
+//         
+//           iTextSize = 0;
+//           iNdx--;
+//         }
+//         else
+//         {
+////            oPage.alTextVerses.add(oTextVerse);
+//            oPage.add(oTextVerse);
+//         }
+//      }
+      
+//      CChordsTextPairVerse oChordsTextPairVerse;
+      
+//      ArrayList<CChordsTextPairVerse> alChordsTextPairVerses = oSong.getChordsTextVerses();
+//      ArrayList<? extends CVerse> alVerses = oSong.getChordsTextVerses();
+      ArrayList<? extends CVerse> alVerses = oSong.oText.alTextVerses;
+      CVerse oVerse;
+      
+      for(iNdx = 0; iNdx < alVerses.size(); iNdx++)
       {
-         oTextVerse = oSong.oText.alTextVerses.get(iTextVerseNdx);
+//         oChordsTextPairVerse = alChordsTextPairVerses.get(iNdx);
+         oVerse = alVerses.get(iNdx);
          if(iTextSize != 0)
             iTextSize++;
-         iTextSize += oTextVerse.alTextLines.size();
+         iTextSize += oVerse.size();
          if(iTextSize > iLinesNbr)
          {
             alPages.add(oPage);
          
-            oPage = new CTextVersesSet();
+//            oPage = new CTextVersesSet();
+            oPage = new CVerseSet();
          
            iTextSize = 0;
-           iTextVerseNdx--;
+           iNdx--;
          }
          else
          {
-            oPage.alTextVerses.add(oTextVerse);
+//            oPage.alTextVerses.add(oTextVerse);
+            oPage.add(oVerse);
          }
-      }
+      }      
    
-      if(oPage.alTextVerses.size() != 0)
+//      if(oPage.alTextVerses.size() != 0)
+      if(oPage.size() != 0)         
       {
          alPages.add(oPage);
       }      
@@ -477,7 +510,10 @@ public class Main extends FragmentActivity implements IDataExchange
    @Override
    public ArrayList<CTextVerse> getPage(int iNdx)
    {
-      return alPages.get(iNdx).alTextVerses;
+//      return alPages.get(iNdx).alTextVerses;
+//      ArrayList<CTextVerse> alPage = (ArrayList<CTextVerse>) alPages.get(iNdx).getAll(); 
+//      return ArrayList(CTextVerse) alPages.get(iNdx);
+      return null;
    }
    
    private void updateFromPreferences()
@@ -533,5 +569,18 @@ public class Main extends FragmentActivity implements IDataExchange
             return oChordsVerse;
       
       return null;
+   }
+
+   @Override
+   public ArrayList<CChordsTextPairVerse> getPage1(int iNdx)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public CVerseSet getPage2(int iNdx)
+   {
+      return alPages.get(iNdx);
    }
 }
