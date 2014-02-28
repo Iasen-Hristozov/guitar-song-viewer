@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Name: com/discworld/guitarsonglib
+Specification-Title: Guitar Song Classes
+Specification-Version: 1.0.2
+Specification-Vendor: Discworld
+Implementation-Title: com.discworld.guitarsonglib
+Implementation-Version: 2
+Implementation-Vendor: Discworld

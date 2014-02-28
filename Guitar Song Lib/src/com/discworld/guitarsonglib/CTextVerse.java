@@ -2,7 +2,7 @@ package com.discworld.guitarsonglib;
 
 import java.util.ArrayList;
 
-public class CTextVerse
+public class CTextVerse extends CVerse
 {
    public boolean bIsChorus;
    public String sChordsVerseID;
@@ -38,5 +38,11 @@ public class CTextVerse
          sTextVerse += (sTextVerse.equals("") ? "" : "\n") + oTextLine.toString();
       }
       return sTextVerse;
+   }
+
+   @Override
+   public int size()
+   {
+      return alTextLines.size();
    }
 }

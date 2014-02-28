@@ -2,7 +2,7 @@ package com.discworld.guitarsonglib;
 
 import java.util.ArrayList;
 
-public class CChordsTextPairVerse
+public class CChordsTextPairVerse extends CVerse
 {
    public ArrayList<CChordsTextPair> alChordsTextPairs;
    
@@ -34,5 +34,17 @@ public class CChordsTextPairVerse
          s += oChordsTextPair.toString() + "\n";
       s += "\n";
       return s;
+   }
+
+
+   @Override
+   public int size()
+   {
+      int iLines = 0;
+      
+      for(CChordsTextPair oChordsTextPair: alChordsTextPairs)
+         iLines += oChordsTextPair.getLines();
+      
+      return iLines;
    }
 }
