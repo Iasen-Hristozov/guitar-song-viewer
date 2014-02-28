@@ -14,5 +14,8 @@
 			<attribute name="javadoc_location" value="jar:file:/D:/Iasen/%21PROJECTS/Android/Guitar Song Editor/lib/itextpdf-5.5.0-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/EnglishHyphenator/src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/EnglishHyphenator"/>
+	<classpathentry kind="lib" path="lib/guitarlib.jar" sourcepath="/Guitar Song Lib/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

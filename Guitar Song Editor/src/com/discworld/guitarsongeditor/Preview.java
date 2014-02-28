@@ -43,10 +43,9 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.rtf.RTFEditorKit;
 
-import com.discworld.guitarsongeditor.dto.CChordsTextPair;
-import com.discworld.guitarsongeditor.dto.CChordsTextPairVerse;
-import com.discworld.guitarsongeditor.dto.CChordsVerse;
-import com.discworld.guitarsongeditor.dto.CSong;
+import com.discworld.guitarsonglib.CChordsTextPair;
+import com.discworld.guitarsonglib.CChordsTextPairVerse;
+import com.discworld.guitarsonglib.CSong;
 import com.itextpdf.awt.DefaultFontMapper;
 import com.itextpdf.awt.DefaultFontMapper.BaseFontParameters;
 import com.itextpdf.awt.geom.AffineTransform;

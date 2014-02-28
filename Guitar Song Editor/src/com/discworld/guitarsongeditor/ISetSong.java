@@ -1,6 +1,6 @@
 package com.discworld.guitarsongeditor;
 
-import com.discworld.guitarsongeditor.dto.CSong;
+import com.discworld.guitarsonglib.CSong;
 
 public interface ISetSong
 {

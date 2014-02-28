@@ -40,14 +40,14 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
 
-import com.discworld.guitarsongeditor.dto.CChord;
-import com.discworld.guitarsongeditor.dto.CChordsLine;
-import com.discworld.guitarsongeditor.dto.CChordsTextPair;
-import com.discworld.guitarsongeditor.dto.CChordsVerse;
-import com.discworld.guitarsongeditor.dto.CEnglishHyphenator;
-import com.discworld.guitarsongeditor.dto.CSong;
-import com.discworld.guitarsongeditor.dto.CTextLine;
-import com.discworld.guitarsongeditor.dto.CTextVerse;
+import com.discworld.englishhyphenator.CEnglishHyphenator;
+import com.discworld.guitarsonglib.CChord;
+import com.discworld.guitarsonglib.CChordsLine;
+import com.discworld.guitarsonglib.CChordsTextPair;
+import com.discworld.guitarsonglib.CChordsVerse;
+import com.discworld.guitarsonglib.CSong;
+import com.discworld.guitarsonglib.CTextLine;
+import com.discworld.guitarsonglib.CTextVerse;
 
 import javax.swing.JComboBox;
 import java.awt.FlowLayout;
@@ -182,8 +182,8 @@ public class SongEditor extends JFrame implements ActionListener
       panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
       
       txtURL = new JTextField();
-//      txtURL.setText("http://www.falshivim-vmeste.ru/songs/827193600.html");
-      txtURL.setText("http://www.falshivim-vmeste.ru/songs/104457600.html");
+      txtURL.setText("http://www.falshivim-vmeste.ru/songs/827193600.html");
+//      txtURL.setText("http://www.falshivim-vmeste.ru/songs/104457600.html");
       txtURL.setCaretPosition(0);
       panel_3.add(txtURL);
       txtURL.setColumns(10);
@@ -407,6 +407,7 @@ public class SongEditor extends JFrame implements ActionListener
       }
       else if(oSource == btnSave)
       {
+         xmlSong = txtXml.getText();
          saveSongXml(xmlSong);
       }
       else if(oSource == btnPreview)
