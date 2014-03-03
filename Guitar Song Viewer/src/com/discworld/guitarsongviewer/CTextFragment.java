@@ -1,10 +1,7 @@
 package com.discworld.guitarsongviewer;
 
-import java.util.ArrayList;
-
 import com.discworld.guitarsonglib.CChordsVerse;
 import com.discworld.guitarsonglib.CTextVerse;
-import com.discworld.guitarsonglib.CVerse;
 import com.discworld.guitarsongviewer.dto.CVerseSet;
 import com.discworld.guitarsongviewer.dto.IDataExchange;
 
@@ -16,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -31,8 +26,6 @@ public class CTextFragment extends Fragment
    private int iLinesNbr,   
                iNdx,
                iEnuDisplayChords;
-   
-   private ArrayList<CTextVerse> alText;
    
    private CVerseSet oVerseSet; 
    
@@ -87,8 +80,7 @@ public class CTextFragment extends Fragment
               iLinesNbr = iHeight / iLinesHeght;
               oDataExchange.setLinesNbr(iLinesNbr);
               
-//              alText = oDataExchange.getPage(iNdx);
-              oVerseSet = oDataExchange.getPage2(iNdx);
+              oVerseSet = oDataExchange.getPage(iNdx);
               
               setLyrics();
            }
@@ -96,8 +88,7 @@ public class CTextFragment extends Fragment
       }
       else
       {
-//         alText = oDataExchange.getPage(iNdx);
-         oVerseSet = oDataExchange.getPage2(iNdx);
+         oVerseSet = oDataExchange.getPage(iNdx);
          
          tvText.setTextSize(iTextSize);
 
@@ -113,30 +104,23 @@ public class CTextFragment extends Fragment
       tvText.setText(null);
       tvChords.setText(null);
       
-      CTextVerse oTextVerse;
-      for(int i = 0; i < oVerseSet.size(); i++)
+      if(iEnuDisplayChords == Main.ENU_DISPLAY_CHORDS_ABOVE)
+         tvText.append(oVerseSet.toString());
+      else
       {
-         oTextVerse = (CTextVerse) oVerseSet.get(i);
-         tvText.append(oTextVerse.toString() + "\n\n");
-         
-         if(iEnuDisplayChords == Main.ENU_DISPLAY_CHORDS_RELATED && !oTextVerse.sChordsVerseID.isEmpty())
+         CTextVerse oTextVerse;
+         for(int i = 0; i < oVerseSet.size(); i++)
          {
-            oChordsVerse = oDataExchange.getChordsVerse(oTextVerse.sChordsVerseID);
-            tvChords.append(oChordsVerse.toString() + "\n\n");
+            oTextVerse = (CTextVerse) oVerseSet.get(i);
+            tvText.append(oTextVerse.toString() + "\n\n");
+            
+            if(iEnuDisplayChords == Main.ENU_DISPLAY_CHORDS_RELATED && !oTextVerse.sChordsVerseID.isEmpty())
+            {
+               oChordsVerse = oDataExchange.getChordsVerse(oTextVerse.sChordsVerseID);
+               tvChords.append(oChordsVerse.toString() + "\n\n");
+            }
          }
       }
-      
-      
-//      for(CTextVerse oTextVerse : alText)
-//      {
-//         tvText.append(oTextVerse.toString() + "\n\n");
-//         
-//         if(iEnuDisplayChords == Main.ENU_DISPLAY_CHORDS_RELATED)
-//         {
-//            oChordsVerse = oDataExchange.getChordsVerse(oTextVerse.sChordsVerseID);
-//            tvChords.append(oChordsVerse.toString() + "\n\n");
-//         }
-//      }      
    }
    
    @Override

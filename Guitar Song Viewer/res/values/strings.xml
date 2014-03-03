@@ -8,4 +8,6 @@
    <string name="abt_app_rls_dt_tm">Software release date</string>
    <string name="smp_abt_vrs">1.0.1</string>
    <string name="smp_abt_rls_date">19.01.2013</string>
+   <string name="smp_text">Test</string>
+   <string name="smp_chords">Chords</string>
 </resources>

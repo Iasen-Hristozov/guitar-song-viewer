@@ -1,70 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <song title = "Антонина" author = "ДДТ" language = "ru">
    <chords>
-      <chords-verse id = "0">
+      <chords-verse id = "1">
          <chords-line>
-            <chord name = "Em" pos = "2" />
-            <chord name = "C" pos = "6" />
+            <chord name = "Em" pos = "3" />
+            <chord name = "C" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "Am" pos = "2" />
-            <chord name = "H7" pos = "6" />
+            <chord name = "Am" pos = "3" />
+            <chord name = "H7" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "Em" pos = "2" />
-            <chord name = "C" pos = "6" />
+            <chord name = "Em" pos = "3" />
+            <chord name = "C" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "D" pos = "2" />
-            <chord name = "G" pos = "6" />
+            <chord name = "D" pos = "3" />
+            <chord name = "G" pos = "7" />
          </chords-line>
       </chords-verse>
 
-      <chords-verse id = "1">
+      <chords-verse id = "2">
          <chords-line>
-            <chord name = "C" pos = "2" />
-            <chord name = "D" pos = "6" />
+            <chord name = "C" pos = "3" />
+            <chord name = "D" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "G" pos = "2" />
-            <chord name = "C" pos = "6" />
+            <chord name = "G" pos = "3" />
+            <chord name = "C" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "Am" pos = "2" />
-            <chord name = "H" pos = "6" />
+            <chord name = "Am" pos = "3" />
+            <chord name = "H" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "Em" pos = "2" />
-            <chord name = "E7" pos = "6" />
+            <chord name = "Em" pos = "3" />
+            <chord name = "E7" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "C" pos = "2" />
-            <chord name = "D" pos = "6" />
+            <chord name = "C" pos = "3" />
+            <chord name = "D" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "G" pos = "2" />
-            <chord name = "C" pos = "6" />
+            <chord name = "G" pos = "3" />
+            <chord name = "C" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "Am" pos = "2" />
-            <chord name = "H" pos = "6" />
+            <chord name = "Am" pos = "3" />
+            <chord name = "H" pos = "7" />
          </chords-line>
          <chords-line>
-            <chord name = "Em" pos = "2" />
+            <chord name = "Em" pos = "3" />
          </chords-line>
       </chords-verse>
 
    </chords>
 
    <text>
-      <text-verse id-chords-verse = "0">
+      <text-verse id-chords-verse = "1">
          <text-line>Антонина обернулась,</text-line>
          <text-line>Убежала, улетела,</text-line>
          <text-line>На мгновенье распахнулось</text-line>
          <text-line>Небо и сгорело тело</text-line>
       </text-verse>
 
-      <text-verse id-chords-verse = "1">
+      <text-verse id-chords-verse = "2">
          <text-line>Антонина, Антонина,</text-line>
          <text-line>Ночь кряхтит как злая мина</text-line>
          <text-line>Наступила, оглянулась</text-line>

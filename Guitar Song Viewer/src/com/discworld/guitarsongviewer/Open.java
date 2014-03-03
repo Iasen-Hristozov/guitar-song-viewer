@@ -11,6 +11,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import com.discworld.guitarsonglib.CSong;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -100,10 +102,10 @@ public class Open extends ListActivity
              if(eventType == XmlPullParser.START_TAG) 
              { 
                 String strNode = xmlSong.getName();
-                if(strNode.equals(Main.TAG_SONG))
+                if(strNode.equals(CSong.TAG_SONG))
                 {
-                   String sTitle = xmlSong.getAttributeValue(null, Main.ATR_TITLE);
-                   String sAuthor = xmlSong.getAttributeValue(null, Main.ATR_AUTHOR);
+                   String sTitle = xmlSong.getAttributeValue(null, CSong.ATR_TITLE);
+                   String sAuthor = xmlSong.getAttributeValue(null, CSong.ATR_AUTHOR);
                    
                    sFullTitle = !sAuthor.isEmpty() ? sAuthor + " - " + sTitle : sTitle; 
                    

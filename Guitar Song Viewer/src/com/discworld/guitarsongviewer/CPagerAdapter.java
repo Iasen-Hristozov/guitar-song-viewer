@@ -6,11 +6,10 @@ package com.discworld.guitarsongviewer;
 
 import java.util.List;
 
-import android.app.FragmentTransaction;
+//import android.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
 
 /**
 * The <code>PagerAdapter</code> serves the fragments when paging.
