@@ -7,8 +7,6 @@ import javax.print.attribute.standard.Sides;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JEditorPane;
 import javax.swing.JTextPane;
 
 import java.awt.Color;
@@ -24,23 +22,16 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.StyledDocument;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.rtf.RTFEditorKit;
 
 import com.discworld.guitarsonglib.CChordsTextPair;
@@ -48,8 +39,6 @@ import com.discworld.guitarsonglib.CChordsTextPairVerse;
 import com.discworld.guitarsonglib.CSong;
 import com.itextpdf.awt.DefaultFontMapper;
 import com.itextpdf.awt.DefaultFontMapper.BaseFontParameters;
-import com.itextpdf.awt.geom.AffineTransform;
-import com.itextpdf.awt.geom.Rectangle;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.BaseFont;
@@ -253,6 +242,7 @@ public class Preview extends JPanel implements ActionListener, ISetSong
          oDefaultFontMapper.putName("Courier New", oBaseFontParameters );      
          
 
+         @SuppressWarnings("deprecation")
          Graphics2D oGraphics2D = oPdfContentByte.createGraphics(PageSize.A4.getWidth(), PageSize.A4.getHeight(), oDefaultFontMapper, true, .95f);
 
          java.awt.geom.AffineTransform oAffineTransform = new java.awt.geom.AffineTransform();

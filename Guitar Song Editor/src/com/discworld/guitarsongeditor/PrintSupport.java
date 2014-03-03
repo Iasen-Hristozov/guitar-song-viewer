@@ -10,8 +10,6 @@ import java.awt.print.PrinterJob;
 
 import javax.swing.RepaintManager;
 
-import com.itextpdf.text.PageSize;
-
 public class PrintSupport implements Printable
 {
 

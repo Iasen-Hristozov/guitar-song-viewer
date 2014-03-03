@@ -87,7 +87,6 @@ public class SongEditor extends JFrame implements ActionListener
    
    private final static Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
                                 ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})"),
-//                                ptrChordEnd = Pattern.compile("[ A-H]"),
                                 ptrSylablesBG = Pattern.compile("[ÀÚÎÓÅÈÞßÜàúîóåèþÿ]"),
                                 ptrSylablesRU = Pattern.compile("[ÀÚÎÓÅÈÞßÜÝÛàúîóåèþÿûý¸]"),
                                 ptrLngRU = Pattern.compile("[ÝÛûý]"),
@@ -95,9 +94,6 @@ public class SongEditor extends JFrame implements ActionListener
                                 ptrEngWord = Pattern.compile("\\w+");
    
    
-// private final static int             ENU_HPN_UKN = 0,
-//                                ENU_HPN_LCL = 1,
-//                                ENU_HPN_INT_LRC_HPN = 2;
 
    private final static String URL_FLS_VMS = "falshivim-vmeste.ru";        
    private Matcher mtcText;
@@ -133,7 +129,8 @@ public class SongEditor extends JFrame implements ActionListener
                new SongEditor();
 //               SongEditor window = new SongEditor();
 //               window.frame.setVisible(true);
-            } catch(Exception e)
+            } 
+            catch(Exception e)
             {
                e.printStackTrace();
             }
@@ -587,7 +584,6 @@ public class SongEditor extends JFrame implements ActionListener
       // Add chords and text verses to song
       for(String sVerse: alVerses)
       {
-//         ArrayList<String> alVerseLines = getLinesFromVerse(sVerse);
          String tsVerseLines[] = getLinesFromVerse(sVerse);
 
          // Remove leading spaces from the verse
@@ -672,7 +668,7 @@ public class SongEditor extends JFrame implements ActionListener
          // If exists chords verse assign ID and add to the song. 
          if(oChordsVerse != null)
          {
-            oChordsVerse.sID = String.valueOf(oSong.alChords.size());
+            oChordsVerse.sID = String.valueOf(oSong.alChords.size() + 1);
             oSong.alChords.add(oChordsVerse);
             
             oSong.htChordsIdNdx.put(oChordsVerse.sID, oSong.alChords.size()-1);
@@ -745,7 +741,7 @@ public class SongEditor extends JFrame implements ActionListener
 
    CChordsLine getChordsLineCyr(CChordsTextPair oChordsTextPair)
    {
-      int iSlbNdx = 0,
+      int iSlbNdx = 1,
           iCrdBgn = 0,
           iCrdEnd = 0;
       
@@ -805,7 +801,7 @@ public class SongEditor extends JFrame implements ActionListener
 
    static CChordsLine getChordsLineEn(CChordsTextPair oChordsTextPair) throws Exception 
    {
-      int      iSlbNdx = 0,
+      int      iSlbNdx = 1,
                iBgn = 0,
                iEnd = 0,
                i = 0,
@@ -843,20 +839,6 @@ public class SongEditor extends JFrame implements ActionListener
          hyphenated_word = oHyphenator.hyphenate(word);
          tsSylables = hyphenated_word.split("-");
          
-//         switch(iEnuHyphenator)
-//         {
-//            case ENU_HPN_UKN:
-//            case ENU_HPN_LCL:
-//            default:
-//               hyphenated_word = oHyphenator.hyphenate(word);
-//               tsSylables = hyphenated_word.split("­");
-//            break;
-//            
-//            case ENU_HPN_INT_LRC_HPN:
-//               hyphenated_word = sLyricHyphenatorRequest(word);
-//               tsSylables = hyphenated_word.split("-");
-//            break;
-//         }
          for(int j = 0; j < tsSylables.length; j++)
             alSyllables.add(tsSylables[j]);
 
@@ -876,7 +858,6 @@ public class SongEditor extends JFrame implements ActionListener
          if(iBgn < oChordsTextPair.sTextLine.length())
          {
             for(i = iNxtSlb; i < alSyllables.size(); i++)
-//            for(; i < alSyllables.size(); i++)
             {
                sSyllable = alSyllables.get(i);
                if(sSyllable.matches("[\\W]"))
@@ -915,170 +896,4 @@ public class SongEditor extends JFrame implements ActionListener
       
       return oChordsLine;
    }   
-   
-//   static Hyphenator initHyphenator()
-//   {
-//      Hyphenator oHyphenator = new Hyphenator();
-//      
-//      oHyphenator.setErrorHandler(new ErrorHandler() 
-//      {
-//         public void debug(String guard,String s) 
-//         {}
-//         public void info(String s)
-//         {
-//            System.err.println(s);
-//         }
-//         public void warning(String s)
-//         {
-//            System.err.println("WARNING: "+s);
-//         }
-//         public void error(String s)
-//         {
-//            System.err.println("ERROR: "+s);
-//         }
-//         public void exception(String s, Exception e)
-//         {
-//            System.err.println("ERROR: "+s); e.printStackTrace(); 
-//         }
-//         public boolean isDebugged(String guard)
-//         {
-//            return false;
-//         }
-//      });
-//      
-//      try
-//      {
-//         
-//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyphen.tex")));
-////         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-en-us.tex")));
-////         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-en-gb.tex")));
-////         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/hyph-bg.tex")));
-//         
-//      } 
-//      catch(FileNotFoundException e)
-//      {
-//         e.printStackTrace();
-//      } 
-//      catch(IOException e)
-//      {
-//         e.printStackTrace();
-//      }
-//      
-//      return oHyphenator;
-//   }
-//   
-//   static Hyphenator initHyphenator(String sHyphen)
-//   {
-//      Hyphenator oHyphenator = new Hyphenator();
-//      
-//      oHyphenator.setErrorHandler(new ErrorHandler() 
-//      {
-//         public void debug(String guard,String s) 
-//         {}
-//         public void info(String s)
-//         {
-//            System.err.println(s);
-//         }
-//         public void warning(String s)
-//         {
-//            System.err.println("WARNING: "+s);
-//         }
-//         public void error(String s)
-//         {
-//            System.err.println("ERROR: "+s);
-//         }
-//         public void exception(String s, Exception e)
-//         {
-//            System.err.println("ERROR: "+s); e.printStackTrace(); 
-//         }
-//         public boolean isDebugged(String guard)
-//         {
-//            return false;
-//         }
-//      });
-//      
-//      try
-//      {
-//         oHyphenator.loadTable(new java.io.BufferedInputStream(new java.io.FileInputStream("etc/hyphen/" + sHyphen)));
-//      } 
-//      catch(FileNotFoundException e)
-//      {
-//         e.printStackTrace();
-//      } 
-//      catch(IOException e)
-//      {
-//         e.printStackTrace();
-//      }
-//      
-//      return oHyphenator;
-//   }   
-//   
-//   static String sLyricHyphenatorRequest(String sText)
-//   {
-//      final String sURL = "http://www.juiciobrennan.com/syllables/",      
-//                   USER_AGENT = "Mozilla/5.0",
-//                   sTextBgn = "name=\"inputText\">",
-//                   sTextEnd = "</textarea>",
-//                   sUrlParameters = "inputText=";
-//      
-//      String       sResponse, 
-//                   sHyphenatedText = null;
-//      
-//      URL          oURL;
-//      
-//      DataOutputStream wr;
-//      
-//      BufferedReader   in; 
-//      
-//      HttpURLConnection oHTTPConn;
-//      
-//      try
-//      {
-//         oURL = new URL(sURL);
-//         oHTTPConn = (HttpURLConnection) oURL.openConnection();
-//         
-//         //add reuqest header
-//         oHTTPConn.setRequestMethod("POST");
-//         oHTTPConn.setRequestProperty("User-Agent", USER_AGENT);
-//         oHTTPConn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-//         
-//         // Send post request
-//         oHTTPConn.setDoOutput(true);
-//         wr = new DataOutputStream(oHTTPConn.getOutputStream());
-//         wr.writeBytes(sUrlParameters + sText);
-//         wr.flush();
-//         wr.close();
-//    
-//         if(oHTTPConn.getResponseCode() == 200)
-//         {
-//            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream()));
-//            
-//            String inputLine;
-//            StringBuffer sbResponse = new StringBuffer();
-//        
-//            while ((inputLine = in.readLine()) != null) 
-//               sbResponse.append(inputLine);
-//            in.close();
-//            
-//            sResponse = sbResponse.toString();
-//            
-//            sHyphenatedText = sResponse.substring(sResponse.indexOf(sTextBgn) + sTextBgn.length(), sResponse.indexOf(sTextEnd));
-//         }
-//      } 
-//      catch(MalformedURLException e)
-//      {
-//         e.printStackTrace();
-//      } catch(ProtocolException e)
-//      {
-//         // TODO Auto-generated catch block
-//         e.printStackTrace();
-//      } catch(IOException e)
-//      {
-//         // TODO Auto-generated catch block
-//         e.printStackTrace();
-//      }
-//      
-//      return sHyphenatedText;
-//   }
-
 }
