@@ -29,13 +29,14 @@ public class CSong
 //   public ArrayList<CTextVerse> alText;
    public CTextVersesSet oText;
    
-   public Hashtable<String, CChordsVerse> htChords;
+//   public Hashtable<String, CChordsVerse> htChords;
    public Hashtable<String, Integer> htChordsIdNdx;
    
+   public final static String TAG_SONG = "song",
+                              ATR_AUTHOR = "author",
+                              ATR_TITLE = "title";
+   
    private final static String XML_ID = "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
-                               TAG_SONG = "song",
-                               ATR_AUTHOR = "author",
-                               ATR_TITLE = "title",
                                ATR_LANG = "language",
                                TAG_CHORDS = "chords",
                                TAG_CHORDS_VERSE = "chords-verse",
@@ -408,7 +409,7 @@ public class CSong
       
       return alChordsTextVerses;
    }
-
+   
    private String getChordsLineString(String sTextLine, CChordsLine oChordsLine)
    {
       String sChordsLine;
@@ -421,7 +422,7 @@ public class CSong
 
    private String getChordsLineStringCyr(String sTextLine, CChordsLine oChordsLine)
    {
-      int iSlbNdx = 0,
+      int iSlbNdx = 1,
           iBgn = 0,
           iEnd = 0;
       
@@ -481,14 +482,9 @@ public class CSong
       return sChordsLine;
    }
    
-   private String paddedLeftString(int iPad, String s)
-   {
-      return String.format("%1$" +  iPad + "s", s);
-   }
-
    private String getChordsLineStringEn(String sTextLine, CChordsLine oChordsLine)
    {
-      int      iSlbNdx = 0,
+      int      iSlbNdx = 1,
                iBgn = 0,
                iEnd = 0,
                i = 0,
@@ -571,4 +567,10 @@ public class CSong
 
       return sChordsLine;
    }
+
+   private String paddedLeftString(int iPad, String s)
+   {
+      return String.format("%1$" +  iPad + "s", s);
+   }
+
 }

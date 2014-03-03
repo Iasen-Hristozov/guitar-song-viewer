@@ -4,22 +4,18 @@ import java.util.ArrayList;
 
 public class CTextVerse extends CVerse
 {
-   public boolean bIsChorus;
    public String sChordsVerseID;
    public ArrayList<CTextLine> alTextLines;
    
    public CTextVerse()
    {
-      bIsChorus = false;
       sChordsVerseID = "";
       alTextLines = new ArrayList<CTextLine>();
    }
    
    public CTextVerse(String sChordsCoupletID,
-                     ArrayList<CTextLine> alTextLines,
-                     boolean bIsChorus)
+                     ArrayList<CTextLine> alTextLines)
    {
-      this.bIsChorus = bIsChorus;
       this.sChordsVerseID = sChordsCoupletID;
       this.alTextLines = alTextLines;
    }
