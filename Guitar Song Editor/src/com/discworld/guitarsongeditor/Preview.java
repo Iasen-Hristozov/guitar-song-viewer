@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -120,8 +121,16 @@ public class Preview extends JPanel implements ActionListener, ISetSong
 //      tpSong.setText("{\\rtf1 \\fs36\\qc " + oSong.sAuthor + " - " + oSong.sTitle + "} ");
       String sSong = "{\\rtf1 \\fs32\\qc\\b " + oSong.sAuthor + " - " + oSong.sTitle + "\\par\\fs28\\ql\\b0 "; 
       
+      int iLnsNbr = 0;
+      
       for(CChordsTextPairVerse oChordsTextPairVerse: alChordsTextVerses)
       {
+         iLnsNbr += oChordsTextPairVerse.size() + 1;
+         if(iLnsNbr > 38)
+         {
+            sSong += (char)12;
+            iLnsNbr = 0;
+         }
          for(CChordsTextPair oChordsTextPair: oChordsTextPairVerse.alChordsTextPairs)
          {
             if(!oChordsTextPair.sChordsLine.isEmpty())
@@ -129,11 +138,19 @@ public class Preview extends JPanel implements ActionListener, ISetSong
             sSong += "\\par " + oChordsTextPair.sTextLine;
          }
          sSong += "\\par ";
+//         sSong += "\\pard \\insrsid \\page \\par ";
+//         sSong += (char)12;
+         
       }
       
       sSong += "} ";
       
       tpSong.setText(sSong);
+      
+//      tpSong.setText("{\\rtf1 \\fs36 \\b \\qc Здравей - свят \\par Hello - World! \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
+//      tpSong.setText("{\\rtf1 \\fs36 \\b \\qc Здравей - свят \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
+//      tpSong.setText("{\\rtf1 \\fs36 {\\b Здравей - свят} \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
+      
       tpSong.setCaretPosition(0);
    }
    
@@ -240,8 +257,11 @@ public class Preview extends JPanel implements ActionListener, ISetSong
          BaseFontParameters oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\cour.ttf");
          oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
          oDefaultFontMapper.putName("Courier New", oBaseFontParameters );      
-         
 
+         oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\courbd.ttf");
+         oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
+         oDefaultFontMapper.putName("Courier New Bold", oBaseFontParameters );      
+         
          @SuppressWarnings("deprecation")
          Graphics2D oGraphics2D = oPdfContentByte.createGraphics(PageSize.A4.getWidth(), PageSize.A4.getHeight(), oDefaultFontMapper, true, .95f);
 
@@ -303,11 +323,11 @@ public class Preview extends JPanel implements ActionListener, ISetSong
          if(oFile == null)
             return;
          
-//         final StringWriter out = new StringWriter();
-         final ByteArrayOutputStream out = new ByteArrayOutputStream();
+         final StringWriter out = new StringWriter();
+//         final ByteArrayOutputStream out = new ByteArrayOutputStream();
          Document doc = tpSong.getDocument();
-//         AdvancedRTFEditorKit kit = new AdvancedRTFEditorKit();
-         RTFEditorKit kit = new RTFEditorKit();
+         AdvancedRTFEditorKit kit = new AdvancedRTFEditorKit();
+//         RTFEditorKit kit = new RTFEditorKit();
          kit.write(out, doc, doc.getStartPosition().getOffset(), doc.getLength());
          out.close();
 
