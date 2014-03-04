@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
+import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -42,12 +43,12 @@ import com.itextpdf.awt.DefaultFontMapper;
 import com.itextpdf.awt.DefaultFontMapper.BaseFontParameters;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import rtf.AdvancedRTFEditorKit;
-import java.awt.Font;
 
 //public class Preview extends JPanel implements ActionListener, ISetSong
 public class Preview extends JPanel implements ActionListener, ISetSong
@@ -246,43 +247,59 @@ public class Preview extends JPanel implements ActionListener, ISetSong
 //         oDocument.setPageSize(new com.itextpdf.text.Rectangle(iPageWidth, iPageHeight));
          oDocument.setPageSize(PageSize.A4);
          oDocument.open();
-         PdfContentByte oPdfContentByte = oPdfWriter.getDirectContent();
-
-         oPdfContentByte.saveState();
-         oPdfContentByte.concatCTM(1, 0, 0, 1, 0, 0);
-
+//         PdfContentByte oPdfContentByte = oPdfWriter.getDirectContent();
+//
+//         oPdfContentByte.saveState();
+//         oPdfContentByte.concatCTM(1, 0, 0, 1, 0, 0);
+//
          DefaultFontMapper oDefaultFontMapper = new DefaultFontMapper();
          oDefaultFontMapper.insertDirectory("c:\\windows\\fonts");
 
          BaseFontParameters oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\cour.ttf");
          oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
          oDefaultFontMapper.putName("Courier New", oBaseFontParameters );      
-
+//
          oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\courbd.ttf");
          oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
          oDefaultFontMapper.putName("Courier New Bold", oBaseFontParameters );      
+//         
+//         @SuppressWarnings("deprecation")
+//         Graphics2D oGraphics2D = oPdfContentByte.createGraphics(PageSize.A4.getWidth(), PageSize.A4.getHeight(), oDefaultFontMapper, true, .95f);
+//
+//         java.awt.geom.AffineTransform oAffineTransform = new java.awt.geom.AffineTransform();
+//         oAffineTransform.translate(convertToPixels(20), convertToPixels(20));
+//         oAffineTransform.scale(pixelToPoint, pixelToPoint);
+//
+//         oGraphics2D.transform(oAffineTransform);
+//
+//         oGraphics2D.setColor(Color.WHITE);
+//         oGraphics2D.fill(tpSong.getBounds());
+//
+//         java.awt.Rectangle oRectangle = getVisibleEditorRect(tpSong);
+//         tpSong.getUI().getRootView(tpSong).paint(oGraphics2D, oRectangle);
          
-         @SuppressWarnings("deprecation")
-         Graphics2D oGraphics2D = oPdfContentByte.createGraphics(PageSize.A4.getWidth(), PageSize.A4.getHeight(), oDefaultFontMapper, true, .95f);
-
-         java.awt.geom.AffineTransform oAffineTransform = new java.awt.geom.AffineTransform();
-         oAffineTransform.translate(convertToPixels(20), convertToPixels(20));
-         oAffineTransform.scale(pixelToPoint, pixelToPoint);
-
-         oGraphics2D.transform(oAffineTransform);
-
-         oGraphics2D.setColor(Color.WHITE);
-         oGraphics2D.fill(tpSong.getBounds());
-
-         java.awt.Rectangle oRectangle = getVisibleEditorRect(tpSong);
-         tpSong.getUI().getRootView(tpSong).paint(oGraphics2D, oRectangle);
+//         BaseFont bf = BaseFont.createFont( "c:/windows/fonts/arialbd.ttf", "Cp1251", BaseFont.EMBEDDED);
+         BaseFont bf = BaseFont.createFont( "c:/windows/fonts/arialbd.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+         Paragraph preface = new Paragraph();
+//         com.itextpdf.text.Font catFont = new com.itextpdf.text.Font("Courier New Bold", Font.BOLD, 18);
+//         com.itextpdf.text.Font catFont = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.COURIER, 18, com.itextpdf.text.Font.BOLD);
+         com.itextpdf.text.Font catFont = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.COURIER, 18, com.itextpdf.text.Font.BOLD);
+//         Paragraph p = new Paragraph("юбрнп - оеяем", catFont);
+         Paragraph p = new Paragraph("юбрнп - оеяем", new com.itextpdf.text.Font(bf, 18));
+         p.setAlignment(Paragraph.ALIGN_CENTER);
+         preface.add(p);
+         oDocument.add(preface);
+         
+         oDocument.newPage();
+         
+         oDocument.add(preface);
 
 //         g2.setColor(Color.BLACK);
 //         g2.setColor(Color.WHITE);
 //         g2.draw(epSong.getBounds());
 
-         oGraphics2D.dispose();
-         oPdfContentByte.restoreState();
+//         oGraphics2D.dispose();
+//         oPdfContentByte.restoreState();
          oDocument.close();
          oFileOutputStream.flush();
          oFileOutputStream.close();         
