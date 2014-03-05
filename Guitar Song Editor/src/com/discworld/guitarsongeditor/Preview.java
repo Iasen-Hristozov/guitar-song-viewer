@@ -4,16 +4,15 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.Sides;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
-import java.awt.Font;
-import java.awt.Color;
+//import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Toolkit;
 
@@ -23,7 +22,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,29 +32,27 @@ import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.rtf.RTFEditorKit;
 
 import com.discworld.guitarsonglib.CChordsTextPair;
 import com.discworld.guitarsonglib.CChordsTextPairVerse;
 import com.discworld.guitarsonglib.CSong;
-import com.itextpdf.awt.DefaultFontMapper;
-import com.itextpdf.awt.DefaultFontMapper.BaseFontParameters;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import rtf.AdvancedRTFEditorKit;
 
 //public class Preview extends JPanel implements ActionListener, ISetSong
-public class Preview extends JPanel implements ActionListener, ISetSong
+public class Preview extends JPanel implements ActionListener
 {
    /**
     * 
     */
-   private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = -5389035716855314628L;
+   
    int inch = Toolkit.getDefaultToolkit().getScreenResolution();
    private JButton   btnXptRTF,
                      btnXptPDF,
@@ -66,7 +62,7 @@ public class Preview extends JPanel implements ActionListener, ISetSong
    
    private CSong oSong;
    
-   AdvancedRTFEditorKit kit1;
+//   AdvancedRTFEditorKit kit1;
    public Preview() 
    {
       setLayout(new BorderLayout(0, 0));
@@ -75,15 +71,24 @@ public class Preview extends JPanel implements ActionListener, ISetSong
       add(pnlButtons, BorderLayout.NORTH);
       pnlButtons.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
       
-      btnXptRTF = new JButton("RTF");
+//      btnXptRTF = new JButton("RTF");
+      btnXptRTF = new JButton(new ImageIcon(SongEditor.class.getResource("/icons/rtf-32.png")));
+      btnXptRTF.setMargin(new Insets(0, 0, 0, 0));
+      btnXptRTF.setToolTipText("Export to RTF");
       btnXptRTF.addActionListener(this);
       pnlButtons.add(btnXptRTF);
       
-      btnXptPDF = new JButton("PDF");
+//      btnXptPDF = new JButton("PDF");
+      btnXptPDF = new JButton(new ImageIcon(SongEditor.class.getResource("/icons/pdf-32.png")));
+      btnXptPDF.setMargin(new Insets(0, 0, 0, 0));
+      btnXptPDF.setToolTipText("Export to PDF");
       btnXptPDF.addActionListener(this);
       pnlButtons.add(btnXptPDF);
       
-      btnPrint = new JButton("Print");
+//      btnPrint = new JButton("Print");
+      btnPrint = new JButton(new ImageIcon(SongEditor.class.getResource("/icons/prn-32.png")));
+      btnPrint.setMargin(new Insets(0, 0, 0, 0));
+      btnPrint.setToolTipText("Print");
       btnPrint.addActionListener(this);
       pnlButtons.add(btnPrint);
       
@@ -94,16 +99,16 @@ public class Preview extends JPanel implements ActionListener, ISetSong
       
 //      epSong = new JTextPane("text/html", "");
       tpSong = new JTextPane();
-      tpSong.setFont(new Font("Courier New", Font.PLAIN, 14));
-//      kit1 = new AdvancedRTFEditorKit();      
+      tpSong.setEditable(false);
+      tpSong.setFont(new java.awt.Font("Courier New", java.awt.Font.PLAIN, 14));
 //      epSong.setEditorKit(kit1);
       
 //      epSong = new JEditorPane();
       JScrollPane scrollPane = new JScrollPane(tpSong);
       scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
       scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-      scrollPane.setPreferredSize(new Dimension(250, 145));
-      scrollPane.setMinimumSize(new Dimension(10, 10));
+      scrollPane.setPreferredSize(new Dimension(640, 480));
+      scrollPane.setMinimumSize(new Dimension(250, 145));
       pnlSong.add(scrollPane);
       
 //      epSong.setText("test <b>TEST</b> <h1>HHHH</H1>");
@@ -242,7 +247,8 @@ public class Preview extends JPanel implements ActionListener, ISetSong
 
          com.itextpdf.text.Document oDocument = new com.itextpdf.text.Document();
          FileOutputStream oFileOutputStream = new FileOutputStream(oFile);
-         PdfWriter oPdfWriter = PdfWriter.getInstance(oDocument, oFileOutputStream);
+//         PdfWriter oPdfWriter = PdfWriter.getInstance(oDocument, oFileOutputStream);
+         PdfWriter.getInstance(oDocument, oFileOutputStream);
 
 //         oDocument.setPageSize(new com.itextpdf.text.Rectangle(iPageWidth, iPageHeight));
          oDocument.setPageSize(PageSize.A4);
@@ -252,16 +258,16 @@ public class Preview extends JPanel implements ActionListener, ISetSong
 //         oPdfContentByte.saveState();
 //         oPdfContentByte.concatCTM(1, 0, 0, 1, 0, 0);
 //
-         DefaultFontMapper oDefaultFontMapper = new DefaultFontMapper();
-         oDefaultFontMapper.insertDirectory("c:\\windows\\fonts");
-
-         BaseFontParameters oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\cour.ttf");
-         oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
-         oDefaultFontMapper.putName("Courier New", oBaseFontParameters );      
+//         DefaultFontMapper oDefaultFontMapper = new DefaultFontMapper();
+//         oDefaultFontMapper.insertDirectory("c:\\windows\\fonts");
 //
-         oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\courbd.ttf");
-         oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
-         oDefaultFontMapper.putName("Courier New Bold", oBaseFontParameters );      
+//         BaseFontParameters oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\cour.ttf");
+//         oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
+//         oDefaultFontMapper.putName("Courier New", oBaseFontParameters );      
+////
+//         oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\courbd.ttf");
+//         oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
+//         oDefaultFontMapper.putName("Courier New Bold", oBaseFontParameters );      
 //         
 //         @SuppressWarnings("deprecation")
 //         Graphics2D oGraphics2D = oPdfContentByte.createGraphics(PageSize.A4.getWidth(), PageSize.A4.getHeight(), oDefaultFontMapper, true, .95f);
@@ -278,21 +284,40 @@ public class Preview extends JPanel implements ActionListener, ISetSong
 //         java.awt.Rectangle oRectangle = getVisibleEditorRect(tpSong);
 //         tpSong.getUI().getRootView(tpSong).paint(oGraphics2D, oRectangle);
          
-//         BaseFont bf = BaseFont.createFont( "c:/windows/fonts/arialbd.ttf", "Cp1251", BaseFont.EMBEDDED);
-         BaseFont bf = BaseFont.createFont( "c:/windows/fonts/arialbd.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-         Paragraph preface = new Paragraph();
-//         com.itextpdf.text.Font catFont = new com.itextpdf.text.Font("Courier New Bold", Font.BOLD, 18);
-//         com.itextpdf.text.Font catFont = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.COURIER, 18, com.itextpdf.text.Font.BOLD);
-         com.itextpdf.text.Font catFont = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.COURIER, 18, com.itextpdf.text.Font.BOLD);
-//         Paragraph p = new Paragraph("юбрнп - оеяем", catFont);
-         Paragraph p = new Paragraph("юбрнп - оеяем", new com.itextpdf.text.Font(bf, 18));
+         BaseFont bfTitle = BaseFont.createFont( "c:/windows/fonts/courbd.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+         BaseFont bfText = BaseFont.createFont( "c:/windows/fonts/cour.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        
+         Font fntTitle = new Font(bfTitle, 16);
+         Font fntText = new Font(bfText, 14);
+         
+         final int iLnsNbr = 35;
+         int iLns = 1;
+         Paragraph p = new Paragraph(oSong.sAuthor + " - " + oSong.sTitle, fntTitle);
          p.setAlignment(Paragraph.ALIGN_CENTER);
-         preface.add(p);
-         oDocument.add(preface);
+         oDocument.add(p);
+         String s = "";
          
-         oDocument.newPage();
+         ArrayList<CChordsTextPairVerse> alChordsTextPairVersesSet = oSong.getChordsTextVerses();
          
-         oDocument.add(preface);
+         for(CChordsTextPairVerse oChordsTextPairVerse : alChordsTextPairVersesSet)
+         {
+            iLns += oChordsTextPairVerse.size() + 1;
+            if(iLns > iLnsNbr)
+            {
+               p = new Paragraph(s, fntText);
+               oDocument.add(p);
+               oDocument.newPage();
+               s = oChordsTextPairVerse.toString();
+               iLns = oChordsTextPairVerse.size();
+            }
+            else
+            {
+               s += "\n" + oChordsTextPairVerse.toString(); 
+            }
+         }
+
+         p = new Paragraph(s, fntText);
+         oDocument.add(p);
 
 //         g2.setColor(Color.BLACK);
 //         g2.setColor(Color.WHITE);
@@ -308,21 +333,24 @@ public class Preview extends JPanel implements ActionListener, ISetSong
 
    }
    
-   protected java.awt.Rectangle getVisibleEditorRect(JTextPane ta) {
-      java.awt.Rectangle alloc = tpSong.getBounds();
-      if ((alloc.width > 0) && (alloc.height > 0)) {
-        alloc.x = alloc.y = 0;
-        Insets insets = ta.getInsets();
-        alloc.x += insets.left;
-        alloc.y += insets.top;
-        alloc.width -= insets.left + insets.right;
-        alloc.height -= insets.top + insets.bottom;
-        return alloc;
-      }
-      return null;
-    }   
+//   protected java.awt.Rectangle getVisibleEditorRect(JTextPane ta) 
+//   {
+//      java.awt.Rectangle alloc = tpSong.getBounds();
+//      if ((alloc.width > 0) && (alloc.height > 0)) 
+//      {
+//        alloc.x = alloc.y = 0;
+//        Insets insets = ta.getInsets();
+//        alloc.x += insets.left;
+//        alloc.y += insets.top;
+//        alloc.width -= insets.left + insets.right;
+//        alloc.height -= insets.top + insets.bottom;
+//        return alloc;
+//      }
+//      return null;
+//    }   
    
-   public float convertToPixels(int points) {
+   public float convertToPixels(int points) 
+   {
       return (float) (points / pixelToPoint);
     }
    

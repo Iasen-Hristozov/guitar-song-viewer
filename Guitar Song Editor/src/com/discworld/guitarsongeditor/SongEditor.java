@@ -70,7 +70,6 @@ public class SongEditor extends JFrame implements ActionListener
    private static final long serialVersionUID = 7937537729513348982L;
    
    private JTextArea txtSong;
-//                      txtXml;
    private JPanel pnlRawText, pnlXmlText, pnlBtn;
    private JButton btnConvert;
    private Box verticalBox;
@@ -80,8 +79,7 @@ public class SongEditor extends JFrame implements ActionListener
    private JPanel pnlSong;
    private JTextField txtAuthor;
    private JLabel lblAuthor;
-   private String sSong,
-                  xmlSong;
+   private String sSong;
    private ArrayList<String> alVerses;
    private CSong oSong;
    
@@ -248,12 +246,16 @@ public class SongEditor extends JFrame implements ActionListener
          public void changedUpdate(DocumentEvent arg0)
          {
             // TODO Auto-generated method stub
-            
          }
 
          @Override
          public void insertUpdate(DocumentEvent arg0)
          {
+            if(!txtSong.getText().isEmpty())
+               btnConvert.setEnabled(true);
+            else
+               btnConvert.setEnabled(false);
+            
             mtcText = ptrLngRU.matcher(txtSong.getText());
             if(mtcText.find())
             {
@@ -272,7 +274,8 @@ public class SongEditor extends JFrame implements ActionListener
          @Override
          public void removeUpdate(DocumentEvent arg0)
          {
-            // TODO Auto-generated method stub
+            if(txtSong.getText().isEmpty())
+               btnConvert.setEnabled(false);
          }
       });      
       
@@ -293,6 +296,8 @@ public class SongEditor extends JFrame implements ActionListener
       pnlBtn.add(verticalBox);
       
       btnConvert = new JButton(">>");
+      btnConvert.setToolTipText("Convert");
+      btnConvert.setEnabled(false);
       verticalBox.add(btnConvert);
       btnConvert.setAlignmentX(Component.CENTER_ALIGNMENT);
       btnConvert.addActionListener(this);
@@ -386,14 +391,14 @@ public class SongEditor extends JFrame implements ActionListener
       if(oSource == btnConvert)
       {
          sSong = txtSong.getText();
+         if(sSong.isEmpty())
+            return;
 
          // Convert string to CSong object
          convertSongStringToObject();
          
-         xmlSong = oSong.generateXml();
-         
 //         txtXml.setText(xmlSong);
-         txtXml.setText(xmlSong);
+         txtXml.setText(oSong.toXml());
          txtXml.setCaretPosition(0);
          btnSave.setEnabled(true);
          btnPreview.setEnabled(true);
@@ -404,8 +409,7 @@ public class SongEditor extends JFrame implements ActionListener
       }
       else if(oSource == btnSave)
       {
-         xmlSong = txtXml.getText();
-         saveSongXml(xmlSong);
+         saveSongXml(txtXml.getText());
       }
       else if(oSource == btnPreview)
       {
