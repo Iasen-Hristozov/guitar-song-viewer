@@ -39,8 +39,8 @@ public class CVerseSet
       String sVerseSet = "";
       for(CVerse oVerse: alVerses)
       {
-//         sVerseSet += (sVerseSet.equals("") ? "" : "\n") + oVerse.toString();
-         sVerseSet += oVerse.toString();
+         sVerseSet += (sVerseSet.equals("") ? "" : "\n") + oVerse.toString();
+//         sVerseSet += oVerse.toString();
       }
       return sVerseSet;      
    }
