@@ -32,7 +32,7 @@ public class CChordsTextPairVerse extends CVerse
       String s = "";
       for(CChordsTextPair oChordsTextPair: alChordsTextPairs)
          s += oChordsTextPair.toString() + "\n";
-      s += "\n";
+//      s += "\n";
       return s;
    }
 

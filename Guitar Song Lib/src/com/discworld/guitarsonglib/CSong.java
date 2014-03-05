@@ -116,7 +116,7 @@ public class CSong
       htChordsIdNdx = new Hashtable<String, Integer>();
    }
    
-   public String generateXml()
+   public String toXml()
    {
       String sSongXml = XML_ID,
              sLng;
