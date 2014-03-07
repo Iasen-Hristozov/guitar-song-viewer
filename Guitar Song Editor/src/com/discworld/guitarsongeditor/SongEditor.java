@@ -572,7 +572,8 @@ public class SongEditor extends JFrame implements ActionListener
 
    private void convertSongStringToObject()
    {
-//      sSong.
+      int iTextVerseNbr = 0;
+      
       // Split string to verses 
       getVerses();
 
@@ -707,14 +708,56 @@ public class SongEditor extends JFrame implements ActionListener
          // If exists text verse assign ID and add to the song.
          if(oTextVerse != null)
          {
+            iTextVerseNbr++;
             if(oChordsVerse != null)
                oTextVerse.sChordsVerseID = oChordsVerse.sID;
+            else
+               oTextVerse.sChordsVerseID = getChordVerseID(iTextVerseNbr, oTextVerse.size());
 //            oSong.oText.alTextVerses.add(oTextVerse);
             oSong.oText.add(oTextVerse);
          }
       }
    }
    
+   private String getChordVerseID(int iTextVerseNbr, int iTextVerseSize)
+   {
+      int iChordsVersNbr = 0;
+      ArrayList<CChordsVerse> alChordsVerses = getTextRelatedChordsVerses();
+      for(CChordsVerse oChordsVerse: alChordsVerses)
+      {
+         iChordsVersNbr++;
+         if((iTextVerseNbr % iChordsVersNbr == 0) && oChordsVerse.alChordsLines.size() == iTextVerseSize)
+            return oChordsVerse.sID;
+      }
+      
+      return "";
+   }
+
+   private ArrayList<CChordsVerse> getTextRelatedChordsVerses()
+   {
+      ArrayList<CChordsVerse> alTextRelatedChordsVerses = new ArrayList<CChordsVerse>();
+      for(CChordsVerse oChordsVerse : oSong.alChords)
+      {
+         if(isTextRelatedChordsverse(oChordsVerse))
+            alTextRelatedChordsVerses.add(oChordsVerse);
+      }
+      return alTextRelatedChordsVerses;
+   }
+
+   private boolean isTextRelatedChordsverse(CChordsVerse oChordsVerse)
+   {
+      for(CChordsLine oChordsLine: oChordsVerse.alChordsLines)
+      {
+         for(CChord oChord: oChordsLine.alChords)
+         {
+            if(oChord.iPosition > 0)
+               return true;
+         }
+      }
+      
+      return false;
+   }
+
    private int getVerseLeadingSpace(String[] tsVerseLines)
    {
       int iOffset = 0;
