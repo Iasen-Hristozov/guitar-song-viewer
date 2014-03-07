@@ -2,32 +2,40 @@ package com.discworld.guitarsonglib;
 
 import java.util.ArrayList;
 
-public class CTextVersesSet
+public class CTextVersesSet extends CVerseSet
 {
    /* (non-Javadoc)
     * @see java.lang.Object#toString()
     */
 
-   public ArrayList<CTextVerse> alTextVerses;
+//   public ArrayList<CTextVerse> alTextVerses;
    
    public CTextVersesSet()
    {
-      alTextVerses = new ArrayList<CTextVerse>();
+//      alTextVerses = new ArrayList<CTextVerse>();
+      super();
    }
    
-   public void add(CTextVerse oTextVerse)
+   public ArrayList<CVerse> getTextVersesSet()
    {
-      alTextVerses.add(oTextVerse);
+      return alVerses;
    }
    
-   @Override
-   public String toString()
-   {
-      String sTextVersesSet = "";
-      for(CTextVerse oTextVerse: alTextVerses)
-      {
-         sTextVersesSet += (sTextVersesSet.equals("") ? "" : "\n\n") + oTextVerse.toString();
-      }
-      return sTextVersesSet;
-   }
+   
+//   public void add(CTextVerse oTextVerse)
+//   {
+////      alTextVerses.add(oTextVerse);
+//      super.add(oTextVerse);
+//   }
+   
+//   @Override
+//   public String toString()
+//   {
+//      String sTextVersesSet = "";
+//      for(CTextVerse oTextVerse: alTextVerses)
+//      {
+//         sTextVersesSet += (sTextVersesSet.isEmpty() ? "" : "\n") + oTextVerse.toString();
+//      }
+//      return sTextVersesSet;
+//   }
 }

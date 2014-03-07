@@ -158,11 +158,15 @@ public class CSong
          sSongXml += CRD_CLOSE;
       }
       
-      if(!oText.alTextVerses.isEmpty())
+//      if(!oText.alTextVerses.isEmpty())
+      if(oText.size() != 0)
       {
          sSongXml += TXT_OPEN;
-         for(CTextVerse oTextVerse: oText.alTextVerses)
+         CTextVerse oTextVerse;
+//         for(CTextVerse oTextVerse: oText.alTextVerses)
+         for(int i = 0; i < oText.size(); i++)
          {
+            oTextVerse = (CTextVerse) oText.get(i);
             sSongXml += String.format(TXT_VERSE, oTextVerse.sChordsVerseID);
             for(CTextLine oTextLine: oTextVerse.alTextLines)
             {
@@ -314,7 +318,8 @@ public class CSong
                      oTextVerse.addTextLine(oTextLine);
                   }
                }
-               oText.alTextVerses.add(oTextVerse);
+//               oText.alTextVerses.add(oTextVerse);
+               oText.add(oTextVerse);
             }
          }
 
@@ -340,10 +345,6 @@ public class CSong
    {
       String sChordsLine;
       
-      CTextLine oTextLine;
-      
-      CChordsLine oChordsLine;
-      
       CChordsTextPairVerse oChordsTextPairVerse;
       
       CChordsTextPair oChordsTextPair;
@@ -351,8 +352,12 @@ public class CSong
       ArrayList<CChordsTextPairVerse> alChordsTextVerses = new ArrayList<CChordsTextPairVerse>();
       
       
-      for(CTextVerse oTextVerse: oText.alTextVerses)
+      CTextVerse oTextVerse;
+//      for(CTextVerse oTextVerse: oText.alTextVerses)
+      for(int i = 0; i < oText.size(); i++)
       {
+         oTextVerse = (CTextVerse) oText.get(i);
+            
          oChordsTextPairVerse = new CChordsTextPairVerse();
          
          Integer iCrdNdx = htChordsIdNdx.get(oTextVerse.sChordsVerseID);
@@ -361,22 +366,39 @@ public class CSong
          {
             CChordsVerse oChordsVerse = alChords.get(iCrdNdx);
             
-            for(int i = 0; i < oTextVerse.alTextLines.size(); i++)
+            if(oTextVerse.size() == 0)
             {
-               oTextLine = oTextVerse.alTextLines.get(i);
-               oChordsLine = oChordsVerse.alChordsLines.get(i);
+               for(CChordsLine oChordsLine : oChordsVerse.alChordsLines)
+               {
+                  sChordsLine = getChordsLine(oChordsLine);
+
+                  oChordsTextPair = new CChordsTextPair("", sChordsLine);
+                  oChordsTextPairVerse.add(oChordsTextPair);
+               }
+            }
+            else
+            {
+               CChordsLine oChordsLine;
                
-               sChordsLine = getChordsLineString(oTextLine.sTextLine, oChordsLine);
+               CTextLine oTextLine;
                
-               oChordsTextPair = new CChordsTextPair(oTextLine.sTextLine, sChordsLine);
-               oChordsTextPairVerse.add(oChordsTextPair);
-            }            
+               for(int j = 0; j < oTextVerse.alTextLines.size(); j++)
+               {
+                  oTextLine = oTextVerse.alTextLines.get(j);
+                  oChordsLine = oChordsVerse.alChordsLines.get(j);
+                  
+                  sChordsLine = getChordsLineString(oTextLine.sTextLine, oChordsLine);
+                  
+                  oChordsTextPair = new CChordsTextPair(oTextLine.sTextLine, sChordsLine);
+                  oChordsTextPairVerse.add(oChordsTextPair);
+               }            
+            }
          }
          else
          {
-            for(CTextLine oTextLine2: oTextVerse.alTextLines)
+            for(CTextLine oTextLine: oTextVerse.alTextLines)
             {
-               oChordsTextPair = new CChordsTextPair(oTextLine2.sTextLine);
+               oChordsTextPair = new CChordsTextPair(oTextLine.sTextLine);
                oChordsTextPairVerse.add(oChordsTextPair);
             }
             
@@ -413,10 +435,12 @@ public class CSong
    private String getChordsLineString(String sTextLine, CChordsLine oChordsLine)
    {
       String sChordsLine;
+
       if(iEnuLanguage == ENU_LNG_EN)
          sChordsLine = getChordsLineStringEn(sTextLine, oChordsLine);
       else
          sChordsLine = getChordsLineStringCyr(sTextLine, oChordsLine);
+      
       return sChordsLine;
    }
 
@@ -573,4 +597,12 @@ public class CSong
       return String.format("%1$" +  iPad + "s", s);
    }
 
+   private String getChordsLine(CChordsLine oChordsLine)
+   {
+      String sChordsLine = "";
+
+      for(CChord oChord: oChordsLine.alChords)
+         sChordsLine += (sChordsLine.isEmpty() ? "" : " ") + oChord.sName;
+      return sChordsLine;
+   }
 }

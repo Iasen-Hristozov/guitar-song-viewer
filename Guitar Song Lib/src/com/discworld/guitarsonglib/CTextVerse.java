@@ -31,7 +31,7 @@ public class CTextVerse extends CVerse
       String sTextVerse = "";
       for(CTextLine oTextLine: alTextLines)
       {
-         sTextVerse += (sTextVerse.equals("") ? "" : "\n") + oTextLine.toString();
+         sTextVerse += (sTextVerse.isEmpty() ? "" : "\n") + oTextLine.toString();
       }
       return sTextVerse;
    }

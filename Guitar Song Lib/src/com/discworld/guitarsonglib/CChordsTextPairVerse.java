@@ -21,7 +21,7 @@ public class CChordsTextPairVerse extends CVerse
       int iLines = 0;
       
       for(CChordsTextPair oChordsTextPair: alChordsTextPairs)
-         iLines += oChordsTextPair.getLines();
+         iLines += oChordsTextPair.size();
       
       return iLines;
    }
@@ -31,7 +31,7 @@ public class CChordsTextPairVerse extends CVerse
    {
       String s = "";
       for(CChordsTextPair oChordsTextPair: alChordsTextPairs)
-         s += oChordsTextPair.toString() + "\n";
+         s += (s.isEmpty() ? "" : "\n") + oChordsTextPair.toString();
 //      s += "\n";
       return s;
    }
@@ -43,7 +43,7 @@ public class CChordsTextPairVerse extends CVerse
       int iLines = 0;
       
       for(CChordsTextPair oChordsTextPair: alChordsTextPairs)
-         iLines += oChordsTextPair.getLines();
+         iLines += oChordsTextPair.size();
       
       return iLines;
    }

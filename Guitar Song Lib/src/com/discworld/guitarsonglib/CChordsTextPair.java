@@ -22,8 +22,8 @@ public class CChordsTextPair
       this.sTextLine = sTextLine;
       this.sChordsLine = "";
    }
- 
-   public int getLines()
+
+   public int size()
    {
       if(sChordsLine.isEmpty() && sTextLine.isEmpty())
          return 0;
@@ -37,6 +37,6 @@ public class CChordsTextPair
    @Override
    public String toString()
    {
-      return (sChordsLine.isEmpty() ? "" : sChordsLine + "\n") + sTextLine; 
+      return (sChordsLine.isEmpty() ? "" : sChordsLine) + (sTextLine.isEmpty() ? "" : (sChordsLine.isEmpty() ? "" : "\n") + sTextLine); 
    }
 }
