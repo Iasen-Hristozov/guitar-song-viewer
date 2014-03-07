@@ -141,7 +141,8 @@ public class Preview extends JPanel implements ActionListener
          {
             if(!oChordsTextPair.sChordsLine.isEmpty())
                sSong += "\\par " + oChordsTextPair.sChordsLine;
-            sSong += "\\par " + oChordsTextPair.sTextLine;
+            if(!oChordsTextPair.sTextLine.isEmpty())
+               sSong += "\\par " + oChordsTextPair.sTextLine;
          }
          sSong += "\\par ";
 //         sSong += "\\pard \\insrsid \\page \\par ";

@@ -585,13 +585,17 @@ public class SongEditor extends JFrame implements ActionListener
       oSong.sAuthor = txtAuthor.getText();
       oSong.iEnuLanguage = cbxLanguage.getSelectedIndex() + 1;
       
+      boolean bHasChords;
+      
       // Add chords and text verses to song
       for(String sVerse: alVerses)
       {
+         bHasChords = false;
+         
          String tsVerseLines[] = getLinesFromVerse(sVerse);
 
          // Remove leading spaces from the verse
-         int iOffset = getVerseOffset(tsVerseLines);
+         int iOffset = getVerseLeadingSpace(tsVerseLines);
 
          if(iOffset != 0)
          {
@@ -605,15 +609,18 @@ public class SongEditor extends JFrame implements ActionListener
          for(int i = 0; i < tsVerseLines.length; i++)
          {
             mtcText = ptrText.matcher(tsVerseLines[i]);
-            // If the line is a chords line add it to the pair
             if(!mtcText.find())
             {
+               // Chords. Create a new pair and add it to the pair
+               if(oChordsTextPair != null && !oChordsTextPair.sChordsLine.isEmpty() && oChordsTextPair.sTextLine.isEmpty())
+                  alChordsTextPairs.add(oChordsTextPair);
                oChordsTextPair = new CChordsTextPair();
                oChordsTextPair.sChordsLine = tsVerseLines[i];
+               bHasChords = true;
             }
-            // add the text line to the pair
             else
             {
+               // Text. Add the text line to the pair
                if(oChordsTextPair == null)
                   oChordsTextPair = new CChordsTextPair();
                oChordsTextPair.sTextLine = tsVerseLines[i];
@@ -621,11 +628,15 @@ public class SongEditor extends JFrame implements ActionListener
                oChordsTextPair = null;
             }
          }
+         if(oChordsTextPair != null)
+            alChordsTextPairs.add(oChordsTextPair);
          
-         CTextVerse oTextVerse = null;
+//         CTextVerse oTextVerse = null;
+         CTextVerse oTextVerse = new CTextVerse();
          CTextLine oTextLine = null;
          CChordsLine oChordsLine = null;
          CChordsVerse oChordsVerse = null;
+         
          
          // Extract text and chords (if exist) from chords-text pairs and add them to the song
          for(CChordsTextPair oChordsTextPair2 : alChordsTextPairs)
@@ -633,29 +644,44 @@ public class SongEditor extends JFrame implements ActionListener
             // There are chords connected to the text line in the chords-text pair, determine their names and postion
             if(!oChordsTextPair2.sChordsLine.isEmpty())
             {
-               // Different syllablization for different languages, Bulgarian and Russian use almost the same.
-               // The result is a chords line with the name and position (zero based, relative to syllables 
-               // in the text line) of the chords.  
-               if(oSong.iEnuLanguage == CSong.ENU_LNG_EN)
+               if(!oChordsTextPair2.sTextLine.isEmpty())
                {
-                  try
+                  // There is a text line in the pair
+                  
+                  // Different syllablization for different languages, Bulgarian and Russian use almost the same.
+                  // The result is a chords line with the name and position (zero based, relative to syllables 
+                  // in the text line) of the chords.  
+                  if(oSong.iEnuLanguage == CSong.ENU_LNG_EN)
                   {
-                     oChordsLine = getChordsLineEn(oChordsTextPair2);
-                  } 
-                  catch(Exception e)
-                  {
-                     // TODO Auto-generated catch block
-                     e.printStackTrace();
+                     try
+                     {
+                        oChordsLine = getChordsLineEn(oChordsTextPair2);
+                     } 
+                     catch(Exception e)
+                     {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                     }
                   }
+                  else
+                     oChordsLine = getChordsLineCyr(oChordsTextPair2);               
                }
                else
-                  oChordsLine = getChordsLineCyr(oChordsTextPair2);               
+               {
+                  oChordsLine = getChordsLine(oChordsTextPair2);
+               }
+               
                
                // Create a new chords verse id it doesn't exists and add the chords line to it. 
                if(oChordsVerse == null)
                   oChordsVerse = new CChordsVerse();
                
-               oChordsVerse.alChordsLines.add(oChordsLine);
+               oChordsVerse.addChordLine(oChordsLine);
+            }
+            else if(oChordsTextPair2.sChordsLine.isEmpty() && bHasChords)
+            {
+               // There are chords in the verse but this line chords line is empty 
+               oChordsVerse.alChordsLines.add(new CChordsLine());
             }
             
             // If there is a text line in chords-text pair add it to the text verse (create it if it doesn't exist).
@@ -663,8 +689,8 @@ public class SongEditor extends JFrame implements ActionListener
             {
                oTextLine = new CTextLine();
                oTextLine.sTextLine = oChordsTextPair2.sTextLine;
-               if(oTextVerse == null)
-                  oTextVerse = new CTextVerse();
+//               if(oTextVerse == null)
+//                  oTextVerse = new CTextVerse();
                oTextVerse.alTextLines.add(oTextLine);
             }
          }
@@ -683,12 +709,13 @@ public class SongEditor extends JFrame implements ActionListener
          {
             if(oChordsVerse != null)
                oTextVerse.sChordsVerseID = oChordsVerse.sID;
-            oSong.oText.alTextVerses.add(oTextVerse);
+//            oSong.oText.alTextVerses.add(oTextVerse);
+            oSong.oText.add(oTextVerse);
          }
       }
    }
    
-   private int getVerseOffset(String[] tsVerseLines)
+   private int getVerseLeadingSpace(String[] tsVerseLines)
    {
       int iOffset = 0;
 
@@ -899,5 +926,35 @@ public class SongEditor extends JFrame implements ActionListener
       
       
       return oChordsLine;
-   }   
+   }
+   
+   private static CChordsLine getChordsLine(CChordsTextPair oChordsTextPair)
+   {
+      int      iCrdBgn = 0,
+               iCrdEnd = 0;
+           
+      Matcher   mtcChords;
+     
+     CChord oChord;
+     
+     CChordsLine oChordsLine = new CChordsLine();
+     
+     mtcChords = ptrChord.matcher(oChordsTextPair.sChordsLine);
+
+     while(mtcChords.find(iCrdEnd))
+     {
+        iCrdBgn = mtcChords.start();
+        iCrdEnd = mtcChords.end();
+        
+        oChord = new CChord(oChordsTextPair.sChordsLine.substring(iCrdBgn, iCrdEnd));
+        
+        if(oChordsLine.alChords.isEmpty() || oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition >= 0)
+           oChord.iPosition = -1;
+        else 
+           oChord.iPosition = oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition - 1;
+        oChordsLine.addChord(oChord);
+     }
+     
+     return oChordsLine;
+   }
 }
