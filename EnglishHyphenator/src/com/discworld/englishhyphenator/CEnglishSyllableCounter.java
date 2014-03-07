@@ -74,7 +74,7 @@ public class CEnglishSyllableCounter
 {
    /** Map of spellings to syllable counts. */
 
-   protected Map syllableCountMap  = new HashMap();
+//   protected Map syllableCountMap  = new HashMap();
 
    protected static final Pattern[] SubtractSyllables = new Pattern[]
    {
