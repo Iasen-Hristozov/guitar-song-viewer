@@ -2,7 +2,7 @@ package com.discworld.guitarsongviewer;
 
 import com.discworld.guitarsonglib.CChordsVerse;
 import com.discworld.guitarsonglib.CTextVerse;
-import com.discworld.guitarsongviewer.dto.CVerseSet;
+import com.discworld.guitarsonglib.CVerseSet;
 import com.discworld.guitarsongviewer.dto.IDataExchange;
 
 import android.app.Activity;

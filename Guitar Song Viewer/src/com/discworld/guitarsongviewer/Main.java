@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.discworld.guitarsonglib.CChordsVerse;
 import com.discworld.guitarsonglib.CSong;
 import com.discworld.guitarsonglib.CVerse;
+import com.discworld.guitarsonglib.CVerseSet;
 import com.discworld.guitarsongviewer.dto.*;
 
 public class Main extends FragmentActivity implements IDataExchange
@@ -288,7 +289,8 @@ public class Main extends FragmentActivity implements IDataExchange
    
       alPages = new ArrayList<CVerseSet>();
       
-      ArrayList<? extends CVerse> alVerses = (iEnuDisplayChords == ENU_DISPLAY_CHORDS_ABOVE ? oSong.getChordsTextVerses() : oSong.oText.alTextVerses);
+//      ArrayList<? extends CVerse> alVerses = (iEnuDisplayChords == ENU_DISPLAY_CHORDS_ABOVE ? oSong.getChordsTextVerses() : oSong.oText.alTextVerses);
+      ArrayList<? extends CVerse> alVerses = (iEnuDisplayChords == ENU_DISPLAY_CHORDS_ABOVE ? oSong.getChordsTextVerses() : oSong.oText.getTextVersesSet());
       CVerse oVerse;
       
       for(iNdx = 0; iNdx < alVerses.size(); iNdx++)
