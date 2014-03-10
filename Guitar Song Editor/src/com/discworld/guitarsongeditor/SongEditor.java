@@ -572,7 +572,9 @@ public class SongEditor extends JFrame implements ActionListener
 
    private void convertSongStringToObject()
    {
-      int iTextVerseNbr = 0;
+      int iTextVerseNdx = 0;
+      
+      sSong = sSong.replaceAll("( *\n){3,}", "\n\n");
       
       // Split string to verses 
       getVerses();
@@ -708,29 +710,37 @@ public class SongEditor extends JFrame implements ActionListener
          // If exists text verse assign ID and add to the song.
          if(oTextVerse != null)
          {
-            iTextVerseNbr++;
             if(oChordsVerse != null)
                oTextVerse.sChordsVerseID = oChordsVerse.sID;
             else
-               oTextVerse.sChordsVerseID = getChordVerseID(iTextVerseNbr, oTextVerse.size());
+               oTextVerse.sChordsVerseID = getChordVerseID(iTextVerseNdx, oTextVerse.size());
 //            oSong.oText.alTextVerses.add(oTextVerse);
+            if(oTextVerse.alTextLines.size() != 0)
+               iTextVerseNdx++;
             oSong.oText.add(oTextVerse);
          }
       }
    }
    
-   private String getChordVerseID(int iTextVerseNbr, int iTextVerseSize)
+   private String getChordVerseID(int iTextVerseNdx, int iTextVerseSize)
    {
-      int iChordsVersNbr = 0;
-      ArrayList<CChordsVerse> alChordsVerses = getTextRelatedChordsVerses();
-      for(CChordsVerse oChordsVerse: alChordsVerses)
-      {
-         iChordsVersNbr++;
-         if((iTextVerseNbr % iChordsVersNbr == 0) && oChordsVerse.alChordsLines.size() == iTextVerseSize)
-            return oChordsVerse.sID;
-      }
       
-      return "";
+      ArrayList<CChordsVerse> alChordsVerses = getTextRelatedChordsVerses();
+      
+      int iChordsVersNdx = iTextVerseNdx - ((int)iTextVerseNdx / alChordsVerses.size())*alChordsVerses.size();
+      if(alChordsVerses.get(iChordsVersNdx).alChordsLines.size() == iTextVerseSize)
+         return alChordsVerses.get(iChordsVersNdx).sID;
+      else
+         return "";
+
+
+//      for(CChordsVerse oChordsVerse: alChordsVerses)
+//      {
+//         iChordsVersNbr++;
+//         if((iTextVerseNbr % iChordsVersNbr == 0) && oChordsVerse.alChordsLines.size() == iTextVerseSize)
+//            return oChordsVerse.sID;
+//      }
+      
    }
 
    private ArrayList<CChordsVerse> getTextRelatedChordsVerses()
