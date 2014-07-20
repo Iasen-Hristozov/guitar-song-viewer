@@ -57,7 +57,7 @@ public class CTextFragment extends Fragment
       tvText.setTextSize(iTextSize);
       tvChords = (TextView) vPage.findViewById(R.id.tvChords);
 
-      if((iEnuDisplayChords = oDataExchange.getEnuDisplayChords()) != Main.ENU_DISPLAY_CHORDS_RELATED)
+      if((iEnuDisplayChords = oDataExchange.getEnuDisplayChords()) != MainPager.ENU_DISPLAY_CHORDS_RELATED)
          tvChords.setVisibility(View.GONE);
       else
       {
@@ -104,7 +104,7 @@ public class CTextFragment extends Fragment
       tvText.setText(null);
       tvChords.setText(null);
       
-      if(iEnuDisplayChords == Main.ENU_DISPLAY_CHORDS_ABOVE)
+      if(iEnuDisplayChords == MainPager.ENU_DISPLAY_CHORDS_ABOVE)
          tvText.append(oVerseSet.toString());
       else
       {
@@ -114,7 +114,7 @@ public class CTextFragment extends Fragment
             oTextVerse = (CTextVerse) oVerseSet.get(i);
             tvText.append(oTextVerse.toString() + "\n\n");
             
-            if(iEnuDisplayChords == Main.ENU_DISPLAY_CHORDS_RELATED && !oTextVerse.sChordsVerseID.isEmpty())
+            if(iEnuDisplayChords == MainPager.ENU_DISPLAY_CHORDS_RELATED && !oTextVerse.sChordsVerseID.isEmpty())
             {
                oChordsVerse = oDataExchange.getChordsVerse(oTextVerse.sChordsVerseID);
                tvChords.append(oChordsVerse.toString() + "\n\n");

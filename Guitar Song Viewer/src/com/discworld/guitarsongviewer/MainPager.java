@@ -32,7 +32,7 @@ import com.discworld.guitarsonglib.CVerse;
 import com.discworld.guitarsonglib.CVerseSet;
 import com.discworld.guitarsongviewer.dto.*;
 
-public class Main extends FragmentActivity implements IDataExchange
+public class MainPager extends FragmentActivity implements IDataExchange
 {
    public final static int ENU_LNG_UNKNOWN = 0,
                            ENU_LNG_ENGLISH = 1,
