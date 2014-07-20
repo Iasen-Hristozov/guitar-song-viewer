@@ -54,20 +54,20 @@ public class CMain extends Activity
       }
    }
    
-   private void updateFromPreferences()
-   {
-      Context context = getApplicationContext();
-      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-      
-      iEnuDisplayChords = Integer.parseInt(prefs.getString(Preferences.PREF_DISPLAY_CHORDS, "0"));
-      int iTextSize = Integer.parseInt(prefs.getString(Preferences.PREF_TEXT_SIZE, "16"));
-      
-      if(this.iTextSize != iTextSize)
-         this.iTextSize = iTextSize;
-      
-      if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
-         tvChords.setVisibility(View.GONE);
-      else
-         tvChords.setVisibility(View.VISIBLE);
-   }   
+//   private void updateFromPreferences()
+//   {
+//      Context context = getApplicationContext();
+//      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+//      
+//      iEnuDisplayChords = Integer.parseInt(prefs.getString(Preferences.PREF_DISPLAY_CHORDS, "0"));
+//      int iTextSize = Integer.parseInt(prefs.getString(Preferences.PREF_TEXT_SIZE, "16"));
+//      
+//      if(this.iTextSize != iTextSize)
+//         this.iTextSize = iTextSize;
+//      
+//      if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
+//         tvChords.setVisibility(View.GONE);
+//      else
+//         tvChords.setVisibility(View.VISIBLE);
+//   }   
 }
