@@ -32,7 +32,7 @@ import com.discworld.guitarsonglib.CVerse;
 import com.discworld.guitarsonglib.CVerseSet;
 import com.discworld.guitarsongviewer.dto.*;
 
-public class Main extends FragmentActivity implements IDataExchange
+public class MainPagerOld extends FragmentActivity implements IDataExchange
 {
    public final static int ENU_LNG_UNKNOWN = 0,
                            ENU_LNG_ENGLISH = 1,
@@ -46,14 +46,11 @@ public class Main extends FragmentActivity implements IDataExchange
                               LNG_BULGARIAN = "bg",
                               LNG_RUSSIAN = "ru";
 
-   public final static int ENU_DISPLAY_SONG_NONE = 0,
-                           ENU_DISPLAY_SONG_PAGER = 1,
-                           ENU_DISPLAY_SONG_SCROLL = 2;
-   
    public final static int ENU_DISPLAY_CHORDS_NONE = 1,
                            ENU_DISPLAY_CHORDS_ALL = 0,
                            ENU_DISPLAY_CHORDS_RELATED = 2,
                            ENU_DISPLAY_CHORDS_ABOVE = 3;
+   
    
    protected static final int   SHOW_PREFERENCES = 1,
                                 SHOW_ABOUT = 2,
@@ -61,8 +58,7 @@ public class Main extends FragmentActivity implements IDataExchange
 
    private int iLinesNbr = 0,
                iTextSize = 12,
-               iEnuDisplayChords = 0,
-               iEnuDisplaySong = 1;
+               iEnuDisplayChords = 0;
    
    private CSong oSong;
    
@@ -75,68 +71,34 @@ public class Main extends FragmentActivity implements IDataExchange
 
    private CPagerAdapter mPagerAdapter;
    
-   private TextView tvTitle,
-                    tvChords,
-                    tvChords1,
-                    tvText;
+   TextView tvTitle,
+            tvChords;
 
    @Override
    protected void onCreate(Bundle savedInstanceState)
    {
       super.onCreate(savedInstanceState);
+      super.setContentView(R.layout.activity_main);
+
+      tvTitle = (TextView) findViewById(R.id.tvTitle);
+      tvChords = (TextView) findViewById(R.id.tvChords);
       
       updateFromPreferences();
-
+      
       File fSongsDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/" + SONGS_FOLDER);
       fSongsDir.mkdirs();      
       
       oSong = getSongFromResources();
-      
-      if(iEnuDisplaySong == ENU_DISPLAY_SONG_PAGER)
-      {
-         super.setContentView(R.layout.activity_main);
 
-         tvTitle = (TextView) findViewById(R.id.tvTitle);
-         tvChords = (TextView) findViewById(R.id.tvChords);
-
-         if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
-            tvChords.setVisibility(View.GONE);
-         else
-            tvChords.setVisibility(View.VISIBLE);         
-         
-         setTitle();
-         
-         if(iEnuDisplayChords == ENU_DISPLAY_CHORDS_ALL)
-            setChords();
-         
-         
-         
-         //initialsie the pager
-         this.initialisePaging();      
-         
-//         startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
-      }
-      else if(iEnuDisplaySong == ENU_DISPLAY_SONG_SCROLL)
-      {
-         super.setContentView(R.layout.activity_main_scroll);
-         
-         tvTitle = (TextView) findViewById(R.id.tvTitle);
-         tvChords = (TextView) findViewById(R.id.tvChords);
-         tvChords1 = (TextView) findViewById(R.id.tvChords1);
-         tvText = (TextView) findViewById(R.id.tvText);
-         
-         if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
-            tvChords.setVisibility(View.GONE);
-         else
-            tvChords.setVisibility(View.VISIBLE);
-         
-         ArrayList<? extends CVerse> alVerses = (iEnuDisplayChords == ENU_DISPLAY_CHORDS_ABOVE ? oSong.getChordsTextVerses() : oSong.oText.getTextVersesSet());
-         
-         setTitle();
-         
-         tvText.setText(alVerses.toString());
-      }
+      setTitle();
       
+      if(iEnuDisplayChords == ENU_DISPLAY_CHORDS_ALL)
+         setChords();
+      
+      //initialsie the pager
+      this.initialisePaging();      
+      
+//      startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
    }
    
    private CSong getSongFromResources() 
@@ -163,7 +125,6 @@ public class Main extends FragmentActivity implements IDataExchange
       
       return oSong;
    }
-   
    
    private void getSongFromFile(String sFile) 
    {
@@ -199,7 +160,6 @@ public class Main extends FragmentActivity implements IDataExchange
       }
    }
    
-   
    @Override
    public boolean onCreateOptionsMenu(Menu menu)
    {  
@@ -209,7 +169,6 @@ public class Main extends FragmentActivity implements IDataExchange
       return true;
    }
 
-   
    @Override
    public boolean onOptionsItemSelected(MenuItem item) 
    {
@@ -234,7 +193,6 @@ public class Main extends FragmentActivity implements IDataExchange
       }
    }
    
-   
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent intent) 
    {
@@ -244,12 +202,7 @@ public class Main extends FragmentActivity implements IDataExchange
       {
          if(resultCode == Activity.RESULT_CANCELED)
          {
-            int iEnuDisplaySongOld = iEnuDisplaySong;
             updateFromPreferences();
-            if(iEnuDisplaySongOld != iEnuDisplaySong)
-            {
-               refresh();
-            }
             if(mPagerAdapter != null)
             {
                mPagerAdapter.deleteAllItems();
@@ -378,18 +331,16 @@ public class Main extends FragmentActivity implements IDataExchange
       Context context = getApplicationContext();
       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
       
-      iEnuDisplaySong = Integer.parseInt(prefs.getString(Preferences.PREF_DISPLAY_SONG, "1"));
       iEnuDisplayChords = Integer.parseInt(prefs.getString(Preferences.PREF_DISPLAY_CHORDS, "0"));
       int iTextSize = Integer.parseInt(prefs.getString(Preferences.PREF_TEXT_SIZE, "16"));
       
       if(this.iTextSize != iTextSize)
          this.iTextSize = iTextSize;
       
-//      if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
-//         tvChords.setVisibility(View.GONE);
-//      else
-//         tvChords.setVisibility(View.VISIBLE);
-   
+      if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
+         tvChords.setVisibility(View.GONE);
+      else
+         tvChords.setVisibility(View.VISIBLE);
    }
 
    @Override
@@ -402,7 +353,6 @@ public class Main extends FragmentActivity implements IDataExchange
    {
       tvTitle.setText(oSong.sAuthor + " - " + oSong.sTitle);
    }
-   
    
    private void setChords()
    {
@@ -418,13 +368,6 @@ public class Main extends FragmentActivity implements IDataExchange
    public int getEnuDisplayChords()
    {
       return iEnuDisplayChords;
-   }
-   
-   private void refresh()
-   {
-      finish();
-      Intent oIntent = new Intent(Main.this, Main.class);
-      startActivity(oIntent);
    }
 
    @Override

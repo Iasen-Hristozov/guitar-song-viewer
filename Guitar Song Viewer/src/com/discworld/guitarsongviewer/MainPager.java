@@ -1,66 +1,30 @@
 package com.discworld.guitarsongviewer;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.discworld.guitarsonglib.CChordsVerse;
-import com.discworld.guitarsonglib.CSong;
 import com.discworld.guitarsonglib.CVerse;
 import com.discworld.guitarsonglib.CVerseSet;
 import com.discworld.guitarsongviewer.dto.*;
 
-public class MainPager extends FragmentActivity implements IDataExchange
+public class MainPager extends CMain implements IDataExchange
 {
-   public final static int ENU_LNG_UNKNOWN = 0,
-                           ENU_LNG_ENGLISH = 1,
-                           ENU_LNG_BULGARIAN = 2,
-                           ENU_LNG_RUSSIAN = 3;
-   public final static String SONGS_FOLDER = "Songs";
-   
    public final static String SONGS_SUFFIX = ".xml";
-                              
-   public final static String LNG_ENGLISH = "en",
-                              LNG_BULGARIAN = "bg",
-                              LNG_RUSSIAN = "ru";
-
-   public final static int ENU_DISPLAY_CHORDS_NONE = 1,
-                           ENU_DISPLAY_CHORDS_ALL = 0,
-                           ENU_DISPLAY_CHORDS_RELATED = 2,
-                           ENU_DISPLAY_CHORDS_ABOVE = 3;
    
-   
-   protected static final int   SHOW_PREFERENCES = 1,
-                                SHOW_ABOUT = 2,
-                                SHOW_OPEN = 3;
-
-   private int iLinesNbr = 0,
-               iTextSize = 12,
-               iEnuDisplayChords = 0;
-   
-   private CSong oSong;
+   private int iLinesNbr = 0;
    
    ArrayList<CVerseSet> alPages;
 //   ArrayList<CChordsTextPairVerseSet> alPages1;
@@ -70,9 +34,6 @@ public class MainPager extends FragmentActivity implements IDataExchange
    ViewPager vp;   //Reference to class to swipe views
 
    private CPagerAdapter mPagerAdapter;
-   
-   TextView tvTitle,
-            tvChords;
 
    @Override
    protected void onCreate(Bundle savedInstanceState)
@@ -82,17 +43,10 @@ public class MainPager extends FragmentActivity implements IDataExchange
 
       tvTitle = (TextView) findViewById(R.id.tvTitle);
       tvChords = (TextView) findViewById(R.id.tvChords);
-      
-      updateFromPreferences();
-      
-      File fSongsDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/" + SONGS_FOLDER);
-      fSongsDir.mkdirs();      
-      
-      oSong = getSongFromResources();
 
       setTitle();
       
-      if(iEnuDisplayChords == ENU_DISPLAY_CHORDS_ALL)
+      if(oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ALL)
          setChords();
       
       //initialsie the pager
@@ -101,98 +55,17 @@ public class MainPager extends FragmentActivity implements IDataExchange
 //      startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
    }
    
-   private CSong getSongFromResources() 
-   {
-//      XmlResourceParser xmlSong = getResources().getXml(R.xml.antonina_2);
-      try
-      {
-         InputStream oInputStream = getResources().openRawResource(R.raw.antonina_2);
-   
-         byte[] b = new byte[oInputStream.available()];
-         oInputStream.read(b);
-         oInputStream.close();
-         String xmlSomg = new String(b, "UTF-8");
-         
-         oSong = new CSong(xmlSomg);
-         
-      } 
-      catch(IOException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      
-      
-      return oSong;
-   }
-   
-   private void getSongFromFile(String sFile) 
-   {
-      try
-      {
-         InputStream oInputStream =  new BufferedInputStream(new FileInputStream(sFile));
-         byte[] b = new byte[oInputStream.available()];
-         oInputStream.read(b);
-         oInputStream.close();
-         String xmlSomg = new String(b, "UTF-8");
-         
-         oSong = new CSong(xmlSomg);
-         
-         setTitle();
-         
-         if(iEnuDisplayChords == ENU_DISPLAY_CHORDS_ALL)
-            setChords();
-         
-      } catch(FileNotFoundException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-//      catch(XmlPullParserException e)
-//      {
-//         // TODO Auto-generated catch block
-//         e.printStackTrace();
-//      } 
-      catch(IOException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-   }
-   
    @Override
-   public boolean onCreateOptionsMenu(Menu menu)
-   {  
-      // Inflate the menu; this adds items to the action bar if it is present.
-      getMenuInflater().inflate(R.menu.main, menu);
-      
-      return true;
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) 
+   protected void getSongFromFile(String sFile) 
    {
-      // Handle item selection
-      switch (item.getItemId()) 
-      {
-         case R.id.action_open:
-            startActivityForResult(new Intent(this, Open.class), SHOW_OPEN);
-            return true;
-
-         
-         case R.id.action_settings:
-            startActivityForResult(new Intent(this, Preferences.class), SHOW_PREFERENCES);
-            return true;
-
-         case R.id.action_about:
-            startActivityForResult(new Intent(this, About.class), SHOW_ABOUT);
-            return true;
-            
-         default:
-            return super.onOptionsItemSelected(item);
-      }
+      super.getSongFromFile(sFile);
+      
+      setTitle();
+      
+      if(oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ALL)
+         setChords();
    }
-   
+  
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent intent) 
    {
@@ -202,7 +75,6 @@ public class MainPager extends FragmentActivity implements IDataExchange
       {
          if(resultCode == Activity.RESULT_CANCELED)
          {
-            updateFromPreferences();
             if(mPagerAdapter != null)
             {
                mPagerAdapter.deleteAllItems();
@@ -210,7 +82,7 @@ public class MainPager extends FragmentActivity implements IDataExchange
             }
             iLinesNbr = 0;
             
-            if(iEnuDisplayChords == ENU_DISPLAY_CHORDS_ALL)
+            if(oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ALL)
                setChords();            
             
             initialisePaging();
@@ -220,20 +92,13 @@ public class MainPager extends FragmentActivity implements IDataExchange
       {
          if(resultCode == Activity.RESULT_OK)
          {
-            Bundle extras = intent.getExtras();
-//            String sFile = extras.getString("file", "");
-            String sFile = extras.getString("file");
-            if(!sFile.isEmpty())
+            if(mPagerAdapter != null)
             {
-               getSongFromFile(sFile);
-               if(mPagerAdapter != null)
-               {
-                  mPagerAdapter.deleteAllItems();
-                  mPagerAdapter.notifyDataSetChanged();
-               }
-               iLinesNbr = 0;
-               initialisePaging();               
+               mPagerAdapter.deleteAllItems();
+               mPagerAdapter.notifyDataSetChanged();
             }
+            iLinesNbr = 0;
+            initialisePaging();               
          }
       }
    }
@@ -290,7 +155,7 @@ public class MainPager extends FragmentActivity implements IDataExchange
       alPages = new ArrayList<CVerseSet>();
       
 //      ArrayList<? extends CVerse> alVerses = (iEnuDisplayChords == ENU_DISPLAY_CHORDS_ABOVE ? oSong.getChordsTextVerses() : oSong.oText.alTextVerses);
-      ArrayList<? extends CVerse> alVerses = (iEnuDisplayChords == ENU_DISPLAY_CHORDS_ABOVE ? oSong.getChordsTextVerses() : oSong.oText.getTextVersesSet());
+      ArrayList<? extends CVerse> alVerses = (oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ABOVE ? oApplication.getSong().getChordsTextVerses() : oApplication.getSong().oText.getTextVersesSet());
       CVerse oVerse;
       
       for(iNdx = 0; iNdx < alVerses.size(); iNdx++)
@@ -326,54 +191,36 @@ public class MainPager extends FragmentActivity implements IDataExchange
       return iLinesNbr;
    }   
    
-   private void updateFromPreferences()
+   @Override
+   protected void updateFromPreferences()
    {
-      Context context = getApplicationContext();
-      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+      super.updateFromPreferences();
       
-      iEnuDisplayChords = Integer.parseInt(prefs.getString(Preferences.PREF_DISPLAY_CHORDS, "0"));
-      int iTextSize = Integer.parseInt(prefs.getString(Preferences.PREF_TEXT_SIZE, "16"));
-      
-      if(this.iTextSize != iTextSize)
-         this.iTextSize = iTextSize;
-      
-      if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
+      if(oApplication.getEnuDisplayChords() != ENU_DISPLAY_CHORDS_ALL)
          tvChords.setVisibility(View.GONE);
       else
          tvChords.setVisibility(View.VISIBLE);
    }
 
+   // TODO Optimize? Move in fragment?
    @Override
    public int getTextSize()
    {
-      return iTextSize;
-   }
-   
-   private void setTitle()
-   {
-      tvTitle.setText(oSong.sAuthor + " - " + oSong.sTitle);
-   }
-   
-   private void setChords()
-   {
-      tvChords.setText(null);
-      for(CChordsVerse oChordsVerse: oSong.alChords)
-      {
-         tvChords.append(oChordsVerse.toString());
-         tvChords.append("\n\n");
-      }
+      return oApplication.getTextSize();
    }
 
+   // TODO Optimize? Move in fragment?
    @Override
    public int getEnuDisplayChords()
    {
-      return iEnuDisplayChords;
+      return oApplication.getEnuDisplayChords();
    }
 
+   // TODO Optimize? Move in fragment?
    @Override
    public CChordsVerse getChordsVerse(String sID)
    {
-      return oSong.alChords.get(oSong.htChordsIdNdx.get(sID));
+      return oApplication.getSong().alChords.get(oApplication.getSong().htChordsIdNdx.get(sID));
    }
 
    @Override
