@@ -42,7 +42,7 @@ public class MainPager extends CMain implements IDataExchange
       super.setContentView(R.layout.activity_main);
 
       tvTitle = (TextView) findViewById(R.id.tvTitle);
-      tvChords = (TextView) findViewById(R.id.tvChords);
+      tvChords = (TextView) findViewById(R.id.tvChords1);
 
       setTitle();
       

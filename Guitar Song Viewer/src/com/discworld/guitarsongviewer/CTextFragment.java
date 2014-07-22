@@ -55,7 +55,7 @@ public class CTextFragment extends Fragment
       View vPage = inflater.inflate(R.layout.page, container, false);
       tvText = (TextView) vPage.findViewById(R.id.tvText);
       tvText.setTextSize(iTextSize);
-      tvChords = (TextView) vPage.findViewById(R.id.tvChords);
+      tvChords = (TextView) vPage.findViewById(R.id.tvChords1);
 
       if((iEnuDisplayChords = oDataExchange.getEnuDisplayChords()) != MainPager.ENU_DISPLAY_CHORDS_RELATED)
          tvChords.setVisibility(View.GONE);
