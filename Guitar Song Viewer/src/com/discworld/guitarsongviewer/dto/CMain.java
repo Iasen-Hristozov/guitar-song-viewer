@@ -93,8 +93,8 @@ public class CMain extends FragmentActivity
             updateFromPreferences();
             if(iEnuDisplaySongOld != oApplication.getEnuDisplaySong())
                vReturnReload();
-            else if(oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ALL)
-               setChords();            
+//            else if(oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ALL)
+//               setChords();            
             
          }
       }

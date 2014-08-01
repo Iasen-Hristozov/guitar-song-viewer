@@ -97,7 +97,7 @@ public class Main extends FragmentActivity implements IDataExchange
          super.setContentView(R.layout.activity_main);
 
          tvTitle = (TextView) findViewById(R.id.tvTitle);
-         tvChords = (TextView) findViewById(R.id.tvChords1);
+         tvChords = (TextView) findViewById(R.id.tvChordsRelative);
 
          if(iEnuDisplayChords != ENU_DISPLAY_CHORDS_ALL)
             tvChords.setVisibility(View.GONE);
@@ -121,7 +121,7 @@ public class Main extends FragmentActivity implements IDataExchange
          super.setContentView(R.layout.activity_main_scroll);
          
          tvTitle = (TextView) findViewById(R.id.tvTitle);
-         tvChords = (TextView) findViewById(R.id.tvChords1);
+         tvChords = (TextView) findViewById(R.id.tvChordsRelative);
          tvChords1 = (TextView) findViewById(R.id.tvChords);
          tvText = (TextView) findViewById(R.id.tvText);
          

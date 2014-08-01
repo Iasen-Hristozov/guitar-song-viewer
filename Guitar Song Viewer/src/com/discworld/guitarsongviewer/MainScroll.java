@@ -12,8 +12,11 @@ import com.discworld.guitarsongviewer.dto.CMain;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -26,6 +29,7 @@ public class MainScroll extends CMain
 {
    private int verticalScrollMax,
                scrollPos = 0,
+               iScrollSpeed,
                heightToScroll = 1,
                scrollPeriod = 20;
    
@@ -34,11 +38,10 @@ public class MainScroll extends CMain
    private ScrollView svMain;
    private RelativeLayout rlText;
    private TextView tvText,
-                    tvChords1;
+                    tvChordsRelated;
    private Timer scrollTimer     =  null;
    private TimerTask scrollerSchedule;
    private SeekBar sbSpeed;
-   private Handler handler;
    
    private final Runnable Timer_Tick  =  new Runnable() 
    {
@@ -60,16 +63,18 @@ public class MainScroll extends CMain
       svMain  =   (ScrollView) findViewById(R.id.svMain);
       rlText = (RelativeLayout)findViewById(R.id.llText);
       tvText  = (TextView)findViewById(R.id.tvText);
-      tvChords1 = (TextView) findViewById(R.id.tvChords1);
+      tvChordsRelated = (TextView) findViewById(R.id.tvChordsRelative);
       
       tvText.setTextSize(oApplication.getTextSize());
-      tvChords1.setTextSize(oApplication.getTextSize());
+      tvChordsRelated.setTextSize(oApplication.getTextSize());
       
       setTitle();
       
       setSong();
       
-      setDispalyChords();
+      setDisplayChords();
+      
+      iScrollSpeed = loadScrollSpeed();
       
       ViewTreeObserver vto =  rlText.getViewTreeObserver();
       vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() 
@@ -80,12 +85,19 @@ public class MainScroll extends CMain
           {
              rlText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
              getScrollMaxAmount();
-             startAutoScrolling(scrollPeriod);
+//             startAutoScrolling(scrollPeriod);
+             
+//             if(iScrollSpeed != seekBarMax)
+                startAutoScrolling(iScrollSpeed);
+             
           }
       });
       
       sbSpeed = (SeekBar) findViewById(R.id.sbSpeed);
       sbSpeed.setMax(seekBarMax);
+      
+      sbSpeed.setProgress(seekBarMax - iScrollSpeed);
+      
       sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
       { 
          @Override 
@@ -97,8 +109,11 @@ public class MainScroll extends CMain
                scrollTimer = null;
             }
 
-            if(progress != 0)
-               startAutoScrolling(seekBar.getMax() - progress);
+            iScrollSpeed = seekBar.getMax() - progress;
+            saveScrollSpeed(iScrollSpeed);
+            
+//            if(progress != 0)
+               startAutoScrolling(iScrollSpeed);
          } 
 
          @Override 
@@ -115,23 +130,23 @@ public class MainScroll extends CMain
        }); 
    }
 
-   private void setDispalyChords()
+   private void setDisplayChords()
    {
       if(oApplication.getEnuDisplayChords() == CApplication.ENU_DISPLAY_CHORDS_NONE || oApplication.getEnuDisplayChords() == CApplication.ENU_DISPLAY_CHORDS_ABOVE)
       {
-         tvChords1.setVisibility(View.GONE);
+         tvChordsRelated.setVisibility(View.GONE);
          tvChords.setVisibility(View.GONE);
       }
       else if(oApplication.getEnuDisplayChords() == CApplication.ENU_DISPLAY_CHORDS_ALL)
       {
          tvChords.setVisibility(View.VISIBLE);
-         tvChords1.setVisibility(View.GONE);
+         tvChordsRelated.setVisibility(View.GONE);
          setChords();
       }
       else if(oApplication.getEnuDisplayChords() == CApplication.ENU_DISPLAY_CHORDS_RELATED)
       {
          tvChords.setVisibility(View.GONE);
-         tvChords1.setVisibility(View.VISIBLE);
+         tvChordsRelated.setVisibility(View.VISIBLE);
       }
    }
    
@@ -142,7 +157,7 @@ public class MainScroll extends CMain
       tvText.setText(null);
       
       if(oApplication.getEnuDisplayChords() == CApplication.ENU_DISPLAY_CHORDS_RELATED)
-         tvChords1.setText(null);
+         tvChordsRelated.setText(null);
       
       ArrayList<? extends CVerse> alVerses = (oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ABOVE ? oApplication.getSong().getChordsTextVerses() : oApplication.getSong().oText.getTextVersesSet());
       CVerse oVerse;
@@ -155,10 +170,17 @@ public class MainScroll extends CMain
          if(oApplication.getEnuDisplayChords() == CApplication.ENU_DISPLAY_CHORDS_RELATED && !((CTextVerse) oVerse).sChordsVerseID.isEmpty())
          {
             oChordsVerse = oApplication.getSong().alChords.get(oApplication.getSong().htChordsIdNdx.get(((CTextVerse) oVerse).sChordsVerseID));
-            tvChords1.append(oChordsVerse.toString() + "\n\n");
+            tvChordsRelated.append(oChordsVerse.toString() + "\n\n");
          }
-         
       }
+   }
+   
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) 
+   {
+      cancelAutoScrolling();
+      
+      return super.onOptionsItemSelected(item);
    }
    
    @Override
@@ -175,42 +197,28 @@ public class MainScroll extends CMain
          {
             if(iEnuDisplayChordsOld != oApplication.getEnuDisplayChords())
             {
-               setDispalyChords();
+               setDisplayChords();
                setSong();
+               svMain.scrollTo(0, 0);
             }
             if(iTextSizeOld != oApplication.getTextSize())
             {
                tvText.setTextSize(oApplication.getTextSize());
                if(oApplication.getEnuDisplayChords() == CApplication.ENU_DISPLAY_CHORDS_RELATED)
-                  tvChords1.setTextSize(oApplication.getTextSize());
+                  tvChordsRelated.setTextSize(oApplication.getTextSize());
+               svMain.scrollTo(0, 0);
             }
          }
       }
       else if(requestCode == SHOW_OPEN)
       {
-         setDispalyChords();
+         setDisplayChords();
          setSong();
+         svMain.scrollTo(0, 0);
       }
+      
+      startAutoScrolling(iScrollSpeed);
    }   
-   
-   public void startAutoScrolling1()
-   {
-      handler = new Handler();
-      
-      Runnable runnable = new Runnable() {
-         @Override
-         public void run() {
-            /* do what you need to do */
-            moveScrollView();
-            /* and here comes the "trick" */
-            int delay = sbSpeed.getProgress();
-            handler.postDelayed(this, delay);
-         }
-      };      
-      
-      
-      handler.postDelayed(runnable, 100);
-   }
 
    public void getScrollMaxAmount()
    {
@@ -221,6 +229,9 @@ public class MainScroll extends CMain
    
    public void startAutoScrolling(int scrollPeriod)
    {
+      if(scrollPeriod == seekBarMax)
+         return;
+      
       if(scrollerSchedule != null)
       {
          scrollerSchedule.cancel();
@@ -277,30 +288,37 @@ public class MainScroll extends CMain
    
    public void onDestroy()
    {
-      clearTimerTaks(scrollerSchedule);
-      clearTimers(scrollTimer);
-      
-      scrollerSchedule      = null;
-      scrollTimer           = null;
+      cancelAutoScrolling();
       
       super.onDestroy();
    }
    
-   private void clearTimers(Timer timer)
+   private void saveScrollSpeed(int iScrollSpeed)
    {
-       if(timer != null) 
-       {
-          timer.cancel();
-           timer = null;
-       }
+      SharedPreferences oPrf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+      Editor editor = oPrf.edit();
+      editor.putInt(Preferences.PREF_SCROLL_SPEED, iScrollSpeed);
+      editor.commit();
    }
    
-   private void clearTimerTaks(TimerTask timerTask)
+   private int loadScrollSpeed()
    {
-      if(timerTask != null) 
+      SharedPreferences oPrf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+      return oPrf.getInt(Preferences.PREF_SCROLL_SPEED, seekBarMax);
+   }
+   
+   private void cancelAutoScrolling()
+   {
+      if(scrollerSchedule != null)
       {
-         timerTask.cancel();
-         timerTask = null;
+         scrollerSchedule.cancel();
+         scrollerSchedule = null;
+      }
+      
+      if(scrollTimer != null)
+      {
+         scrollTimer.cancel();
+         scrollTimer = null;
       }
    }
 }

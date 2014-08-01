@@ -1,26 +1,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:tools="http://schemas.android.com/tools"
-   android:id="@+id/RelativeLayout1"
    android:layout_width="fill_parent"
    android:layout_height="fill_parent"
    android:orientation="vertical"
    tools:context=".Main" >
 
     <TextView
-       android:id="@+id/tvChords"
-       android:layout_width="wrap_content"
+       android:id="@+id/tvTitle"
+       android:layout_width="fill_parent"
        android:layout_height="wrap_content"
-       android:layout_alignParentRight="true"
-       android:layout_marginRight="5dp"
-       android:layout_marginTop="30dp"
-       android:text="Chords"
-       android:textAppearance="?android:attr/textAppearanceSmall" />
+       android:gravity="center_horizontal"
+       android:paddingBottom="5dp"
+       android:paddingTop="5dp"
+       android:text="Author - Title"
+       android:textAppearance="?android:attr/textAppearanceMedium"
+       android:textStyle="bold" />
+
+   <TextView
+      android:id="@+id/tvChords"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_below="@id/tvTitle"
+      android:layout_marginRight="5dp"
+      android:text="Chords"
+      android:textAppearance="?android:attr/textAppearanceSmall" />
 
    <ScrollView
       android:id="@+id/svMain"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_alignParentTop="true" >
+      android:layout_below="@id/tvTitle" >
 
       <RelativeLayout
          android:id="@+id/llText"
@@ -32,32 +42,16 @@
             android:id="@+id/tvText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvTitle"
             android:text="Text" />
 
          <TextView
-            android:id="@+id/tvChords1"
+            android:id="@+id/tvChordsRelative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/tvTitle"
             android:layout_marginRight="5dp"
             android:text="Chords1"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-
-         <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center_horizontal"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:text="Author - Title"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold" />
-
       </RelativeLayout>
    </ScrollView>
 
@@ -66,7 +60,10 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="10dp"
       android:max="20"
-      android:progress="1" />
+      android:progress="1"
+      android:progressDrawable="@xml/progress_horizontal_holo_light" />
 
 </RelativeLayout>
