@@ -188,7 +188,7 @@ public class MainScroll extends CMain
    {
       int iEnuDisplayChordsOld = oApplication.getEnuDisplayChords();
       int iTextSizeOld = oApplication.getTextSize();
-      
+
       super.onActivityResult(requestCode, resultCode, intent);
       
       if(requestCode == SHOW_PREFERENCES)

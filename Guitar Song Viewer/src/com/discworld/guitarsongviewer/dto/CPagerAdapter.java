@@ -1,4 +1,4 @@
-package com.discworld.guitarsongviewer;
+package com.discworld.guitarsongviewer.dto;
 
 /**
 *

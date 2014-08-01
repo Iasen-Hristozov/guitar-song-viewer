@@ -1,9 +1,12 @@
-package com.discworld.guitarsongviewer;
+package com.discworld.guitarsongviewer.dto;
 
 import com.discworld.guitarsonglib.CChordsVerse;
 import com.discworld.guitarsonglib.CTextVerse;
 import com.discworld.guitarsonglib.CVerseSet;
-import com.discworld.guitarsongviewer.dto.IDataExchange;
+import com.discworld.guitarsongviewer.MainPager;
+import com.discworld.guitarsongviewer.R;
+import com.discworld.guitarsongviewer.R.id;
+import com.discworld.guitarsongviewer.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;

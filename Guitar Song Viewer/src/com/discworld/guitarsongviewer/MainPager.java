@@ -42,9 +42,12 @@ public class MainPager extends CMain implements IDataExchange
       super.setContentView(R.layout.activity_main);
 
       tvTitle = (TextView) findViewById(R.id.tvTitle);
-      tvChords = (TextView) findViewById(R.id.tvChordsRelative);
+//      tvChords = (TextView) findViewById(R.id.tvChordsRelative);
+      tvChords = (TextView) findViewById(R.id.tvChords);
 
       setTitle();
+      
+      setDisplayChords();
       
       if(oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ALL)
          setChords();
@@ -69,21 +72,28 @@ public class MainPager extends CMain implements IDataExchange
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent intent) 
    {
+      int iEnuDisplayChordsOld = oApplication.getEnuDisplayChords();
+      
       super.onActivityResult(requestCode, resultCode, intent);
       
       if(requestCode == SHOW_PREFERENCES)
       {
          if(resultCode == Activity.RESULT_CANCELED)
          {
+            if(iEnuDisplayChordsOld != oApplication.getEnuDisplayChords())
+            {
+               setDisplayChords();
+
+               if(oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ALL)
+                  setChords();            
+            }
+            
             if(mPagerAdapter != null)
             {
                mPagerAdapter.deleteAllItems();
                mPagerAdapter.notifyDataSetChanged();
             }
             iLinesNbr = 0;
-            
-            if(oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ALL)
-               setChords();            
             
             initialisePaging();
          }
@@ -102,6 +112,14 @@ public class MainPager extends CMain implements IDataExchange
          }
       }
    }
+
+   private void setDisplayChords()
+   {
+      if(oApplication.getEnuDisplayChords() != ENU_DISPLAY_CHORDS_ALL)
+         tvChords.setVisibility(View.GONE);
+      else
+         tvChords.setVisibility(View.VISIBLE);
+   }      
    
    private void initialisePaging() 
    {
@@ -190,17 +208,6 @@ public class MainPager extends CMain implements IDataExchange
    {
       return iLinesNbr;
    }   
-   
-   @Override
-   protected void updateFromPreferences()
-   {
-      super.updateFromPreferences();
-      
-      if(oApplication.getEnuDisplayChords() != ENU_DISPLAY_CHORDS_ALL)
-         tvChords.setVisibility(View.GONE);
-      else
-         tvChords.setVisibility(View.VISIBLE);
-   }
 
    // TODO Optimize? Move in fragment?
    @Override

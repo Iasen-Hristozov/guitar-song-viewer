@@ -37,7 +37,7 @@ public class Open extends ListActivity
    {
       super.onCreate(savedInstanceState);
       
-      String path = Environment.getExternalStorageDirectory().toString()+"/" + MainMain.SONGS_FOLDER;
+      String path = Environment.getExternalStorageDirectory().toString()+"/" + Main.SONGS_FOLDER;
         
 //        File root = new File(Environment
 //          .getExternalStorageDirectory()
