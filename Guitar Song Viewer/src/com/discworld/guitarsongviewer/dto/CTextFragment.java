@@ -5,8 +5,6 @@ import com.discworld.guitarsonglib.CTextVerse;
 import com.discworld.guitarsonglib.CVerseSet;
 import com.discworld.guitarsongviewer.MainPager;
 import com.discworld.guitarsongviewer.R;
-import com.discworld.guitarsongviewer.R.id;
-import com.discworld.guitarsongviewer.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -74,7 +72,8 @@ public class CTextFragment extends Fragment
        ViewTreeObserver vto = tvText.getViewTreeObserver();
        vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() 
        {
-           public void onGlobalLayout() 
+           @SuppressWarnings("deprecation")
+         public void onGlobalLayout() 
            {
               ViewTreeObserver obs = tvText.getViewTreeObserver();
               obs.removeGlobalOnLayoutListener(this);              

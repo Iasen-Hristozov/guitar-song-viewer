@@ -13,7 +13,8 @@ public class Preferences extends PreferenceActivity
 	
 	SharedPreferences prefs;
 	
-	@Override
+	@SuppressWarnings("deprecation")
+   @Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
