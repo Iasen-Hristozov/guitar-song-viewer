@@ -82,12 +82,15 @@ public class SongEditor extends JFrame implements ActionListener
    private String sSong;
    private ArrayList<String> alVerses;
    private CSong oSong;
-   
+
    private final static Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
                                 ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})"),
-                                ptrSylablesBG = Pattern.compile("[ÀÚÎÓÅÈŞßÜàúîóåèşÿ]"),
-                                ptrSylablesRU = Pattern.compile("[ÀÚÎÓÅÈŞßÜİÛàúîóåèşÿûı¸]"),
-                                ptrLngRU = Pattern.compile("[İÛûı]"),
+//                                ptrSylablesBG = Pattern.compile("[ĞĞªĞĞ£Ğ•Ğ˜Ğ®Ğ¯Ğ¬Ğ°ÑŠĞ¾ÑƒĞµĞ¸ÑÑ]"),
+                                ptrSylablesBG = Pattern.compile("[\u0410\u042a\u041e\u0423\u0415\u0418\u042e\u042f\u042c\u0430\u044a\u043e\u0443\u0435\u0438\u044e\u044f]"),
+//                                ptrSylablesRU = Pattern.compile("[ĞĞªĞĞ£Ğ•Ğ˜Ğ®Ğ¯Ğ¬Ğ­Ğ«Ğ°ÑŠĞ¾ÑƒĞµĞ¸ÑÑÑ‹ÑÑ‘]"),
+                                ptrSylablesRU = Pattern.compile("[\u0410\u042a\u041e\u0423\u0415\u0418\u042e\u042f\u042c\u042d\u042b\u0430\u044a\u043e\u0443\u0435\u0438\u044e\u044f\u044b\u044d\u0451]"),
+//                                ptrLngRU = Pattern.compile("[Ğ­Ğ«Ñ‹Ñ]"),
+                                ptrLngRU = Pattern.compile("[\u042d\u042b\u044b\u044d]"),
                                 ptrLngEN = Pattern.compile("[AEIOUYaeiouy]"),
                                 ptrEngWord = Pattern.compile("\\w+");
    
@@ -224,8 +227,8 @@ public class SongEditor extends JFrame implements ActionListener
       
       cbxLanguage = new JComboBox();
       cbxLanguage.setMaximumRowCount(3);
-//      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
-      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "Áúëãàğñêè", "Ğóñêèé"}));
+      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
+//      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "ÃÃºÃ«Ã£Ã Ã°Ã±ÃªÃ¨", "ÃÃ³Ã±ÃªÃ¨Ã©"}));
       lblLang.setLabelFor(cbxLanguage);
       pnlLang.add(cbxLanguage, BorderLayout.CENTER);
       
@@ -483,7 +486,9 @@ public class SongEditor extends JFrame implements ActionListener
       final String USER_AGENT = "Mozilla/5.0",
                    sTitleNameBgn = "<h1>",
                    sTitleNameEnd = "</h1>",
-                   sTitleBgn = "Àêêîğäû ïåñíè ",
+//                   sTitleBgn = "Ã€ÃªÃªÃ®Ã°Ã¤Ã» Ã¯Ã¥Ã±Ã­Ã¨ ",
+//                   sTitleBgn = "ĞĞºĞºĞ¾Ñ€Ğ´Ñ‹ Ğ¿ĞµÑĞ½Ğ¸ ",
+                   sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ",
                    sAuthorBgn = " (",
                    sAuthorEnd = ")",
                    sTextBgn = "<pre class=textsong>",
