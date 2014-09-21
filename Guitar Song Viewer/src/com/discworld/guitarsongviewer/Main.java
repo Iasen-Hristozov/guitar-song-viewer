@@ -14,8 +14,8 @@ import com.discworld.guitarsongviewer.dto.*;
 
 public class Main extends Activity 
 {
-   public final static String SONGS_FOLDER = "Songs";
-   
+   public final static String SONGS_FOLDER = "Songs",
+                              SONGS_SUFFIX = ".xml";
    private final static int SHOW_SONG_PAGER = 1,
                             SHOW_SONG_SCROLL = 2;
 

@@ -20,7 +20,7 @@ import com.discworld.guitarsongviewer.dto.*;
 
 public class MainPager extends CMain implements IDataExchange
 {
-   public final static String SONGS_SUFFIX = ".xml";
+   
    
    private int iLinesNbr = 0;
    

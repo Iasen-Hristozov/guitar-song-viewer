@@ -67,7 +67,7 @@ public class Open extends ListActivity
       lsSongsTitles.clear();
       for(File file : files)
       {
-         if(file.getName().endsWith(MainPager.SONGS_SUFFIX))
+         if(file.getName().endsWith(Main.SONGS_SUFFIX))
          {
             if(!(sSongTitle = getSongTitle(file.getPath())).isEmpty())
             {
