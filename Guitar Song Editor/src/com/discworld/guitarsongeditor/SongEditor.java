@@ -1,6 +1,7 @@
 package com.discworld.guitarsongeditor;
 
 import javax.swing.JFrame;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Insets;
@@ -20,23 +21,22 @@ import javax.swing.BoxLayout;
 import javax.swing.SwingUtilities;
 
 import java.awt.Component;
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.Policy;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.SwingConstants;
-
 import javax.swing.UIManager;
 import javax.swing.JLabel;
 
@@ -48,9 +48,12 @@ import com.discworld.guitarsonglib.CChordsVerse;
 import com.discworld.guitarsonglib.CSong;
 import com.discworld.guitarsonglib.CTextLine;
 import com.discworld.guitarsonglib.CTextVerse;
+import com.discworld.guitarsongplugins.dto.CGuitarSongPlugin;
 
 import javax.swing.JComboBox;
+
 import java.awt.FlowLayout;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -82,6 +85,11 @@ public class SongEditor extends JFrame implements ActionListener
    private String sSong;
    private ArrayList<String> alVerses;
    private CSong oSong;
+   
+   private final static String PLUGIN_FOLDER = "plugins",
+                               PLUGIN_SUFFIX = ".jar";      
+   
+   private static ArrayList<CGuitarSongPlugin> alPlugins;
 
    private final static Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
                                 ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})"),
@@ -96,7 +104,6 @@ public class SongEditor extends JFrame implements ActionListener
    
    
 
-   private final static String URL_FLS_VMS = "falshivim-vmeste.ru";        
    private Matcher mtcText;
    
    private ArrayList<CChordsTextPair> alChordsTextPairs;
@@ -348,11 +355,34 @@ public class SongEditor extends JFrame implements ActionListener
       
       this.setSize(640, 480);
       this.setVisible(true);
+      
+      //===============================================================
+      // Loading plugins
+      new File(PLUGIN_FOLDER).mkdirs();
+      
+      Policy.setPolicy(new PluginPolicy());
+      System.setSecurityManager(new SecurityManager());
+      
+      alPlugins = new ArrayList<CGuitarSongPlugin>();
+      
+      final File fPluginFolder = new File(System.getProperty("user.dir") + "\\" + PLUGIN_FOLDER);
+      
+      try
+      {
+         loadPlugins(fPluginFolder);
+      } catch(InstantiationException | IllegalAccessException
+               | ClassNotFoundException | IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }      
+      
       //===============================================================
       // For test purposes only. Remove it before release
       
       getSongFromURL(txtURL.getText());
       txtSong.setCaretPosition(0);
+      
       
 //      com.itextpdf.text.pdf.hyphenation.Hyphenator h = new com.itextpdf.text.pdf.hyphenation.Hyphenator("en", "US", 2, 2);
 //      Hyphenation s = h.hyphenate("hyphenation");
@@ -386,6 +416,53 @@ public class SongEditor extends JFrame implements ActionListener
       
    }
 
+   private static void loadPlugins(final File fPluginFolder) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
+   {
+      for (final File fEntry : fPluginFolder.listFiles()) 
+      {
+         if (fEntry.isDirectory()) 
+         {
+             loadPlugins(fEntry);
+         } 
+         else 
+         {
+//             System.out.println(fEntry.getName());
+             
+             if(!fEntry.getName().endsWith(PLUGIN_SUFFIX))
+                continue;
+             
+             ClassLoader oClassLoader = URLClassLoader.newInstance(new URL[] { fEntry.toURL() });
+             CGuitarSongPlugin authorizedPlugin = (CGuitarSongPlugin) oClassLoader.loadClass(getClassName(fEntry.getAbsolutePath())).newInstance();
+             alPlugins.add(authorizedPlugin);
+         }
+     }      
+   }
+   
+   private static String getClassName(String sFile) throws IOException
+   {
+      String sClassName = "";
+      ZipInputStream zip = new ZipInputStream(new FileInputStream(sFile));
+      for(ZipEntry entry = zip.getNextEntry(); entry!=null && sClassName.isEmpty(); entry=zip.getNextEntry())
+      {
+         if(entry.getName().endsWith(".class") && !entry.isDirectory()) 
+         {
+            // This ZipEntry represents a class. Now, what class does it represent?
+            StringBuilder className=new StringBuilder();
+            for(String part : entry.getName().split("/")) 
+            {
+               if(className.length() != 0)
+                  className.append(".");
+                  className.append(part);
+               if(part.endsWith(".class"))
+                  className.setLength(className.length()-".class".length());
+            }
+            sClassName = className.toString();
+         }
+      }
+      zip.close();
+      return sClassName;
+   }   
+   
    @Override
    public void actionPerformed(ActionEvent e)
    {
@@ -474,105 +551,19 @@ public class SongEditor extends JFrame implements ActionListener
 
    private void getSongFromURL(String sURL)
    {
-      if(sURL.contains(URL_FLS_VMS))
+      for(CGuitarSongPlugin oPlugin: alPlugins)
       {
-         getSongFromFalshivimVmeste(sURL);
-      }
-      
-   }
-
-   private void getSongFromFalshivimVmeste(String sURL)
-   {
-      final String USER_AGENT = "Mozilla/5.0",
-                   sTitleNameBgn = "<h1>",
-                   sTitleNameEnd = "</h1>",
-//                   sTitleBgn = "Àêêîðäû ïåñíè ",
-//                   sTitleBgn = "Аккорды песни ",
-                   sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ",
-                   sAuthorBgn = " (",
-                   sAuthorEnd = ")",
-                   sTextBgn = "<pre class=textsong>",
-                   sTextEnd = "</pre>";
-  
-      String       sResponse;
-  
-      URL          oURL;
-  
-      BufferedReader   in; 
-  
-      HttpURLConnection oHTTPConn;
-  
-      try
-      {
-         oURL = new URL(sURL);
-         oHTTPConn = (HttpURLConnection) oURL.openConnection();
-
-         // optional default is GET
-         oHTTPConn.setRequestMethod("GET");
-     
-         // add reuqest header
-         oHTTPConn.setRequestProperty("User-Agent", USER_AGENT);
-     
-         if(oHTTPConn.getResponseCode() == 200)
+         if(sURL.contains(oPlugin.getDomainName()))
          {
-            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream(), "UTF-8"));
-//            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream()));
-        
-            String inputLine;
-            StringBuffer sbResponse = new StringBuffer();
-    
-            while ((inputLine = in.readLine()) != null) 
-               sbResponse.append(inputLine + "\n");
-//            int inputChar;
-//            while ((inputChar = in.read()) != -1)
-//               sbResponse.append((char)inputChar);
-//            sResponse = sbResponse.toString();
-//            txtSong.setText(sResponse);            
-            in.close();
-        
-            sResponse = sbResponse.toString();
-
-            // Get song title and author
-            int iTtlNmBgn = sResponse.indexOf(sTitleNameBgn);
-            int iTtlNmEnd = sResponse.indexOf(sTitleNameEnd);
-            String sTtlNm = sResponse.substring(iTtlNmBgn + sTitleNameBgn.length(), iTtlNmEnd);
+            oPlugin.getSongFromURL(sURL);
             
-            // Get and set song title
-            int iTtlBgn = sTtlNm.indexOf(sTitleBgn);
-            int iTtlEnd = sTtlNm.indexOf(sAuthorBgn);
-            String sTitle = sTtlNm.substring(iTtlBgn + sTitleBgn.length(), iTtlEnd);
-            txtTitle.setText(sTitle);
+            txtTitle.setText(oPlugin.getTitle());
+            txtAuthor.setText(oPlugin.getAuthor());
+            txtSong.setText(oPlugin.getSong());
             txtTitle.setCaretPosition(0);
-            
-            // Get and set song author
-            int iAthEnd = sTtlNm.indexOf(sAuthorEnd);
-            String sAuthor = sTtlNm.substring(iTtlEnd + sAuthorBgn.length(), iAthEnd);
-            txtAuthor.setText(sAuthor);
-            txtTitle.setCaretPosition(0);
-            
-            // Get and set song text
-            int iTxtBgn =  sResponse.indexOf(sTextBgn);
-            int iTxtEnd =  sResponse.indexOf(sTextEnd);
-            String sText = sResponse.substring(iTxtBgn + sTextBgn.length(), iTxtEnd);
-            txtSong.setText(sText);
             txtSong.setCaretPosition(0);
          }
-      } 
-      catch(MalformedURLException e)
-      {
-         e.printStackTrace();
-      } 
-      catch(ProtocolException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      } 
-      catch(IOException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-  
+      }      
    }
 
    private void convertSongStringToObject()
