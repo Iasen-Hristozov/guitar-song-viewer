@@ -49,7 +49,6 @@ public class About extends Activity
       setResult(RESULT_OK, new Intent());
       finish();
    }
-
    
    public String getReleaseDate()
    {
