@@ -432,8 +432,8 @@ public class SongEditor extends JFrame implements ActionListener
                 continue;
              
              ClassLoader oClassLoader = URLClassLoader.newInstance(new URL[] { fEntry.toURL() });
-             CGuitarSongPlugin authorizedPlugin = (CGuitarSongPlugin) oClassLoader.loadClass(getClassName(fEntry.getAbsolutePath())).newInstance();
-             alPlugins.add(authorizedPlugin);
+             CGuitarSongPlugin oPlugin = (CGuitarSongPlugin) oClassLoader.loadClass(getClassName(fEntry.getAbsolutePath())).newInstance();
+             alPlugins.add(oPlugin);
          }
      }      
    }
