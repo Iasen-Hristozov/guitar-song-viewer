@@ -27,8 +27,13 @@ public class PluginTest
 
    public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
    {
-      final String sURL = "http://www.falshivim-vmeste.ru/songs/827193600.html";
-    
+//      final String sURL = "http://www.falshivim-vmeste.ru/songs/827193600.html";
+      
+//      final String sURL = "http://tabs.ultimate-guitar.com/j/johnny_mandel/suicide_is_painless_tab.htm";
+//      final String sURL = "http://tabs.ultimate-guitar.com/b/blues_brothers/rawhide_crd.htm";
+//      final String sURL = "http://muzland.ru/songs.html?auth=108&song=3&tone=Am";
+      final String sURL = "http://muzland.ru/songs.html?auth=108&song=35";
+      
       new File(PLUGIN_FOLDER).mkdirs();
       
       Policy.setPolicy(new PluginPolicy());
@@ -74,11 +79,11 @@ public class PluginTest
              
 //             File authorizedJarFile = new File("FalshivimVmeste.jar");
 //             File authorizedJarFile = new File(fEntry.getName());
-             ClassLoader authorizedLoader = URLClassLoader.newInstance(new URL[] { fEntry.toURL() });
+             ClassLoader oClassLoader = URLClassLoader.newInstance(new URL[] { fEntry.toURL() });
 //             System.out.println(getClassName(authorizedJarFile.getPath()));
 //             CGuitarSongPlugin authorizedPlugin = (CGuitarSongPlugin) authorizedLoader.loadClass("com.discworld.guitarsongplugins.FalshivimVmeste").newInstance();
-             CGuitarSongPlugin authorizedPlugin = (CGuitarSongPlugin) authorizedLoader.loadClass(getClassName(fEntry.getPath())).newInstance();
-             alPlugins.add(authorizedPlugin);
+             CGuitarSongPlugin oPlugin = (CGuitarSongPlugin) oClassLoader.loadClass(getClassName(fEntry.getAbsolutePath())).newInstance();
+             alPlugins.add(oPlugin);
              
          }
      }      
