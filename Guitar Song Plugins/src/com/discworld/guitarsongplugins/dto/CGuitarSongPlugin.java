@@ -1,13 +1,144 @@
 package com.discworld.guitarsongplugins.dto;
 
-public abstract class CGuitarSongPlugin
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+public class CGuitarSongPlugin
 {
+//   protected String DOMAIN = "http://muzland.ru/",
+//                    sTitleNameBgn = "<h1 class=\"songname\">",
+//                    sTitleNameEnd = "</h1>",
+//                    sTitleBgn = "<div itemprop=\"name\">",
+//                    sTitleEnd = "</div>",
+//                    sAuthorBgn = "<div itemprop=\"byArtist\">",
+//                    sAuthorEnd = "</div>",
+//                    sTextBgn = "<pre itemprop=\"chordsBlock\">",
+//                    sTextEnd = "</pre>";
+   
+   protected String DOMAIN,
+            sTitleNameBgn,
+            sTitleNameEnd,
+            sTitleBgn,
+            sTitleEnd,
+            sAuthorBgn,
+            sAuthorEnd,
+            sTextBgn,
+            sTextEnd;   
+
    protected String sSong,
                     sTitle,
                     sAuthor;   
    
-   abstract public String getDomainName();
-   abstract public void getSongFromURL(String sURL);
+//   protected void onCreate()
+//   {
+//      // TODO Auto-generated method stub
+//      
+//   }
+   
+//   abstract protected void onCreate();
+   
+   public void onCreate()
+   {
+      DOMAIN = "http://muzland.ru/";
+      sTitleNameBgn = "<h1 class=\"songname\">";
+      sTitleNameEnd = "</h1>";
+      sTitleBgn = "<div itemprop=\"name\">";
+      sTitleEnd = "</div>";
+      sAuthorBgn = "<div itemprop=\"byArtist\">";
+      sAuthorEnd = "</div>";
+      sTextBgn = "<pre itemprop=\"chordsBlock\">";
+      sTextEnd = "</pre>";      
+   }
+   
+   public String getDomainName()
+   {
+      return DOMAIN;
+   }
+   
+   public void getSongFromURL(String sURL)
+   {
+      final String USER_AGENT = "Mozilla/5.0";
+      
+      String       sResponse;
+      
+      URL          oURL;
+    
+      BufferedReader   in; 
+    
+      HttpURLConnection oHTTPConn;
+
+      try
+      {
+         oURL = new URL(sURL);
+         oHTTPConn = (HttpURLConnection) oURL.openConnection();
+    
+         // optional default is GET
+         oHTTPConn.setRequestMethod("GET");
+     
+         // add reuqest header
+         oHTTPConn.setRequestProperty("User-Agent", USER_AGENT);
+     
+         if(oHTTPConn.getResponseCode() == 200)
+         {
+            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream(), "UTF-8"));
+        
+            String inputLine;
+            StringBuffer sbResponse = new StringBuffer();
+    
+            while ((inputLine = in.readLine()) != null) 
+               sbResponse.append(inputLine + "\n");
+            in.close();
+        
+            sResponse = sbResponse.toString();
+    
+            // Get song title and author
+            String sTtlNm;
+            if(!sTitleNameBgn.isEmpty() && !sTitleNameBgn.isEmpty())
+            {
+               int iTtlNmBgn = sResponse.indexOf(sTitleNameBgn);
+               int iTtlNmEnd = sResponse.indexOf(sTitleNameEnd, iTtlNmBgn);
+               sTtlNm = sResponse.substring(iTtlNmBgn + sTitleNameBgn.length(), iTtlNmEnd);
+            }
+            else
+               sTtlNm = sResponse;
+            
+            // Get and set song title
+            int iTtlBgn = sTtlNm.indexOf(sTitleBgn);
+            int iTtlEnd = sTtlNm.indexOf(sTitleEnd, iTtlBgn);
+            sTitle = sTtlNm.substring(iTtlBgn + sTitleBgn.length(), iTtlEnd);
+            
+            // Get and set song author
+            int iAthBgn = sTtlNm.indexOf(sAuthorBgn);
+            int iAthEnd = sTtlNm.indexOf(sAuthorEnd, iAthBgn);
+            sAuthor = sTtlNm.substring(iAthBgn + sAuthorBgn.length(), iAthEnd);
+            
+            // Get and set song text
+            int iTxtBgn =  sResponse.indexOf(sTextBgn);
+            int iTxtEnd =  sResponse.indexOf(sTextEnd, iTxtBgn);
+            sSong = sResponse.substring(iTxtBgn + sTextBgn.length(), iTxtEnd);
+         }
+       } 
+       catch(MalformedURLException e)
+       {
+          e.printStackTrace();
+       } 
+       catch(ProtocolException e)
+       {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+       } 
+       catch(IOException e)
+       {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+       }         
+   }
+   
    public String getTitle()
    {
       return sTitle;
