@@ -17,8 +17,7 @@ public class FalshivimVmeste extends CGuitarSongPlugin
 //      sTitleBgn = "Àêêîðäû ïåñíè ",
 //      sTitleBgn = "Аккорды песни ",
       sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ";
-      sTitleEnd = " (";
-      sAuthorBgn = " (";
+      sTitleEnd = sAuthorBgn = " (";
       sAuthorEnd = ")";
       sTextBgn = "<pre class=textsong>";
       sTextEnd = "</pre>";      

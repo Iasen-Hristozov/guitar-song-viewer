@@ -10,14 +10,14 @@ import java.net.URL;
 
 public class CGuitarSongPlugin
 {
-//   protected String DOMAIN = "http://muzland.ru/",
-//                    sTitleNameBgn = "<h1 class=\"songname\">",
+//   protected String DOMAIN = "falshivim-vmeste.ru",
+//                    sTitleNameBgn = "<h1>",
 //                    sTitleNameEnd = "</h1>",
-//                    sTitleBgn = "<div itemprop=\"name\">",
-//                    sTitleEnd = "</div>",
-//                    sAuthorBgn = "<div itemprop=\"byArtist\">",
+//                    sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ",
+//                    sTitleEnd = " (>",
+//                    sAuthorBgn = " (",
 //                    sAuthorEnd = "</div>",
-//                    sTextBgn = "<pre itemprop=\"chordsBlock\">",
+//                    sTextBgn = "<pre class=textsong>",
 //                    sTextEnd = "</pre>";
    
    protected String DOMAIN,
@@ -42,16 +42,17 @@ public class CGuitarSongPlugin
    
 //   abstract protected void onCreate();
    
-   public void onCreate()
+   public CGuitarSongPlugin()
    {
-      DOMAIN = "http://muzland.ru/";
-      sTitleNameBgn = "<h1 class=\"songname\">";
+      DOMAIN = "falshivim-vmeste.ru";
+      sTitleNameBgn = "<h1>";
       sTitleNameEnd = "</h1>";
-      sTitleBgn = "<div itemprop=\"name\">";
-      sTitleEnd = "</div>";
-      sAuthorBgn = "<div itemprop=\"byArtist\">";
-      sAuthorEnd = "</div>";
-      sTextBgn = "<pre itemprop=\"chordsBlock\">";
+//      sTitleBgn = "Àêêîðäû ïåñíè ",
+//      sTitleBgn = "Аккорды песни ",
+      sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ";
+      sTitleEnd = sAuthorBgn = " (";
+      sAuthorEnd = ")";
+      sTextBgn = "<pre class=textsong>";
       sTextEnd = "</pre>";      
    }
    
