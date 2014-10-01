@@ -27,12 +27,22 @@ public class PluginTest
 
    public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
    {
-      final String sURL = "http://www.falshivim-vmeste.ru/songs/827193600.html";
-      
+//      final String sURL = "http://www.falshivim-vmeste.ru/songs/827193600.html";
 //      final String sURL = "http://tabs.ultimate-guitar.com/j/johnny_mandel/suicide_is_painless_tab.htm";
 //      final String sURL = "http://tabs.ultimate-guitar.com/b/blues_brothers/rawhide_crd.htm";
 //      final String sURL = "http://muzland.ru/songs.html?auth=108&song=3&tone=Am";
 //      final String sURL = "http://muzland.ru/songs.html?auth=108&song=35";
+//      final String sURL = "http://hm6.ru/ddt/18072-ddt-napishi-mne-napishi.html";
+//      final String sURL = "http://hm6.ru/ddt/1233-ddt-antonina.html";
+//      final String sURL = "http://www.amdm.ru/akkordi/mashina_vremeni/12899/ah_kakoi_bil_iziskannii_bal/";
+//      final String sURL = "http://www.amdm.ru/akkordi/mashina_vremeni/3046/sinaa_ptica/";
+      
+//      final String sURL = "http://accords.cu.cc/txt.php?s=070&d=017#v10";
+//      final String sURL = "http://accords.cu.cc/txt.php?s=070&d=024#v08";
+//      final String sURL = "http://www.dix.ru/3039";
+//      final String sURL = "http://www.dix.ru/?id=3168";
+//      final String sURL = "http://abcdisk.ru/akkordi/visockii_vladimir/1222/ballada_o_borbe/";
+      final String sURL = "http://abcdisk.ru/akkordi/visockii_vladimir/14268/ah_vrema_kak_mahorochka/";
       
       new File(PLUGIN_FOLDER).mkdirs();
       

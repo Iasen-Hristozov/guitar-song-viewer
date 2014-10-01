@@ -10,51 +10,48 @@ import java.net.URL;
 
 public class CGuitarSongPlugin
 {
-//   protected String DOMAIN = "falshivim-vmeste.ru",
-//                    sTitleNameBgn = "<h1>",
-//                    sTitleNameEnd = "</h1>",
-//                    sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ",
-//                    sTitleEnd = " (>",
-//                    sAuthorBgn = " (",
-//                    sAuthorEnd = "</div>",
-//                    sTextBgn = "<pre class=textsong>",
-//                    sTextEnd = "</pre>";
    
-   protected String DOMAIN,
-            sTitleNameBgn,
-            sTitleNameEnd,
-            sTitleBgn,
-            sTitleEnd,
-            sAuthorBgn,
-            sAuthorEnd,
-            sTextBgn,
-            sTextEnd;   
+   protected boolean isUTF8 = true;
+   
+   protected String DOMAIN = "falshivim-vmeste.ru",
+                    sTitleNameBgn = "",
+                    sTitleNameEnd = "",
+                    sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ",
+                    sTitleEnd = " (>",
+                    sAuthorBgn = " (",
+                    sAuthorEnd = "</div>",
+                    sTextBgn = "<pre class=textsong>",
+                    sTextEnd = "</pre>";
+   
+//   protected String DOMAIN,
+//            sTitleNameBgn,
+//            sTitleNameEnd,
+//            sTitleBgn,
+//            sTitleEnd,
+//            sAuthorBgn,
+//            sAuthorEnd,
+//            sTextBgn,
+//            sTextEnd;   
 
    protected String sSong,
                     sTitle,
                     sAuthor;   
-   
-//   protected void onCreate()
-//   {
-//      // TODO Auto-generated method stub
-//      
-//   }
-   
+
 //   abstract protected void onCreate();
    
-   public CGuitarSongPlugin()
-   {
-      DOMAIN = "falshivim-vmeste.ru";
-      sTitleNameBgn = "<h1>";
-      sTitleNameEnd = "</h1>";
-//      sTitleBgn = "Àêêîðäû ïåñíè ",
-//      sTitleBgn = "Аккорды песни ",
-      sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ";
-      sTitleEnd = sAuthorBgn = " (";
-      sAuthorEnd = ")";
-      sTextBgn = "<pre class=textsong>";
-      sTextEnd = "</pre>";      
-   }
+//   public CGuitarSongPlugin()
+//   {
+//      DOMAIN = "falshivim-vmeste.ru";
+//      sTitleNameBgn = "<h1>";
+//      sTitleNameEnd = "</h1>";
+////      sTitleBgn = "Àêêîðäû ïåñíè ",
+////      sTitleBgn = "Аккорды песни ",
+//      sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ";
+//      sTitleEnd = sAuthorBgn = " (";
+//      sAuthorEnd = ")";
+//      sTextBgn = "<pre class=textsong>";
+//      sTextEnd = "</pre>";      
+//   }
    
    public String getDomainName()
    {
@@ -65,7 +62,7 @@ public class CGuitarSongPlugin
    {
       final String USER_AGENT = "Mozilla/5.0";
       
-      String       sResponse;
+      String sResponse;
       
       URL          oURL;
     
@@ -86,7 +83,8 @@ public class CGuitarSongPlugin
      
          if(oHTTPConn.getResponseCode() == 200)
          {
-            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream(), "UTF-8"));
+            in = new BufferedReader(isUTF8 ? new InputStreamReader(oHTTPConn.getInputStream(), "UTF-8") : new InputStreamReader(oHTTPConn.getInputStream()));
+//            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream()));
         
             String inputLine;
             StringBuffer sbResponse = new StringBuffer();
@@ -97,31 +95,33 @@ public class CGuitarSongPlugin
         
             sResponse = sbResponse.toString();
     
-            // Get song title and author
-            String sTtlNm;
-            if(!sTitleNameBgn.isEmpty() && !sTitleNameBgn.isEmpty())
-            {
-               int iTtlNmBgn = sResponse.indexOf(sTitleNameBgn);
-               int iTtlNmEnd = sResponse.indexOf(sTitleNameEnd, iTtlNmBgn);
-               sTtlNm = sResponse.substring(iTtlNmBgn + sTitleNameBgn.length(), iTtlNmEnd);
-            }
-            else
-               sTtlNm = sResponse;
+            parseSong(sResponse);
             
-            // Get and set song title
-            int iTtlBgn = sTtlNm.indexOf(sTitleBgn);
-            int iTtlEnd = sTtlNm.indexOf(sTitleEnd, iTtlBgn);
-            sTitle = sTtlNm.substring(iTtlBgn + sTitleBgn.length(), iTtlEnd);
-            
-            // Get and set song author
-            int iAthBgn = sTtlNm.indexOf(sAuthorBgn);
-            int iAthEnd = sTtlNm.indexOf(sAuthorEnd, iAthBgn);
-            sAuthor = sTtlNm.substring(iAthBgn + sAuthorBgn.length(), iAthEnd);
-            
-            // Get and set song text
-            int iTxtBgn =  sResponse.indexOf(sTextBgn);
-            int iTxtEnd =  sResponse.indexOf(sTextEnd, iTxtBgn);
-            sSong = sResponse.substring(iTxtBgn + sTextBgn.length(), iTxtEnd);
+//            // Get song title and author
+//            String sTtlNm;
+//            if(!sTitleNameBgn.isEmpty() && !sTitleNameBgn.isEmpty())
+//            {
+//               int iTtlNmBgn = sResponse.indexOf(sTitleNameBgn);
+//               int iTtlNmEnd = sResponse.indexOf(sTitleNameEnd, iTtlNmBgn);
+//               sTtlNm = sResponse.substring(iTtlNmBgn + sTitleNameBgn.length(), iTtlNmEnd);
+//            }
+//            else
+//               sTtlNm = sResponse;
+//            
+//            // Get and set song title
+//            int iTtlBgn = sTtlNm.indexOf(sTitleBgn);
+//            int iTtlEnd = sTtlNm.indexOf(sTitleEnd, iTtlBgn);
+//            sTitle = sTtlNm.substring(iTtlBgn + sTitleBgn.length(), iTtlEnd);
+//            
+//            // Get and set song author
+//            int iAthBgn = sTtlNm.indexOf(sAuthorBgn);
+//            int iAthEnd = sTtlNm.indexOf(sAuthorEnd, iAthBgn);
+//            sAuthor = sTtlNm.substring(iAthBgn + sAuthorBgn.length(), iAthEnd);
+//            
+//            // Get and set song text
+//            int iTxtBgn =  sResponse.indexOf(sTextBgn);
+//            int iTxtEnd =  sResponse.indexOf(sTextEnd, iTxtBgn);
+//            sSong = sResponse.substring(iTxtBgn + sTextBgn.length(), iTxtEnd);
          }
        } 
        catch(MalformedURLException e)
@@ -138,6 +138,38 @@ public class CGuitarSongPlugin
           // TODO Auto-generated catch block
           e.printStackTrace();
        }         
+   }
+   
+   protected void parseSong(String sResponse)
+   {
+      // Get song title and author
+      String sTtlNm;
+      if(!sTitleNameBgn.isEmpty() && !sTitleNameBgn.isEmpty())
+      {
+         int iTtlNmBgn = sResponse.indexOf(sTitleNameBgn);
+         int iTtlNmEnd = sResponse.indexOf(sTitleNameEnd, iTtlNmBgn);
+         sTtlNm = sResponse.substring(iTtlNmBgn + sTitleNameBgn.length(), iTtlNmEnd);
+      }
+      else
+         sTtlNm = sResponse;
+      
+      // Get and set song title
+      int iTtlBgn = sTtlNm.indexOf(sTitleBgn);
+      int iTtlEnd = sTtlNm.indexOf(sTitleEnd, iTtlBgn);
+      sTitle = sTtlNm.substring(iTtlBgn + sTitleBgn.length(), iTtlEnd);
+      
+      // Get and set song author
+      if(!sAuthorBgn.isEmpty() && !sAuthorEnd.isEmpty())
+      {
+         int iAthBgn = sTtlNm.indexOf(sAuthorBgn);
+         int iAthEnd = sTtlNm.indexOf(sAuthorEnd, iAthBgn);
+         sAuthor = sTtlNm.substring(iAthBgn + sAuthorBgn.length(), iAthEnd);
+      }
+      
+      // Get and set song text
+      int iTxtBgn =  sResponse.indexOf(sTextBgn);
+      int iTxtEnd =  sResponse.indexOf(sTextEnd, iTxtBgn);
+      sSong = sResponse.substring(iTxtBgn + sTextBgn.length(), iTxtEnd);      
    }
    
    public String getTitle()

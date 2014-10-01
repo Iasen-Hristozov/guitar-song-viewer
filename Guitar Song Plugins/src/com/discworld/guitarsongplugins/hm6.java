@@ -8,11 +8,16 @@ public class hm6 extends CGuitarSongPlugin
    public hm6()
    {
       DOMAIN = "hm6.ru";
-      sTitleNameBgn = "<span itemprop=\"title\">";
-      sTitleNameEnd = "</span>";
-      sTitleBgn = " -  ";
-      sTitleEnd = sAuthorBgn = " (";
-      sAuthorEnd = ")";
+      
+      isUTF8 = false;
+      
+//      sTitleNameBgn = "<h1 class=\"b-title\">";
+      sTitleNameBgn = "<h1 class=";
+//      sTitleNameEnd = "</h1>";
+      sTitleNameEnd = "h1>";
+      sTitleBgn = "\"b-title\">";;
+      sTitleEnd = sAuthorBgn = " - ";
+      sAuthorEnd = "</";
       sTextBgn = "<pre class=\"w-words__text\" itemprop=\"chordsBlock\">";
       sTextEnd = "</pre>";      
    }
@@ -22,8 +27,17 @@ public class hm6 extends CGuitarSongPlugin
    {
       super.getSongFromURL(sURL);
       
-      sSong.replaceAll("</a>", "");
-      sSong.replaceAll("</span>", "");
-      sSong.replaceAll("<span .*\" >", "");
+      sTitle = sTitle.trim();
+      sAuthor = sAuthor.trim();
+      
+      String sTmp = sTitle;
+      sTitle = sAuthor;
+      sAuthor = sTmp;
+      
+//      sSong = sSong.replaceAll("</a>", "");
+//      sSong = sSong.replaceAll("</span>", "");
+//      sSong = sSong.replaceAll("<span .*\" >", "");
+      sSong = sSong.replaceAll("<[^<]*<?[^<]*>?[^<]*>", "");
+      sSong = sSong.replaceAll("&ndash;", "-");
    }
 }
