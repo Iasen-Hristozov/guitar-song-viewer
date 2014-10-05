@@ -12,6 +12,7 @@ public class FalshivimVmeste extends CGuitarSongPlugin
    public FalshivimVmeste()
    {
       DOMAIN = "falshivim-vmeste.ru";
+      PATTERN = "http://?www\\.?falshivim-vmeste\\.ru/songs/(\\d*)\\.html";
       TITLE_NAME_BGN = "<h1>";
       TITLE_NAME_END = "</h1>";
 //      sTitleBgn = "Àêêîðäû ïåñíè ",

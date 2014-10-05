@@ -14,6 +14,7 @@ public class CGuitarSongPlugin
    protected boolean isUTF8 = true;
    
    protected String DOMAIN = "falshivim-vmeste.ru",
+                    PATTERN = "",
                     TITLE_NAME_BGN = "",
                     TITLE_NAME_END = "",
                     TITLE_BGN = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ",
