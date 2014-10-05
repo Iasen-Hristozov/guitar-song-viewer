@@ -10,14 +10,14 @@ public class Muzland extends CGuitarSongPlugin
    public Muzland()
    {
       DOMAIN = "http://muzland.ru/";
-      sTitleNameBgn = "<h1 class=\"songname\">";
-      sTitleNameEnd = "</h1>";
-      sTitleBgn = "<div itemprop=\"name\">";
-      sTitleEnd = "</div>";
-      sAuthorBgn = "<div itemprop=\"byArtist\">";
-      sAuthorEnd = "</div>";
-      sTextBgn = "<pre itemprop=\"chordsBlock\">";
-      sTextEnd = "</pre>";
+      TITLE_NAME_BGN = "<h1 class=\"songname\">";
+      TITLE_NAME_END = "</h1>";
+      TITLE_BGN = "<div itemprop=\"name\">";
+      TITLE_END = "</div>";
+      AUTHOR_BGN = "<div itemprop=\"byArtist\">";
+      AUTHOR_END = "</div>";
+      TEXT_BGN = "<pre itemprop=\"chordsBlock\">";
+      TEXT_END = "</pre>";
    }
    
 

@@ -12,14 +12,14 @@ public class hm6 extends CGuitarSongPlugin
       isUTF8 = false;
       
 //      sTitleNameBgn = "<h1 class=\"b-title\">";
-      sTitleNameBgn = "<h1 class=";
+      TITLE_NAME_BGN = "<h1 class=";
 //      sTitleNameEnd = "</h1>";
-      sTitleNameEnd = "h1>";
-      sTitleBgn = "\"b-title\">";;
-      sTitleEnd = sAuthorBgn = " - ";
-      sAuthorEnd = "</";
-      sTextBgn = "<pre class=\"w-words__text\" itemprop=\"chordsBlock\">";
-      sTextEnd = "</pre>";      
+      TITLE_NAME_END = "h1>";
+      TITLE_BGN = "\"b-title\">";;
+      TITLE_END = AUTHOR_BGN = " - ";
+      AUTHOR_END = "</";
+      TEXT_BGN = "<pre class=\"w-words__text\" itemprop=\"chordsBlock\">";
+      TEXT_END = "</pre>";      
    }
    
    @Override

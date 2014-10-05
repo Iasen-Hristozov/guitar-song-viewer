@@ -14,14 +14,14 @@ public class CGuitarSongPlugin
    protected boolean isUTF8 = true;
    
    protected String DOMAIN = "falshivim-vmeste.ru",
-                    sTitleNameBgn = "",
-                    sTitleNameEnd = "",
-                    sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ",
-                    sTitleEnd = " (>",
-                    sAuthorBgn = " (",
-                    sAuthorEnd = "</div>",
-                    sTextBgn = "<pre class=textsong>",
-                    sTextEnd = "</pre>";
+                    TITLE_NAME_BGN = "",
+                    TITLE_NAME_END = "",
+                    TITLE_BGN = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ",
+                    TITLE_END = " (>",
+                    AUTHOR_BGN = " (",
+                    AUTHOR_END = "</div>",
+                    TEXT_BGN = "<pre class=textsong>",
+                    TEXT_END = "</pre>";
    
 //   protected String DOMAIN,
 //            sTitleNameBgn,
@@ -144,32 +144,32 @@ public class CGuitarSongPlugin
    {
       // Get song title and author
       String sTtlNm;
-      if(!sTitleNameBgn.isEmpty() && !sTitleNameBgn.isEmpty())
+      if(!TITLE_NAME_BGN.isEmpty() && !TITLE_NAME_BGN.isEmpty())
       {
-         int iTtlNmBgn = sResponse.indexOf(sTitleNameBgn);
-         int iTtlNmEnd = sResponse.indexOf(sTitleNameEnd, iTtlNmBgn);
-         sTtlNm = sResponse.substring(iTtlNmBgn + sTitleNameBgn.length(), iTtlNmEnd);
+         int iTtlNmBgn = sResponse.indexOf(TITLE_NAME_BGN);
+         int iTtlNmEnd = sResponse.indexOf(TITLE_NAME_END, iTtlNmBgn);
+         sTtlNm = sResponse.substring(iTtlNmBgn + TITLE_NAME_BGN.length(), iTtlNmEnd);
       }
       else
          sTtlNm = sResponse;
       
       // Get and set song title
-      int iTtlBgn = sTtlNm.indexOf(sTitleBgn);
-      int iTtlEnd = sTtlNm.indexOf(sTitleEnd, iTtlBgn);
-      sTitle = sTtlNm.substring(iTtlBgn + sTitleBgn.length(), iTtlEnd);
+      int iTtlBgn = sTtlNm.indexOf(TITLE_BGN);
+      int iTtlEnd = sTtlNm.indexOf(TITLE_END, iTtlBgn);
+      sTitle = sTtlNm.substring(iTtlBgn + TITLE_BGN.length(), iTtlEnd);
       
       // Get and set song author
-      if(!sAuthorBgn.isEmpty() && !sAuthorEnd.isEmpty())
+      if(!AUTHOR_BGN.isEmpty() && !AUTHOR_END.isEmpty())
       {
-         int iAthBgn = sTtlNm.indexOf(sAuthorBgn);
-         int iAthEnd = sTtlNm.indexOf(sAuthorEnd, iAthBgn);
-         sAuthor = sTtlNm.substring(iAthBgn + sAuthorBgn.length(), iAthEnd);
+         int iAthBgn = sTtlNm.indexOf(AUTHOR_BGN);
+         int iAthEnd = sTtlNm.indexOf(AUTHOR_END, iAthBgn);
+         sAuthor = sTtlNm.substring(iAthBgn + AUTHOR_BGN.length(), iAthEnd);
       }
       
       // Get and set song text
-      int iTxtBgn =  sResponse.indexOf(sTextBgn);
-      int iTxtEnd =  sResponse.indexOf(sTextEnd, iTxtBgn);
-      sSong = sResponse.substring(iTxtBgn + sTextBgn.length(), iTxtEnd);      
+      int iTxtBgn =  sResponse.indexOf(TEXT_BGN);
+      int iTxtEnd =  sResponse.indexOf(TEXT_END, iTxtBgn);
+      sSong = sResponse.substring(iTxtBgn + TEXT_BGN.length(), iTxtEnd);      
    }
    
    public String getTitle()

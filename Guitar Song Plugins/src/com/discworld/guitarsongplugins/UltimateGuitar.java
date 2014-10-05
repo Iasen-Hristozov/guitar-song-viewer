@@ -9,14 +9,14 @@ public class UltimateGuitar extends CGuitarSongPlugin
    public UltimateGuitar()
    {
       DOMAIN = "ultimate-guitar.com";
-      sTitleNameBgn = "<div class=\"t_title  \">";
-      sTitleNameEnd = "</div>";
-      sTitleBgn = "<h1>";
-      sTitleEnd = "</h1>";
-      sAuthorBgn = ".htm\">";
-      sAuthorEnd = "</a>";
-      sTextBgn = "<pre><i></i>";
-      sTextEnd = "</pre>";      
+      TITLE_NAME_BGN = "<div class=\"t_title  \">";
+      TITLE_NAME_END = "</div>";
+      TITLE_BGN = "<h1>";
+      TITLE_END = "</h1>";
+      AUTHOR_BGN = ".htm\">";
+      AUTHOR_END = "</a>";
+      TEXT_BGN = "<pre><i></i>";
+      TEXT_END = "</pre>";      
    }   
    
 //   @Override

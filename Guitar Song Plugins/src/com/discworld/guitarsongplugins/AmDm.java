@@ -8,14 +8,14 @@ public class AmDm extends CGuitarSongPlugin
    public AmDm()
    {
       DOMAIN = "amdm.ru";
-      sTitleNameBgn = "";
-      sTitleNameEnd = "";
-      sTitleBgn = "<span itemprop=\"name\">";
-      sTitleEnd = "</span>";
-      sAuthorBgn = "<span itemprop=\"byArtist\">";
-      sAuthorEnd = "</span>";
-      sTextBgn = "<pre itemprop=\"chordsBlock\">";
-      sTextEnd = "</pre>";      
+      TITLE_NAME_BGN = "";
+      TITLE_NAME_END = "";
+      TITLE_BGN = "<span itemprop=\"name\">";
+      TITLE_END = "</span>";
+      AUTHOR_BGN = "<span itemprop=\"byArtist\">";
+      AUTHOR_END = "</span>";
+      TEXT_BGN = "<pre itemprop=\"chordsBlock\">";
+      TEXT_END = "</pre>";      
    }
    
    @Override

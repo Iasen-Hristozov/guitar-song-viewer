@@ -10,14 +10,14 @@ public class ABCDisk extends CGuitarSongPlugin
    {
       DOMAIN = "abcdisk.ru";
       isUTF8 = false;
-      sTitleNameBgn = "<TD valign=\"top\"><B>";
-      sTitleNameEnd = "</h1>";
-      sTitleBgn = " - ";
-      sTitleEnd = "</TD>";
-      sAuthorBgn = "<h1>";
-      sAuthorEnd = " - ";
-      sTextBgn = "<pre style=\"font-size: 12pt;\">";
-      sTextEnd = "</pre>";      
+      TITLE_NAME_BGN = "<TD valign=\"top\"><B>";
+      TITLE_NAME_END = "</h1>";
+      TITLE_BGN = " - ";
+      TITLE_END = "</TD>";
+      AUTHOR_BGN = "<h1>";
+      AUTHOR_END = " - ";
+      TEXT_BGN = "<pre style=\"font-size: 12pt;\">";
+      TEXT_END = "</pre>";      
    }
    
 //   @Override

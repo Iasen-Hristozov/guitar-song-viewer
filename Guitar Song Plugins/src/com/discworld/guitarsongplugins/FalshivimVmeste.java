@@ -12,15 +12,15 @@ public class FalshivimVmeste extends CGuitarSongPlugin
    public FalshivimVmeste()
    {
       DOMAIN = "falshivim-vmeste.ru";
-      sTitleNameBgn = "<h1>";
-      sTitleNameEnd = "</h1>";
+      TITLE_NAME_BGN = "<h1>";
+      TITLE_NAME_END = "</h1>";
 //      sTitleBgn = "Àêêîðäû ïåñíè ",
 //      sTitleBgn = "Аккорды песни ",
-      sTitleBgn = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ";
-      sTitleEnd = sAuthorBgn = " (";
-      sAuthorEnd = ")";
-      sTextBgn = "<pre class=textsong>";
-      sTextEnd = "</pre>";      
+      TITLE_BGN = "\u0410\u043a\u043a\u043e\u0440\u0434\u044b \u043f\u0435\u0441\u043d\u0438 ";
+      TITLE_END = AUTHOR_BGN = " (";
+      AUTHOR_END = ")";
+      TEXT_BGN = "<pre class=textsong>";
+      TEXT_END = "</pre>";      
    }
    
    

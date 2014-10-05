@@ -10,14 +10,14 @@ public class dix extends CGuitarSongPlugin
    {
       DOMAIN = "dix.ru";
       isUTF8 = false;
-      sTitleNameBgn = "";
-      sTitleNameEnd = "";
-      sTitleBgn = "<meta name=\"title\" content=\"";
-      sTitleEnd = "\">";
-      sAuthorBgn = "<title>";
-      sAuthorEnd = "</title>";
-      sTextBgn = "<pre>";
-      sTextEnd = "</pre>";      
+      TITLE_NAME_BGN = "";
+      TITLE_NAME_END = "";
+      TITLE_BGN = "<meta name=\"title\" content=\"";
+      TITLE_END = "\">";
+      AUTHOR_BGN = "<title>";
+      AUTHOR_END = "</title>";
+      TEXT_BGN = "<pre>";
+      TEXT_END = "</pre>";      
    }
    
    @Override

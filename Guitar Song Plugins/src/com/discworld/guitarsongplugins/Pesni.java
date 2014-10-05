@@ -10,23 +10,22 @@ public class Pesni extends CGuitarSongPlugin
    {
       DOMAIN = "pesni.ru";
       isUTF8 = false;
-      sTitleNameBgn = "";
-      sTitleNameEnd = "";
-      sTitleBgn = " - ";
-      sTitleEnd = "</TD>";
-      sAuthorBgn = "<h1>";
-      sAuthorEnd = " - ";
-      sTextBgn = "<pre style=\"font-size: 12pt;\">";
-      sTextEnd = "</pre>";      
+      TITLE_NAME_BGN = "";
+      TITLE_NAME_END = "";
+      TITLE_BGN = "<h1 itemprop=\"name\">";
+      TITLE_END = "</h1>";
+      AUTHOR_BGN = "<span><a href=\"/abc/artist";
+      AUTHOR_END = "</a>";
+      TEXT_BGN = "<li itemprop=\"chordsBlock\" style=\"white-space: pre; font-family: courier\">";
+      TEXT_END = "</li>";      
    }
    
-//   @Override
-//   protected void parseSong(String sResponse)
-//   {
-//      super.parseSong(sResponse);
-//      
-//      String[] sTitleElements = sAuthor.split(" • ");
-//      sAuthor = sTitleElements[sTitleElements.length - 1];
-//      sAuthor = toTitleCase(sAuthor);
-//   }
+   @Override
+   protected void parseSong(String sResponse)
+   {
+      super.parseSong(sResponse);
+      
+      sAuthor = sAuthor.replaceAll("/\\d+/\">", "");
+      sSong = sSong.replaceAll("<br />", "");
+   }
 }
