@@ -9,7 +9,7 @@ public class ABCDisk extends CGuitarSongPlugin
    public ABCDisk()
    {
       DOMAIN = "abcdisk.ru";
-      isUTF8 = false;
+      isUTF8 = true;
       TITLE_NAME_BGN = "<TD valign=\"top\"><B>";
       TITLE_NAME_END = "</h1>";
       TITLE_BGN = " - ";

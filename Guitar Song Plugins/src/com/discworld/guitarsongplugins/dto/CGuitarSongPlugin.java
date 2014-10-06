@@ -89,7 +89,7 @@ public class CGuitarSongPlugin
         
             String inputLine;
             StringBuffer sbResponse = new StringBuffer();
-    
+
             while ((inputLine = in.readLine()) != null) 
                sbResponse.append(inputLine + "\n");
             in.close();

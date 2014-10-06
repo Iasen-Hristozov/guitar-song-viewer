@@ -41,13 +41,13 @@ public class PluginTest
 //      final String sURL = "http://accords.cu.cc/txt.php?s=070&d=024#v08";
 //      final String sURL = "http://www.dix.ru/3039";
 //      final String sURL = "http://www.dix.ru/?id=3168";
-//      final String sURL = "http://abcdisk.ru/akkordi/visockii_vladimir/1222/ballada_o_borbe/";
+      final String sURL = "http://abcdisk.ru/akkordi/visockii_vladimir/1222/ballada_o_borbe/";
 //      final String sURL = "http://abcdisk.ru/akkordi/visockii_vladimir/14268/ah_vrema_kak_mahorochka/";
 //      final String sURL = "http://pesni.ru/song/97/";
 //      final String sURL = "http://pesni.ru/song/100/";
 //      final String sURL = "http://music-palace.ru/?id=114&song=12013";
 //      final String sURL = "http://music-palace.ru/?id=114&song=12049";
-      final String sURL = "http://spoemte.ru/songs/1066608000.html";
+//      final String sURL = "http://spoemte.ru/songs/1066608000.html";
 //      final String sURL = "http://akordite.com/index.php?option=com_chordbase&Itemid=26&task=viewSong&song_id=53052";
 //      final String sURL = "http://www.akordite.com/index.php?option=com_chordbase&Itemid=26&task=viewSong&song_id=381";
       
