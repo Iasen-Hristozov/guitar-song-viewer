@@ -10,6 +10,7 @@ public class Muzland extends CGuitarSongPlugin
    public Muzland()
    {
       DOMAIN = "http://muzland.ru/";
+      ENCODING = ENU_ENCODE_NONE;
       TITLE_NAME_BGN = "<h1 class=\"songname\">";
       TITLE_NAME_END = "</h1>";
       TITLE_BGN = "<div itemprop=\"name\">";

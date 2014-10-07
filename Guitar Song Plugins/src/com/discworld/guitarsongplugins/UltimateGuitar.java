@@ -9,6 +9,7 @@ public class UltimateGuitar extends CGuitarSongPlugin
    public UltimateGuitar()
    {
       DOMAIN = "ultimate-guitar.com";
+      ENCODING = ENU_ENCODE_NONE;
       TITLE_NAME_BGN = "<div class=\"t_title  \">";
       TITLE_NAME_END = "</div>";
       TITLE_BGN = "<h1>";

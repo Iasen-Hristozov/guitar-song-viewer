@@ -9,7 +9,8 @@ public class Pesni extends CGuitarSongPlugin
    public Pesni()
    {
       DOMAIN = "pesni.ru";
-      isUTF8 = false;
+//      isUTF8 = false;
+      ENCODING = ENU_ENCODE_NONE;
       TITLE_NAME_BGN = "";
       TITLE_NAME_END = "";
       TITLE_BGN = "<h1 itemprop=\"name\">";

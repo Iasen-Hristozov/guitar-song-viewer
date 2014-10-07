@@ -10,7 +10,8 @@ public class Accords extends CGuitarSongPlugin
    public Accords()
    {
       DOMAIN = "accords.cu.cc";
-      isUTF8 = false;
+//      isUTF8 = false;
+      ENCODING = ENU_ENCODE_NONE;
       TITLE_NAME_BGN = "";
       TITLE_NAME_END = "";
 //      sTitleBgn = "<span itemprop=\"name\">";

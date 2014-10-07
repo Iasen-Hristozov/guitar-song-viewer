@@ -9,7 +9,8 @@ public class dix extends CGuitarSongPlugin
    public dix()
    {
       DOMAIN = "dix.ru";
-      isUTF8 = false;
+//      isUTF8 = false;
+      ENCODING = ENU_ENCODE_NONE;
       TITLE_NAME_BGN = "";
       TITLE_NAME_END = "";
       TITLE_BGN = "<meta name=\"title\" content=\"";

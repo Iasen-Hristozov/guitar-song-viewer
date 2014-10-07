@@ -9,8 +9,8 @@ public class hm6 extends CGuitarSongPlugin
    {
       DOMAIN = "hm6.ru";
       
-      isUTF8 = false;
-      
+//      isUTF8 = false;
+      ENCODING = ENU_ENCODE_NONE;
 //      sTitleNameBgn = "<h1 class=\"b-title\">";
       TITLE_NAME_BGN = "<h1 class=";
 //      sTitleNameEnd = "</h1>";

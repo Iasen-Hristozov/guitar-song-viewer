@@ -9,7 +9,8 @@ public class spoemte extends CGuitarSongPlugin
    public spoemte()
    {
       DOMAIN = "spoemte.ru";
-      isUTF8 = false;
+//      isUTF8 = false;
+      ENCODING = ENU_ENCODE_NONE;
       TITLE_NAME_BGN = "<h2";
       TITLE_NAME_END = "/h2>";
       TITLE_BGN = " — ";

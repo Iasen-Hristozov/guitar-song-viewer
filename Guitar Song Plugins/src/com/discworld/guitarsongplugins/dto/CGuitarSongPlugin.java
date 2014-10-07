@@ -11,7 +11,13 @@ import java.net.URL;
 public class CGuitarSongPlugin
 {
    
-   protected boolean isUTF8 = true;
+   protected final static byte ENU_ENCODE_NONE = 0,
+                               ENU_ENCODE_UTF8 = 1,
+                               ENU_ENCODE_WIN1251 = 2;
+   
+//   protected boolean isUTF8 = true;
+   
+   protected byte ENCODING = ENU_ENCODE_NONE;
    
    protected String DOMAIN = "falshivim-vmeste.ru",
                     PATTERN = "",
@@ -84,8 +90,26 @@ public class CGuitarSongPlugin
      
          if(oHTTPConn.getResponseCode() == 200)
          {
-            in = new BufferedReader(isUTF8 ? new InputStreamReader(oHTTPConn.getInputStream(), "UTF-8") : new InputStreamReader(oHTTPConn.getInputStream()));
-//            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream()));
+//            in = new BufferedReader(isUTF8 ? new InputStreamReader(oHTTPConn.getInputStream(), "UTF-8") : new InputStreamReader(oHTTPConn.getInputStream()));
+//            in = new BufferedReader(isUTF8 ? new InputStreamReader(oHTTPConn.getInputStream(), "cp1251") : new InputStreamReader(oHTTPConn.getInputStream()));
+//          
+            switch(ENCODING)
+            {
+               case ENU_ENCODE_NONE:
+               default:
+                  in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream()));
+               break;
+               
+               case ENU_ENCODE_UTF8:
+                  in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream(), "UTF-8"));
+               break;
+                     
+               case ENU_ENCODE_WIN1251:
+                  in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream(), "cp1251"));
+               break;
+            }
+            
+            //            in = new BufferedReader(new InputStreamReader(oHTTPConn.getInputStream()));
         
             String inputLine;
             StringBuffer sbResponse = new StringBuffer();

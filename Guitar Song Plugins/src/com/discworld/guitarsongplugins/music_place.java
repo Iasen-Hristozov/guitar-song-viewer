@@ -9,7 +9,8 @@ public class music_place extends CGuitarSongPlugin
    public music_place()
    {
       DOMAIN = "music-palace.ru";
-      isUTF8 = false;
+//      isUTF8 = false;
+      ENCODING = ENU_ENCODE_NONE;
       TITLE_NAME_BGN = "author=";
       TITLE_NAME_END = "strong>";
       TITLE_BGN = " - ";
