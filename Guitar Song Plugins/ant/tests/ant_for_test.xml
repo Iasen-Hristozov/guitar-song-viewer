@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="ant-test" default="foo">
+   <taskdef resource="net/sf/antcontrib/antlib.xml"> 
+        <classpath> 
+            <pathelement location="${basedir}/ant-contrib-1.0b3.jar"/> 
+        </classpath> 
+    </taskdef>
+    <target name="foo"> 
+        <echo message="The first five letters of the alphabet are:"/> 
+        <for list="a,b,c,d,e" param="letter"> 
+            <sequential> 
+                <echo>Letter @{letter}</echo> 
+            </sequential> 
+        </for> 
+    </target> 
+</project>

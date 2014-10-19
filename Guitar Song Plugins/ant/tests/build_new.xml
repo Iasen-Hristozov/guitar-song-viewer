@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="ant-test" default="all">
+   <taskdef resource="net/sf/antcontrib/antlib.xml"> 
+        <classpath> 
+            <pathelement location="${basedir}/ant-contrib-1.0b3.jar"/> 
+        </classpath> 
+    </taskdef>
+    
+   <property name="src" value="${basedir}/src" />
+	<property name="src_ext" value="${src}/com/discworld/guitarsongplugins/" />
+   <property name="build" value="${basedir}/build" />
+   <property name="plugins" value="${basedir}/plugins" />
+	<property name="builder" value="Discworld" />
+	<property name="plugin-name" value="ABCDisk" />
+	<property name="major-version-number" value="1" />
+	
+	<!-- <property name="version-number" value="1" /> -->
+	
+	<tstamp prefix="build-info">
+	      <format property="current-date" pattern="d-MMMM-yyyy" locale="en" />
+	      <format property="current-time" pattern="HH:mm:ss z" locale="en" />
+	      <format property="year-month-day" pattern="yyyy-MM-dd" locale="en" />
+   </tstamp>	
+	
+	<target name="foo"> 
+        <echo message="The first five letters of the alphabet are:"/> 
+        <for list="a,b,c,d,e" param="letter"> 
+            <sequential> 
+                <echo>Letter @{letter}</echo> 
+            </sequential> 
+        </for> 
+    </target>
+	
+   <target name="prepare">
+   	<delete dir="${build}" />
+      <mkdir dir="${build}" />
+   </target>
+	
+	<target name="all" depends="make-all-jars" />
+	
+	<target name="make-all-jars" depends="make-abcdisk-jar" />
+
+   <target name="compile-gp" depends="prepare" >
+      <javac destdir="${build}" srcdir="${src_ext}/dto" includeantruntime = "true">
+         <include name="CGuitarSongPlugin.java"/>
+      </javac>
+   </target>
+
+   <target name="compile-abcdisk" depends="compile-gp" >
+      <javac destdir="${build}" srcdir="${src_ext}" includeantruntime = "true" debug="true" classpath="${build}/com/discworld/guitarsongplugins/dto" debuglevel="lines,vars,source">
+      	<include name="${plugin-name}.java"/>
+      	</javac>
+   </target>
+	
+   <target name="make-abcdisk-jar" depends="compile-abcdisk">
+      <!-- <jar destfile="ABCDisk.jar" basedir="${build}" /> -->
+      <buildnumber file="${plugin-name}.number"/>
+      <property name="version-number" value="${major-version-number}.${build.number}" />
+      <!-- <jar destfile="${plugin-name}.jar"> -->
+      <!-- <jar destfile="${plugin-name}.jar" basedir="${build}"> --> 
+      <!-- <jar destfile="${plugin-name}.jar" basedir="${src}" includes="**/${plugin-name}.java"> -->
+      <jar destfile="${plugin-name}.jar" basedir="${build}" includes="**/${plugin-name}.class">
+         <!-- excludes="**/dto/CGuitarSongPlugin.class" -->
+         <!-- includes="ABCDisk.class"> --> 
+         <!-- <include name="ABCDisk.class"/> --> 
+         <!--<fileset dir="${build}" includes="${plugin-name}.class"/> -->
+         <!-- <fileset dir="${build}" /> -->
+         <!-- <fileset dir="${src_ext}" includes="**/${plugin-name}.java"/> -->
+      	<fileset dir="${src}" includes="**/${plugin-name}.java"/>
+         <!-- <zipfileset dir="${src_ext}" includes="**/*.java" fullpath="/com/discworld/guitarsongplugins/*.java"/> -->
+         <manifest>
+            <attribute name="Built-By" value="${builder}" />
+            <attribute name="Built-On" value="${build-info.current-date}" />
+            <attribute name="Built-At" value="${build-info.current-time}" />
+            <attribute name="Implementation-Version" value="${version-number}" />
+         </manifest>       
+      </jar>	
+
+   </target>
+	
+   <target name="make-abcdisk-jar-java" depends="make-abcdisk-jar">
+      <!-- <jar destfile="ABCDisk.jar" basedir="${build}" /> -->
+      <!-- <jar destfile="${plugin-name}.jar"> -->
+   	<!-- <jar destfile="${plugin-name}.jar" basedir="${build}"> --> 
+		<jar destfile="${plugin-name}.jar" basedir="${src}" includes="**/${plugin-name}.java" update="true">
+		<!-- <jar destfile="${plugin-name}.jar"> -->
+   	<!-- <jar destfile="${plugin-name}.jar" basedir="${build}" includes="**/${plugin-name}.class"> -->
+      	<!-- excludes="**/dto/CGuitarSongPlugin.class" -->
+      	<!-- includes="ABCDisk.class"> --> 
+      	<!-- <include name="ABCDisk.class"/> --> 
+      	<!--<fileset dir="${build}" includes="${plugin-name}.class"/> -->
+      	<!-- <fileset dir="${build}" /> -->
+      	<!-- <fileset dir="${src_ext}" includes="**/${plugin-name}.java"/> -->
+      	<!-- <zipfileset dir="${src_ext}" includes="**/*.java" fullpath="/com/discworld/guitarsongplugins/*.java"/> -->
+   	</jar>
+   </target>
+
+
+
+</project>

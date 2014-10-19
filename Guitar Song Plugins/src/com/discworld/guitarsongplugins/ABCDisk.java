@@ -1,5 +1,6 @@
 package com.discworld.guitarsongplugins;
 
+//import com.discworld.guitarsongplugins.dto.CGuitarSongPlugin;
 import com.discworld.guitarsongplugins.dto.CGuitarSongPlugin;
 
 public class ABCDisk extends CGuitarSongPlugin
