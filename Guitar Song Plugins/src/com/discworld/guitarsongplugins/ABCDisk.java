@@ -22,13 +22,29 @@ public class ABCDisk extends CGuitarSongPlugin
       TEXT_END = "</pre>";      
    }
    
-//   @Override
-//   protected void parseSong(String sResponse)
-//   {
-//      super.parseSong(sResponse);
-//      
-//      String[] sTitleElements = sAuthor.split(" • ");
-//      sAuthor = sTitleElements[sTitleElements.length - 1];
-//      sAuthor = toTitleCase(sAuthor);
-//   }
+   @Override
+   protected void parseSong(String sResponse)
+   {
+      super.parseSong(sResponse);
+      
+      int iNdx;
+      int iSpcNbr;
+      
+      String [] tsLines = sSong.split("\\n");
+      sSong = "";
+      for(int i = 0; i < tsLines.length; i++)
+      {
+         iNdx = tsLines[i].indexOf('\t', 0);
+         while(iNdx != -1)
+         {
+            iSpcNbr = 8 - (iNdx % 8);
+            String s = new String(new char[iSpcNbr]).replace('\0', ' ');
+            tsLines[i] = tsLines[i].substring(0, iNdx) + s + tsLines[i].substring(iNdx+1);
+            iNdx = tsLines[i].indexOf('\t', iNdx);
+         }
+         sSong = sSong + tsLines[i] + '\n';
+      }
+      
+//      sSong.indexOf(ch, fromIndex)
+   }
 }
