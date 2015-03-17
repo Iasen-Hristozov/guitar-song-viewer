@@ -91,8 +91,9 @@ public class SongEditor extends JFrame implements ActionListener
    
    private static ArrayList<CGuitarSongPlugin> alPlugins;
 
-   private final static Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9]"),
-                                ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})"),
+   private final static Pattern ptrText = Pattern.compile("[^ A-Hmoldurs#1-9/\\t]"),
+                                ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})(/[A-H]([moldurs#1-9]{0,6}))?"),
+//                                ptrChord = Pattern.compile("[A-H]([moldurs#1-9]{0,6})"),
 //                                ptrSylablesBG = Pattern.compile("[АЪОУЕИЮЯЬаъоуеиюя]"),
                                 ptrSylablesBG = Pattern.compile("[\u0410\u042a\u041e\u0423\u0415\u0418\u042e\u042f\u042c\u0430\u044a\u043e\u0443\u0435\u0438\u044e\u044f]"),
 //                                ptrSylablesRU = Pattern.compile("[АЪОУЕИЮЯЬЭЫаъоуеиюяыэё]"),
@@ -187,6 +188,7 @@ public class SongEditor extends JFrame implements ActionListener
       panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
       
       txtURL = new JTextField();
+//      txtURL.setText("http://abcdisk.ru/akkordi/visockii_vladimir/1222/ballada_o_borbe/");
       txtURL.setText("http://www.falshivim-vmeste.ru/songs/827193600.html");
 //      txtURL.setText("http://www.falshivim-vmeste.ru/songs/104457600.html");
       txtURL.setCaretPosition(0);
@@ -360,8 +362,8 @@ public class SongEditor extends JFrame implements ActionListener
       // Loading plugins
       new File(PLUGIN_FOLDER).mkdirs();
       
-      Policy.setPolicy(new PluginPolicy());
-      System.setSecurityManager(new SecurityManager());
+//      Policy.setPolicy(new PluginPolicy());
+//      System.setSecurityManager(new SecurityManager());
       
       alPlugins = new ArrayList<CGuitarSongPlugin>();
       

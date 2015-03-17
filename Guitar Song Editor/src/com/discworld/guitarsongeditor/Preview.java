@@ -1,5 +1,6 @@
 package com.discworld.guitarsongeditor;
 
+
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaSizeName;
@@ -22,16 +23,20 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.rtf.RTFEditorKit;
 
 import com.discworld.guitarsonglib.CChordsTextPair;
 import com.discworld.guitarsonglib.CChordsTextPairVerse;
@@ -63,6 +68,7 @@ public class Preview extends JPanel implements ActionListener
    private CSong oSong;
    
 //   AdvancedRTFEditorKit kit1;
+//   RTFEditorKit kit1;
    public Preview() 
    {
       setLayout(new BorderLayout(0, 0));
@@ -101,7 +107,9 @@ public class Preview extends JPanel implements ActionListener
       tpSong = new JTextPane();
       tpSong.setEditable(false);
       tpSong.setFont(new java.awt.Font("Courier New", java.awt.Font.PLAIN, 14));
-//      epSong.setEditorKit(kit1);
+//      kit1 = new AdvancedRTFEditorKit();
+//      kit1 = new RTFEditorKit();
+//      tpSong.setEditorKit(kit1);
       
 //      epSong = new JEditorPane();
       JScrollPane scrollPane = new JScrollPane(tpSong);
@@ -113,7 +121,7 @@ public class Preview extends JPanel implements ActionListener
       
 //      epSong.setText("test <b>TEST</b> <h1>HHHH</H1>");
       tpSong.setContentType("text/rtf");
-//      tpSong.setText("{\\rtf1 \\fs36\\qc HelloWorld! \\par\\fs24\\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
+//      tpSong.setText("{\\rtf1 \\fs36\\qc HelloWorld! \\par\\fs24\\qr {\\i This} is formatted {\\b\\i Text}\\par пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!.} ");
    }
 
 //   @Override
@@ -127,15 +135,16 @@ public class Preview extends JPanel implements ActionListener
 //      tpSong.setText("{\\rtf1 \\fs36\\qc " + oSong.sAuthor + " - " + oSong.sTitle + "} ");
       String sSong = "{\\rtf1 \\fs32\\qc\\b " + oSong.sAuthor + " - " + oSong.sTitle + "\\par\\fs28\\ql\\b0 "; 
       
-      int iLnsNbr = 0;
+      int iLnsNbr = 2;
       
       for(CChordsTextPairVerse oChordsTextPairVerse: alChordsTextVerses)
       {
          iLnsNbr += oChordsTextPairVerse.size() + 1;
-         if(iLnsNbr > 38)
+         if(iLnsNbr > 40)
          {
             sSong += (char)12;
-            iLnsNbr = 0;
+//            sSong += "\\page";
+            iLnsNbr = oChordsTextPairVerse.size() + 1;
          }
          for(CChordsTextPair oChordsTextPair: oChordsTextPairVerse.alChordsTextPairs)
          {
@@ -154,9 +163,9 @@ public class Preview extends JPanel implements ActionListener
       
       tpSong.setText(sSong);
       
-//      tpSong.setText("{\\rtf1 \\fs36 \\b \\qc Здравей - свят \\par Hello - World! \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
-//      tpSong.setText("{\\rtf1 \\fs36 \\b \\qc Здравей - свят \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
-//      tpSong.setText("{\\rtf1 \\fs36 {\\b Здравей - свят} \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par Спасибо!.} ");
+//      tpSong.setText("{\\rtf1 \\fs36 \\b \\qc пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅ \\par Hello - World! \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!.} ");
+//      tpSong.setText("{\\rtf1 \\fs36 \\b \\qc пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅ \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!.} ");
+//      tpSong.setText("{\\rtf1 \\fs36 {\\b пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅ} \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!.} ");
       
       tpSong.setCaretPosition(0);
    }
@@ -369,6 +378,8 @@ public class Preview extends JPanel implements ActionListener
          if(oFile == null)
             return;
          
+         
+         
          final StringWriter out = new StringWriter();
 //         final ByteArrayOutputStream out = new ByteArrayOutputStream();
          Document doc = tpSong.getDocument();
@@ -376,25 +387,41 @@ public class Preview extends JPanel implements ActionListener
 //         RTFEditorKit kit = new RTFEditorKit();
          kit.write(out, doc, doc.getStartPosition().getOffset(), doc.getLength());
          out.close();
-
-         String rtfContent = out.toString();
-         {
-           // replace "Monospaced" by a well-known monospace font
-           rtfContent = rtfContent.replaceAll("Monospaced", "Courier New");
-           final StringBuffer rtfContentBuffer = new StringBuffer(rtfContent);
-           final int endProlog = rtfContentBuffer.indexOf("\n\n");
-           if(endProlog > -1)
-           {
-              // set a good Line Space and no Space Before or Space After each paragraph
-              rtfContentBuffer.insert(endProlog, "\n\\sl240");
-              rtfContentBuffer.insert(endProlog, "\n\\sb0\\sa0");
-              rtfContent = rtfContentBuffer.toString();
-           }
-         }
-
-         final FileOutputStream fos = new FileOutputStream(oFile);
-         fos.write(rtfContent.toString().getBytes());
-         fos.close();
+         java.io.BufferedOutputStream os = new java.io.BufferedOutputStream( new FileOutputStream(oFile));
+//         tpSong.getEditorKit().write( out, doc, 0, doc.getLength());
+//
+//         tpSong.getEditorKit().write( os, doc, 0, doc.getLength()); 
+         
+//         Writer writer = new OutputStreamWriter (new FileOutputStream (oFile), "cp1251");
+//         tpSong.write(writer);
+         
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         tpSong.getEditorKit().write(baos, doc, 0, doc.getLength());
+         
+         System.out.println(baos.toString());
+         
+       final FileOutputStream fos = new FileOutputStream(oFile);
+       baos.writeTo(fos);
+       fos.close();         
+         
+//         String rtfContent = out.toString();
+//         {
+//           // replace "Monospaced" by a well-known monospace font
+//           rtfContent = rtfContent.replaceAll("Monospaced", "Courier New");
+//           final StringBuffer rtfContentBuffer = new StringBuffer(rtfContent);
+//           final int endProlog = rtfContentBuffer.indexOf("\n\n");
+//           if(endProlog > -1)
+//           {
+//              // set a good Line Space and no Space Before or Space After each paragraph
+//              rtfContentBuffer.insert(endProlog, "\n\\sl240");
+//              rtfContentBuffer.insert(endProlog, "\n\\sb0\\sa0");
+//              rtfContent = rtfContentBuffer.toString();
+//           }
+//         }
+//
+//         final FileOutputStream fos = new FileOutputStream(oFile);
+//         fos.write(rtfContent.toString().getBytes());
+//         fos.close();
 
       }      
    }
