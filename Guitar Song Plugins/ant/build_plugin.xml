@@ -20,9 +20,8 @@
           target: entry                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="entry">
-		<antcall target="make-plugin-jar" />
+      <antcall target="copy-plugin" />
 		<antcall target="clear" />
-		<antcall target="copy-plugin" />
 	</target>
 
 
@@ -66,13 +65,12 @@
    </target>
    -->
 
-	<target name="clear" depends="make-plugin-jar">
-		<delete dir="${build}" />
-	</target>
-
 	<target name="copy-plugin" depends="make-plugin-jar">
 		<copy file="${dst}${plugin-name}.jar" tofile="../../Guitar Song Editor/plugins/${plugin-name}.jar" overwrite="true" />
 	</target>
 
+   <target name="clear">
+      <delete dir="${build}" />
+   </target>
 
 </project>
