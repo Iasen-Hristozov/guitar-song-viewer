@@ -29,7 +29,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.security.Policy;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -433,11 +432,11 @@ public class SongEditor extends JFrame implements ActionListener
              if(!fEntry.getName().endsWith(PLUGIN_SUFFIX))
                 continue;
              
-             ClassLoader oClassLoader = URLClassLoader.newInstance(new URL[] { fEntry.toURL() });
+             ClassLoader oClassLoader = URLClassLoader.newInstance(new URL[] { fEntry.toURI().toURL() });
              CGuitarSongPlugin oPlugin = (CGuitarSongPlugin) oClassLoader.loadClass(getClassName(fEntry.getAbsolutePath())).newInstance();
              alPlugins.add(oPlugin);
          }
-     }      
+      }      
    }
    
    private static String getClassName(String sFile) throws IOException
@@ -572,7 +571,7 @@ public class SongEditor extends JFrame implements ActionListener
    {
       int iTextVerseNdx = 0;
       
-      sSong = sSong.replaceAll("( *\n){3,}", "\n\n");
+      sSong = sSong.replaceAll("( *\n){3,}", "\n\n").replaceAll("\n \n", "\n\n");
       
       // Split string to verses 
       getVerses();

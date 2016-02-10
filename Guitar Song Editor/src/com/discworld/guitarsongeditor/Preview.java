@@ -1,6 +1,5 @@
 package com.discworld.guitarsongeditor;
 
-
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaSizeName;
@@ -11,7 +10,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
-//import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
@@ -19,6 +17,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,15 +27,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.rtf.RTFEditorKit;
 
 import com.discworld.guitarsonglib.CChordsTextPair;
 import com.discworld.guitarsonglib.CChordsTextPairVerse;
@@ -48,15 +43,13 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import rtf.AdvancedRTFEditorKit;
-
-//public class Preview extends JPanel implements ActionListener, ISetSong
 public class Preview extends JPanel implements ActionListener
 {
    /**
     * 
     */
    private static final long serialVersionUID = -5389035716855314628L;
+   private final static byte PAGE_LINE_NBR = 40;
    
    int inch = Toolkit.getDefaultToolkit().getScreenResolution();
    private JButton   btnXptRTF,
@@ -67,8 +60,7 @@ public class Preview extends JPanel implements ActionListener
    
    private CSong oSong;
    
-//   AdvancedRTFEditorKit kit1;
-//   RTFEditorKit kit1;
+   String sRtf;
    public Preview() 
    {
       setLayout(new BorderLayout(0, 0));
@@ -107,11 +99,7 @@ public class Preview extends JPanel implements ActionListener
       tpSong = new JTextPane();
       tpSong.setEditable(false);
       tpSong.setFont(new java.awt.Font("Courier New", java.awt.Font.PLAIN, 14));
-//      kit1 = new AdvancedRTFEditorKit();
-//      kit1 = new RTFEditorKit();
-//      tpSong.setEditorKit(kit1);
-      
-//      epSong = new JEditorPane();
+
       JScrollPane scrollPane = new JScrollPane(tpSong);
       scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
       scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -124,7 +112,6 @@ public class Preview extends JPanel implements ActionListener
 //      tpSong.setText("{\\rtf1 \\fs36\\qc HelloWorld! \\par\\fs24\\qr {\\i This} is formatted {\\b\\i Text}\\par �������!.} ");
    }
 
-//   @Override
    public void setSong(CSong oSong)
    {
       ArrayList<CChordsTextPairVerse> alChordsTextVerses; 
@@ -132,40 +119,36 @@ public class Preview extends JPanel implements ActionListener
       
       alChordsTextVerses = oSong.getChordsTextVerses();
       
-//      tpSong.setText("{\\rtf1 \\fs36\\qc " + oSong.sAuthor + " - " + oSong.sTitle + "} ");
-      String sSong = "{\\rtf1 \\fs32\\qc\\b " + oSong.sAuthor + " - " + oSong.sTitle + "\\par\\fs28\\ql\\b0 "; 
+      String sSong = "{\\rtf1 \\fs32\\qc\\b " + oSong.sAuthor + " - " + oSong.sTitle + "\\par\\fs28\\ql\\b0\\par "; 
       
       int iLnsNbr = 2;
       
       for(CChordsTextPairVerse oChordsTextPairVerse: alChordsTextVerses)
       {
          iLnsNbr += oChordsTextPairVerse.size() + 1;
-         if(iLnsNbr > 40)
+         if(iLnsNbr > PAGE_LINE_NBR)
          {
             sSong += (char)12;
 //            sSong += "\\page";
+            
             iLnsNbr = oChordsTextPairVerse.size() + 1;
          }
          for(CChordsTextPair oChordsTextPair: oChordsTextPairVerse.alChordsTextPairs)
          {
             if(!oChordsTextPair.sChordsLine.isEmpty())
-               sSong += "\\par " + oChordsTextPair.sChordsLine;
+               sSong += oChordsTextPair.sChordsLine + "\\par ";
+//               sSong += "\\par " + oChordsTextPair.sChordsLine;
             if(!oChordsTextPair.sTextLine.isEmpty())
-               sSong += "\\par " + oChordsTextPair.sTextLine;
+               sSong += oChordsTextPair.sTextLine + "\\par ";
+//               sSong += "\\par " + oChordsTextPair.sTextLine;
          }
          sSong += "\\par ";
-//         sSong += "\\pard \\insrsid \\page \\par ";
-//         sSong += (char)12;
-         
       }
       
       sSong += "} ";
       
       tpSong.setText(sSong);
-      
-//      tpSong.setText("{\\rtf1 \\fs36 \\b \\qc ������� - ���� \\par Hello - World! \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par �������!.} ");
-//      tpSong.setText("{\\rtf1 \\fs36 \\b \\qc ������� - ���� \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par �������!.} ");
-//      tpSong.setText("{\\rtf1 \\fs36 {\\b ������� - ����} \\par\\fs24 \\b0 \\qr {\\i This} is formatted {\\b\\i Text}\\par �������!.} ");
+      sRtf = sSong;
       
       tpSong.setCaretPosition(0);
    }
@@ -214,37 +197,22 @@ public class Preview extends JPanel implements ActionListener
 
    private void printSong()
    {
-//      tpSong.setBounds(0, 0, (int) convertToPixels((int)PageSize.A4.getWidth() - 58), (int) convertToPixels((int)PageSize.A4.getHeight() - 60));
-
-//      MessageFormat headerFormat = new MessageFormat("Your header here - {0}");  //sets the page number
-//      MessageFormat footerFormat = new MessageFormat("Your footer here");
-
       PrintRequestAttributeSet attr_set = new HashPrintRequestAttributeSet();
       attr_set.add(MediaSizeName.ISO_A4);
       attr_set.add(Sides.DUPLEX);      
       
       try
       {
-//         tpSong.print(headerFormat, footerFormat, true, null, attr_set, true);
          tpSong.print(null, null, true, null, attr_set, true);
-      } catch(PrinterException e)
+      } 
+      catch(PrinterException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      
-//      PrintSupport.printComponent(tpSong);//txtPrintArea is the name of your JTextArea.
    }
 
    private void exportToPdf() throws DocumentException, IOException
    {
-//      final int iPageWidth = 612,
-//                iPageHeight = 792;
-
-//      A4 = 8.27x11.69" x72points/inch = 595x842 points
-//      final int iPageWidth = 595,
-//               iPageHeight = 842;
-
       if (tpSong.getDocument().getLength() > 0)
       {
          File oFile = getFile("PDF", "pdf");
@@ -252,47 +220,15 @@ public class Preview extends JPanel implements ActionListener
          if(oFile == null)
             return;
          
-//         tpSong.setBounds(0, 0, (int) convertToPixels(iPageWidth - 58), (int) convertToPixels(iPageHeight - 60));
          tpSong.setBounds(0, 0, (int) convertToPixels((int)PageSize.A4.getWidth() - 58), (int) convertToPixels((int)PageSize.A4.getHeight() - 60));
 
          com.itextpdf.text.Document oDocument = new com.itextpdf.text.Document();
          FileOutputStream oFileOutputStream = new FileOutputStream(oFile);
-//         PdfWriter oPdfWriter = PdfWriter.getInstance(oDocument, oFileOutputStream);
+
          PdfWriter.getInstance(oDocument, oFileOutputStream);
 
-//         oDocument.setPageSize(new com.itextpdf.text.Rectangle(iPageWidth, iPageHeight));
          oDocument.setPageSize(PageSize.A4);
          oDocument.open();
-//         PdfContentByte oPdfContentByte = oPdfWriter.getDirectContent();
-//
-//         oPdfContentByte.saveState();
-//         oPdfContentByte.concatCTM(1, 0, 0, 1, 0, 0);
-//
-//         DefaultFontMapper oDefaultFontMapper = new DefaultFontMapper();
-//         oDefaultFontMapper.insertDirectory("c:\\windows\\fonts");
-//
-//         BaseFontParameters oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\cour.ttf");
-//         oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
-//         oDefaultFontMapper.putName("Courier New", oBaseFontParameters );      
-////
-//         oBaseFontParameters = new BaseFontParameters("c:\\windows\\fonts\\courbd.ttf");
-//         oBaseFontParameters.encoding = BaseFont.IDENTITY_H;
-//         oDefaultFontMapper.putName("Courier New Bold", oBaseFontParameters );      
-//         
-//         @SuppressWarnings("deprecation")
-//         Graphics2D oGraphics2D = oPdfContentByte.createGraphics(PageSize.A4.getWidth(), PageSize.A4.getHeight(), oDefaultFontMapper, true, .95f);
-//
-//         java.awt.geom.AffineTransform oAffineTransform = new java.awt.geom.AffineTransform();
-//         oAffineTransform.translate(convertToPixels(20), convertToPixels(20));
-//         oAffineTransform.scale(pixelToPoint, pixelToPoint);
-//
-//         oGraphics2D.transform(oAffineTransform);
-//
-//         oGraphics2D.setColor(Color.WHITE);
-//         oGraphics2D.fill(tpSong.getBounds());
-//
-//         java.awt.Rectangle oRectangle = getVisibleEditorRect(tpSong);
-//         tpSong.getUI().getRootView(tpSong).paint(oGraphics2D, oRectangle);
          
          BaseFont bfTitle = BaseFont.createFont( "c:/windows/fonts/courbd.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
          BaseFont bfText = BaseFont.createFont( "c:/windows/fonts/cour.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
@@ -322,47 +258,23 @@ public class Preview extends JPanel implements ActionListener
             }
             else
             {
-               s += "\n" + oChordsTextPairVerse.toString(); 
+               s += "\n\n" + oChordsTextPairVerse.toString(); 
             }
          }
 
          p = new Paragraph(s, fntText);
          oDocument.add(p);
 
-//         g2.setColor(Color.BLACK);
-//         g2.setColor(Color.WHITE);
-//         g2.draw(epSong.getBounds());
-
-//         oGraphics2D.dispose();
-//         oPdfContentByte.restoreState();
          oDocument.close();
          oFileOutputStream.flush();
          oFileOutputStream.close();         
       }
-      
-
    }
-   
-//   protected java.awt.Rectangle getVisibleEditorRect(JTextPane ta) 
-//   {
-//      java.awt.Rectangle alloc = tpSong.getBounds();
-//      if ((alloc.width > 0) && (alloc.height > 0)) 
-//      {
-//        alloc.x = alloc.y = 0;
-//        Insets insets = ta.getInsets();
-//        alloc.x += insets.left;
-//        alloc.y += insets.top;
-//        alloc.width -= insets.left + insets.right;
-//        alloc.height -= insets.top + insets.bottom;
-//        return alloc;
-//      }
-//      return null;
-//    }   
    
    public float convertToPixels(int points) 
    {
       return (float) (points / pixelToPoint);
-    }
+   }
    
    private void exportToRtf() throws IOException, BadLocationException
    {
@@ -377,52 +289,20 @@ public class Preview extends JPanel implements ActionListener
          
          if(oFile == null)
             return;
-         
-         
-         
-         final StringWriter out = new StringWriter();
-//         final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
          Document doc = tpSong.getDocument();
-         AdvancedRTFEditorKit kit = new AdvancedRTFEditorKit();
-//         RTFEditorKit kit = new RTFEditorKit();
-         kit.write(out, doc, doc.getStartPosition().getOffset(), doc.getLength());
-         out.close();
-         java.io.BufferedOutputStream os = new java.io.BufferedOutputStream( new FileOutputStream(oFile));
-//         tpSong.getEditorKit().write( out, doc, 0, doc.getLength());
-//
-//         tpSong.getEditorKit().write( os, doc, 0, doc.getLength()); 
-         
-//         Writer writer = new OutputStreamWriter (new FileOutputStream (oFile), "cp1251");
-//         tpSong.write(writer);
          
          ByteArrayOutputStream baos = new ByteArrayOutputStream();
          tpSong.getEditorKit().write(baos, doc, 0, doc.getLength());
          
-         System.out.println(baos.toString());
-         
-       final FileOutputStream fos = new FileOutputStream(oFile);
-       baos.writeTo(fos);
-       fos.close();         
-         
-//         String rtfContent = out.toString();
-//         {
-//           // replace "Monospaced" by a well-known monospace font
-//           rtfContent = rtfContent.replaceAll("Monospaced", "Courier New");
-//           final StringBuffer rtfContentBuffer = new StringBuffer(rtfContent);
-//           final int endProlog = rtfContentBuffer.indexOf("\n\n");
-//           if(endProlog > -1)
-//           {
-//              // set a good Line Space and no Space Before or Space After each paragraph
-//              rtfContentBuffer.insert(endProlog, "\n\\sl240");
-//              rtfContentBuffer.insert(endProlog, "\n\\sb0\\sa0");
-//              rtfContent = rtfContentBuffer.toString();
-//           }
-//         }
-//
-//         final FileOutputStream fos = new FileOutputStream(oFile);
-//         fos.write(rtfContent.toString().getBytes());
-//         fos.close();
+         final FileOutputStream fos = new FileOutputStream(oFile);
 
+         String s = baos.toString();
+         s = s.replaceAll("\\\\b\\\\", "\\\\b\\\\qc\\\\").replaceAll("\\x0C", "\\\\page");
+         fos.write(s.getBytes());
+       
+         baos.close();
+         fos.close();
       }      
    }
    
@@ -451,7 +331,6 @@ public class Preview extends JPanel implements ActionListener
             if(dialogResult == JOptionPane.NO_OPTION)
                return null;
          }                
-         
       }  
          
       return oFile;
