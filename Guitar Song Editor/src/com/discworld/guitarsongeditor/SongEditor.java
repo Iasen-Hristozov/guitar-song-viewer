@@ -26,8 +26,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -59,10 +57,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 import java.awt.Font;
 
@@ -143,8 +137,6 @@ public class SongEditor extends JFrame implements ActionListener
             try
             {
                new SongEditor();
-//               SongEditor window = new SongEditor();
-//               window.frame.setVisible(true);
             } 
             catch(Exception e)
             {
@@ -195,13 +187,9 @@ public class SongEditor extends JFrame implements ActionListener
       panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
       
       txtURL = new JTextField();
-//      txtURL.setText("http://abcdisk.ru/akkordi/visockii_vladimir/1222/ballada_o_borbe/");
-      txtURL.setText("http://www.falshivim-vmeste.ru/songs/827193600.html");
-//      txtURL.setText("http://www.falshivim-vmeste.ru/songs/104457600.html");
       txtURL.setCaretPosition(0);
       panel_3.add(txtURL);
       txtURL.setColumns(10);
-      
       
       btnGet = new JButton("Get");
       btnGet.addActionListener(this);
@@ -244,7 +232,6 @@ public class SongEditor extends JFrame implements ActionListener
       cbxLanguage = new JComboBox();
       cbxLanguage.setMaximumRowCount(3);
       cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438", "\u0420\u0443\u0441\u043A\u0438\u0439"}));
-//      cbxLanguage.setModel(new DefaultComboBoxModel(new String[] {"English", "Áúëãàðñêè", "Ðóñêèé"}));
       lblLang.setLabelFor(cbxLanguage);
       pnlLang.add(cbxLanguage, BorderLayout.CENTER);
       
@@ -253,8 +240,6 @@ public class SongEditor extends JFrame implements ActionListener
       pnlSong = new JPanel();
       pnlRawText.add(pnlSong, BorderLayout.CENTER);
       pnlSong.setLayout(new BoxLayout(pnlSong, BoxLayout.Y_AXIS));
-            
-//      container.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
             
       txtSong = new JTextArea(0, 20);
       txtSong.setFont(new Font("Courier New", Font.PLAIN, 12));
@@ -378,6 +363,10 @@ public class SongEditor extends JFrame implements ActionListener
       
       //===============================================================
       // For test purposes only. Remove it before release
+
+//    txtURL.setText("http://abcdisk.ru/akkordi/visockii_vladimir/1222/ballada_o_borbe/");
+      txtURL.setText("http://www.falshivim-vmeste.ru/songs/827193600.html");
+//    txtURL.setText("http://www.falshivim-vmeste.ru/songs/104457600.html");
       
       getSongFromURL(txtURL.getText());
       txtSong.setCaretPosition(0);
@@ -396,8 +385,6 @@ public class SongEditor extends JFrame implements ActionListener
          } 
          else 
          {
-//             System.out.println(fEntry.getName());
-             
              if(!fEntry.getName().endsWith(PLUGIN_SUFFIX))
                 continue;
              
@@ -447,9 +434,10 @@ public class SongEditor extends JFrame implements ActionListener
          // Convert string to CSong object
          convertSongStringToObject();
 
-//         xmlSong = songToXml(oSong);
-//         txtXml.setText(xmlSong);
-         txtXml.setText(oSong.toXml2());
+         
+         xmlSong = oSong.toXml();
+         txtXml.setText(xmlSong);
+//         txtXml.setText(oSong.toXml());
          txtXml.setCaretPosition(0);
          btnSave.setEnabled(true);
          btnPreview.setEnabled(true);
@@ -460,8 +448,6 @@ public class SongEditor extends JFrame implements ActionListener
       }
       else if(oSource == btnSave)
       {
-//         saveSongXml(txtXml.getText());
-         
          xmlSong = txtXml.getText();
          try
          {
@@ -472,7 +458,6 @@ public class SongEditor extends JFrame implements ActionListener
          {
             JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "Song Validation Error", JOptionPane.PLAIN_MESSAGE);
          }
-         
       }
       else if(oSource == btnPreview)
       {
@@ -491,9 +476,7 @@ public class SongEditor extends JFrame implements ActionListener
             frame.pack();
             frame.setVisible (true);
             
-//            oSong = new CSong(txtXml.getText());
-//            oSong = xmlToSong(xmlSong);
-            oSong = new CSong(xmlSong, 1);
+            oSong = new CSong(xmlSong);
             
             oPreview.setSong(oSong);
          } 
@@ -501,54 +484,7 @@ public class SongEditor extends JFrame implements ActionListener
          {
             JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "Song Validation Error", JOptionPane.PLAIN_MESSAGE);
          }
-         
-         
       }
-   }
-   
-   private String songToXml(CSong oSong)
-   {
-      String xmlSong = "";
-      try
-      {
-         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
-//       JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class, CChordsVerse.class, CChordsLine.class, CChord.class);
-
-         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-         StringWriter sw = new StringWriter();
-       
-         jaxbMarshaller.marshal(oSong, sw);
-         xmlSong = sw.toString();     
-      } 
-      catch(JAXBException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      
-      return xmlSong;
-   }
-   
-   private CSong xmlToSong(String xmlSong)
-   {
-      CSong oSong = null;
-      StringReader sr = new StringReader(xmlSong);
-      JAXBContext jaxbContext1;
-      try
-      {
-         jaxbContext1 = JAXBContext.newInstance(CSong.class);
-         Unmarshaller jaxbUnmarshaller = jaxbContext1.createUnmarshaller();
-         oSong = (CSong)jaxbUnmarshaller.unmarshal(sr);
-         
-      } catch(JAXBException e)
-      {
-         e.printStackTrace();
-      }
-      
-      return oSong;
    }
 
    private void saveSongXml(String xmlSong)
@@ -577,8 +513,6 @@ public class SongEditor extends JFrame implements ActionListener
             PrintWriter writer = new PrintWriter(sPar + "\\" + sFile, "UTF-8");
             writer.print(xmlSong);
             writer.close();
-            exportToXml(xmlSong);
-         
          } 
          catch(FileNotFoundException e)
          {
@@ -710,7 +644,7 @@ public class SongEditor extends JFrame implements ActionListener
                      }
                   }
                   else
-                     oChordsLine = getChordsLineCyr(oChordsTextPair2);               
+                     oChordsLine = getChordsLineCyr(oChordsTextPair2, oSong.sLanguage);               
                }
                else
                {
@@ -727,7 +661,6 @@ public class SongEditor extends JFrame implements ActionListener
             else if(oChordsTextPair2.sChordsLine.isEmpty() && bHasChords)
             {
                // There are chords in the verse but this line chords line is empty 
-//               oChordsVerse.alChordsLines.add(new CChordsLine());
                oChordsVerse.add(new CChordsLine());
             }
             
@@ -736,8 +669,6 @@ public class SongEditor extends JFrame implements ActionListener
             {
                oTextLine = new CTextLine();
                oTextLine.sTextLine = oChordsTextPair2.sTextLine;
-//               if(oTextVerse == null)
-//                  oTextVerse = new CTextVerse();
                oTextVerse.alTextLines.add(oTextLine);
             }
          }
@@ -758,7 +689,7 @@ public class SongEditor extends JFrame implements ActionListener
                oTextVerse.sChordsVerseID = oChordsVerse.sID;
             else
                oTextVerse.sChordsVerseID = getChordVerseID(iTextVerseNdx, oTextVerse.size());
-//            oSong.oText.alTextVerses.add(oTextVerse);
+
             if(oTextVerse.alTextLines.size() != 0)
                iTextVerseNdx++;
             oSong.oText.add(oTextVerse);
@@ -772,20 +703,11 @@ public class SongEditor extends JFrame implements ActionListener
       ArrayList<CChordsVerse> alChordsVerses = getTextRelatedChordsVerses();
       
       int iChordsVersNdx = iTextVerseNdx - ((int)iTextVerseNdx / alChordsVerses.size())*alChordsVerses.size();
-//      if(alChordsVerses.get(iChordsVersNdx).alChordsLines.size() == iTextVerseSize)
+
       if(alChordsVerses.get(iChordsVersNdx).size() == iTextVerseSize)
          return alChordsVerses.get(iChordsVersNdx).sID;
       else
          return "";
-
-
-//      for(CChordsVerse oChordsVerse: alChordsVerses)
-//      {
-//         iChordsVersNbr++;
-//         if((iTextVerseNbr % iChordsVersNbr == 0) && oChordsVerse.alChordsLines.size() == iTextVerseSize)
-//            return oChordsVerse.sID;
-//      }
-      
    }
 
    private ArrayList<CChordsVerse> getTextRelatedChordsVerses()
@@ -801,10 +723,8 @@ public class SongEditor extends JFrame implements ActionListener
 
    private boolean isTextRelatedChordsverse(CChordsVerse oChordsVerse)
    {
-//      for(CChordsLine oChordsLine: oChordsVerse.alChordsLines)
       for(CChordsLine oChordsLine: oChordsVerse)
       {
-//         for(CChord oChord: oChordsLine.alChords)
          for(CChord oChord: oChordsLine)
          {
             if(oChord.iPosition > 0)
@@ -823,8 +743,6 @@ public class SongEditor extends JFrame implements ActionListener
       
       for(int i = 0; i < tsVerseLines.length; i++)
       {
-//         if(tsVerseLines[i].matches("[^A-Hmoldurs0-9]"))
-//         if(tsVerseLines[i].matches("[^A-H]"))
          matcher = ptrText.matcher(tsVerseLines[i]);
          if(matcher.find())
          {
@@ -850,7 +768,6 @@ public class SongEditor extends JFrame implements ActionListener
       return iOffset;
    }
 
-   //   private ArrayList<String> getLinesFromVerse(String sVerse)
    private String[] getLinesFromVerse(String sVerse)
    {
       return sVerse.split("\n");
@@ -866,11 +783,9 @@ public class SongEditor extends JFrame implements ActionListener
          if(!tsVerses[i].trim().isEmpty())
             alVerses.add(tsVerses[i]);
       }
-      
-//      int a = 1;
    }
 
-   CChordsLine getChordsLineCyr(CChordsTextPair oChordsTextPair)
+   private static CChordsLine getChordsLineCyr(CChordsTextPair oChordsTextPair, String sLanguage)
    {
       int iSlbNdx = 1,
           iCrdBgn = 0,
@@ -882,20 +797,8 @@ public class SongEditor extends JFrame implements ActionListener
       CChord oChord;
       
       CChordsLine oChordsLine = new CChordsLine();
-      
-//      switch(oSong.iEnuLanguage)
-//      {
-//         case CSong.ENU_LNG_BG:
-//            mtcText = ptrSylablesBG.matcher(oChordsTextPair.sTextLine);      
-//         break;
-//         
-//         default:
-//         case CSong.ENU_LNG_RU:
-//            mtcText = ptrSylablesRU.matcher(oChordsTextPair.sTextLine);      
-//         break;
-//      }
 
-      switch(oSong.sLanguage)
+      switch(sLanguage)
       {
          case CSong.LANG_BG:
             mtcText = ptrSylablesBG.matcher(oChordsTextPair.sTextLine);      
@@ -906,7 +809,6 @@ public class SongEditor extends JFrame implements ActionListener
             mtcText = ptrSylablesRU.matcher(oChordsTextPair.sTextLine);      
          break;
       }
-      
       
       mtcChords = ptrChord.matcher(oChordsTextPair.sChordsLine);
       while(mtcChords.find(iCrdEnd))
@@ -932,11 +834,9 @@ public class SongEditor extends JFrame implements ActionListener
          }
          else
          {
-//            if(oChordsLine.alChords.isEmpty() || oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition >=0)
             if(oChordsLine.isEmpty() || oChordsLine.get(oChordsLine.size()-1).iPosition >=0)
                oChord.iPosition = -1;
             else 
-//               oChord.iPosition = oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition - 1;
                oChord.iPosition = oChordsLine.get(oChordsLine.size()-1).iPosition - 1;
             oChordsLine.addChord(oChord);
          }
@@ -1028,19 +928,16 @@ public class SongEditor extends JFrame implements ActionListener
          }
          else
          {
-//            if(oChordsLine.alChords.isEmpty() || oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition >=0)
             if(oChordsLine.isEmpty() || oChordsLine.get(oChordsLine.size()-1).iPosition >=0)
                oChord.iPosition = -1;
             else 
                oChord.iPosition = oChordsLine.get(oChordsLine.size()-1).iPosition - 1;
-//               oChord.iPosition = oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition - 1;
             oChordsLine.addChord(oChord);
          }
       }      
       
 //      hyphenated_word = oHyphenator.hyphenate("they`re");
 //      System.out.println(hyphenated_word); 
-      
       
       return oChordsLine;
    }
@@ -1065,7 +962,6 @@ public class SongEditor extends JFrame implements ActionListener
         
         oChord = new CChord(oChordsTextPair.sChordsLine.substring(iCrdBgn, iCrdEnd));
         
-//        if(oChordsLine.alChords.isEmpty() || oChordsLine.alChords.get(oChordsLine.alChords.size()-1).iPosition >= 0)
         if(oChordsLine.isEmpty() || oChordsLine.get(oChordsLine.size()-1).iPosition >= 0)
            oChord.iPosition = -1;
         else 
@@ -1074,43 +970,5 @@ public class SongEditor extends JFrame implements ActionListener
      }
      
      return oChordsLine;
-   }
-
-
-   private void exportToXml(String xmlSong)
-   {
-      try 
-      {
-         File file = new File(xmlSong);
-         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
-//         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class, CChordsVerse.class, CChordsLine.class, CChord.class);
-         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-   
-//         JABXList<CFile> Files = new JABXList<CFile>(vFilesDwn);
-         
-         // output pretty printed
-         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-   
-//         String s;
-//         jaxbMarshaller.marshal(oSong, file);
-         StringWriter sw = new StringWriter();
-         
-         jaxbMarshaller.marshal(oSong, sw);
-         System.out.print(sw.toString());
-         
-         System.out.println("unmarshall");
-         StringReader sr = new StringReader(sw.toString());
-         JAXBContext jaxbContext1 = JAXBContext.newInstance(CSong.class);
-         Unmarshaller jaxbUnmarshaller = jaxbContext1.createUnmarshaller();
-         CSong oSongnew = (CSong)jaxbUnmarshaller.unmarshal(sr);
-         int a = 1;
-         a++;
-         
-   
-      } 
-      catch (JAXBException e) 
-      {
-         e.printStackTrace();
-      }      
    }
 }
