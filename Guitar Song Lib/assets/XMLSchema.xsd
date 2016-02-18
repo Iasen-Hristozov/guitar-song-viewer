@@ -1,0 +1,78 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified" attributeFormDefault="unqualified">
+   <xs:element name="song">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="chords"/>
+            <xs:element ref="text"/>
+         </xs:sequence>
+         <xs:attribute name="title" type="xs:string"/>
+         <xs:attribute name="author" type="xs:string"/>
+         <xs:attribute name="language">
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:pattern value="en|bg|ru" />
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="chords">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="chords-verse">
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="chords-verse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="chord-line" />
+         </xs:sequence>
+         <xs:attribute name="id" type="id" />
+      </xs:complexType>
+   </xs:element>
+   
+   <xs:element name="chord-line">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="chord"></xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   
+   <xs:element name="chord">
+      <xs:complexType>
+         <xs:attribute name="name" type="xs:string"/>
+         <xs:attribute name="pos" type="id"/>
+      </xs:complexType>
+   </xs:element>
+   
+   <xs:element name="text">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="text-verse"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   
+   <xs:element name="text-verse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="text-line"/>
+         </xs:sequence>
+         <xs:attribute name="id-chords-verse" type="id"/>
+      </xs:complexType>
+   </xs:element>
+   
+   <xs:element name="text-line" type="xs:string"></xs:element>
+
+   <xs:simpleType name="id">
+      <xs:restriction base="xs:int">
+         <xs:minInclusive value="1" />
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>
