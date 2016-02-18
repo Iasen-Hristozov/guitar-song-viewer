@@ -8,11 +8,8 @@ public class CTextVersesSet extends CVerseSet
     * @see java.lang.Object#toString()
     */
 
-//   public ArrayList<CTextVerse> alTextVerses;
-   
    public CTextVersesSet()
    {
-//      alTextVerses = new ArrayList<CTextVerse>();
       super();
    }
    
@@ -20,22 +17,4 @@ public class CTextVersesSet extends CVerseSet
    {
       return alVerses;
    }
-   
-   
-//   public void add(CTextVerse oTextVerse)
-//   {
-////      alTextVerses.add(oTextVerse);
-//      super.add(oTextVerse);
-//   }
-   
-//   @Override
-//   public String toString()
-//   {
-//      String sTextVersesSet = "";
-//      for(CTextVerse oTextVerse: alTextVerses)
-//      {
-//         sTextVersesSet += (sTextVersesSet.isEmpty() ? "" : "\n") + oTextVerse.toString();
-//      }
-//      return sTextVersesSet;
-//   }
 }

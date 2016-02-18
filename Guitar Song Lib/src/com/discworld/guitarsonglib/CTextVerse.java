@@ -6,21 +6,19 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
 
 @XmlRootElement(name = "text-verse")
 @XmlType(name = "text-verse")
 public class CTextVerse extends CVerse
 {
    @XmlAttribute(name = "id-chords-verse", required = true)
-   public String sChordsVerseID;
+   public String sChordsVerseID = "";
+   
    @XmlElement(name = "text-line")
-   public ArrayList<CTextLine> alTextLines;
+   public ArrayList<CTextLine> alTextLines = new ArrayList<CTextLine>();
    
    public CTextVerse()
    {
-      sChordsVerseID = "";
-      alTextLines = new ArrayList<CTextLine>();
    }
    
    public CTextVerse(String sChordsCoupletID,

@@ -1,7 +1,6 @@
 package com.discworld.guitarsonglib;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -20,20 +19,12 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.discworld.englishhyphenator.CEnglishHyphenator;
@@ -43,22 +34,21 @@ public class CSong
 {
    @XmlAttribute(name = "title", required = true)
    public String sTitle = "";
+
    @XmlAttribute(name = "author", required = true)
    public String sAuthor = "";
-//   @XmlTransient
-//   public int iEnuLanguage;
+   
    @XmlAttribute(name = "language", required = true)
    public String sLanguage;
+   
    @XmlElementWrapper(name = "chords", required = true)
    @XmlElementRef()
    public ArrayList<CChordsVerse> alChords = new ArrayList<CChordsVerse>();
-//   public ArrayList<CTextVerse> alText;
+
    @XmlElementWrapper(name = "text", required = true)
    @XmlElementRef()
-//   public CTextVersesSet oText;
    public ArrayList<CVerse> oText = new ArrayList<CVerse>();
    
-//   public Hashtable<String, CChordsVerse> htChords;
    @XmlTransient
    public Hashtable<String, Integer> htChordsIdNdx = new Hashtable<String, Integer>();
    
@@ -69,57 +59,6 @@ public class CSong
                               LANG_BG = "bg",
                               LANG_RU = "ru",
                               LANG[] = {LANG_EN, LANG_BG, LANG_RU};
-   
-   private final static String XML_ID = "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
-                               ATR_LANG = "language",
-                               TAG_CHORDS = "chords",
-                               TAG_CHORDS_VERSE = "chords-verse",
-                               ATR_ID = "id",
-                               TAG_CHORDS_LINE = "chords-line",
-                               TAG_CHORD = "chord",
-                               ATR_NAME = "name",
-                               ATR_POS = "pos",
-                               TAG_TEXT = "text",
-                               TAG_TEXT_VERSE = "text-verse",
-                               TAG_TEXT_LINE = "text-line",
-                               ATR_CHORDS_VERSE_ID = "id-chords-verse",
-                               TAG_OPEN = "<",
-                               TAG_END = ">",
-                               TAG_CLOSE = "</",
-                               PAD_CTG = "   ",
-                               PAD_VERSE = "      ",
-                               PAD_LINE = "         ",
-                               PAD_CHORD = "            ",
-                               NEW_LINE = "\n",
-                               CRD_VERSE = PAD_VERSE + TAG_OPEN + TAG_CHORDS_VERSE  + " " + ATR_ID + " = \"%s\"" + TAG_END + NEW_LINE,
-//                               CRD_LINE = PAD_LINE + TAG_OPEN + TAG_CHORDS_LINE + TAG_END + "%s" + TAG_CLOSE + TAG_CHORDS_LINE + TAG_END + NEW_LINE,
-                               CRD_LINE = PAD_LINE + TAG_OPEN + TAG_CHORDS_LINE + TAG_END + NEW_LINE,
-                               CRD_LINE_CLOSE = PAD_LINE + TAG_CLOSE + TAG_CHORDS_LINE + TAG_END + NEW_LINE,
-                               CRD_CHORD = PAD_CHORD + TAG_OPEN + TAG_CHORD + " " +  ATR_NAME + " = \"%s\" " + ATR_POS + " = \"%s\" /" + TAG_END + NEW_LINE,
-                               CRD_VERSE_CLOSE = PAD_VERSE + TAG_CLOSE + TAG_CHORDS_VERSE  + TAG_END + NEW_LINE + NEW_LINE,
-                               CRD_OPEN = PAD_CTG + TAG_OPEN + TAG_CHORDS + TAG_END + NEW_LINE,
-                               CRD_CLOSE = PAD_CTG + TAG_CLOSE + TAG_CHORDS + TAG_END + NEW_LINE + NEW_LINE,
-                               TXT_OPEN = PAD_CTG + TAG_OPEN + TAG_TEXT+ TAG_END + NEW_LINE,
-                               TXT_CLOSE = PAD_CTG + TAG_CLOSE + TAG_TEXT + TAG_END + NEW_LINE,
-                               TXT_VERSE = PAD_VERSE + TAG_OPEN + TAG_TEXT_VERSE + " " + ATR_CHORDS_VERSE_ID + " = \"%s\""+ TAG_END + NEW_LINE,
-                               TXT_VERSE_CLOSE = PAD_VERSE + TAG_CLOSE + TAG_TEXT_VERSE  + TAG_END + NEW_LINE + NEW_LINE,
-                               TXT_LINE = PAD_LINE + TAG_OPEN + TAG_TEXT_LINE + TAG_END + "%s" + TAG_CLOSE + TAG_TEXT_LINE + TAG_END + NEW_LINE,
-                               SONG_CLOSE = TAG_CLOSE + TAG_SONG + TAG_END;
-/*                               
-                               CRD_VERSE = "      <" + TAG_CHORDS_VERSE  + " " + ATR_ID + " = \"%s\">\n",
-                               CRD_LINE = "         <" + TAG_CHORDS_LINE + ">\n",
-                               CRD_LINE_CLOSE = "         </" + TAG_CHORDS_LINE + ">\n",
-                               CRD_CHORD = "            <" + TAG_CHORD + " " +  ATR_NAME + " = \"%s\" " + ATR_POS + " = \"%s\" />\n",
-                               CRD_VERSE_CLOSE = "      </" + TAG_CHORDS_VERSE  + ">\n",
-                               CRD_OPEN = "            <" + TAG_CHORDS + ">\n",
-                               CRD_CLOSE = "            </" + TAG_CHORDS + ">\n\n",
-                               TXT_OPEN = "   <" + TAG_TEXT +  ">\n",
-                               TXT_CLOSE = "   </" + TAG_TEXT + ">\n",
-                               TXT_VERSE = "      <" + TAG_TEXT_VERSE + " " + ATR_CHORDS_VERSE_ID + " = \"%s\">\n",
-                               TXT_VERSE_CLOSE = "      </" + TAG_TEXT_VERSE  + ">\n\n",
-                               TXT_LINE = "         <" + TAG_TEXT_LINE + ">%s</" + TAG_TEXT_LINE + ">\n",
-                               SONG_CLOSE = "<" + TAG_SONG + ">";
- */
    
    public final static int ENU_LNG_UNDEFINED = 0,
                            ENU_LNG_EN = 1,
@@ -133,357 +72,58 @@ public class CSong
    
    public CSong()
    {
-//      init();
    }
-   
+      
    public CSong(String xmlSong)
-      {
-         Element  eChords,
-                  eText;
-         
-         NodeList nlChordsVerses,
-                  nlChordsLines,
-                  nlChords,
-                  nlTextVerses,
-                  nlTextLines;
-         
-         Node  ndChordsVerse,
-               ndChordsLine,
-               ndChord,
-               ndTextVerse,
-               ndTextLine;
-         
-         CChordsVerse oChordsVerse;
-         
-         CChordsLine oChordsLine;
-         
-         CChord oChord;
-         
-         CTextVerse oTextVerse;
-         
-         CTextLine oTextLine;
-         
-//         init();
-         
-         //Get the DOM Builder Factory
-         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-   
-         try
-         {
-            //Get the DOM Builder
-            //Load and Parse the XML document
-            //document contains the complete XML as a Tree.
-            
-            DocumentBuilder builder = factory.newDocumentBuilder();
-   //         InputSource is = new InputSource(xmlSong);
-            InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader(xmlSong));
-            
-            Document document = builder.parse(is);
-            //Iterating through the nodes and extracting the data.
-            Element eRoot = document.getDocumentElement();
-   //         Node root = document.getDocumentElement().getFirstChild();
-            sTitle = eRoot.getAttributes().getNamedItem(ATR_TITLE).getNodeValue();
-            sAuthor = eRoot.getAttributes().getNamedItem(ATR_AUTHOR).getNodeValue();
-            // For JRE 1.7
-   //         switch(eRoot.getAttributes().getNamedItem(ATR_LANG).getNodeValue())
-   //         {
-   //            case LANG_BG :
-   //               iEnuLanguage = ENU_LNG_BG;
-   //            break;
-   //            
-   //            case LANG_RU:
-   //               iEnuLanguage = ENU_LNG_RU;
-   //            break;
-   //            
-   //            case LANG_EN:
-   //            default:
-   //               iEnuLanguage = ENU_LNG_EN;
-   //            break;            
-   //         }
-            
-            sLanguage = eRoot.getAttributes().getNamedItem(ATR_LANG).getNodeValue();
-   //         // For JRE 1.6
-   //         if(sLanguage == LANG_BG)
-   //            iEnuLanguage = ENU_LNG_BG;
-   //         else if(sLanguage == LANG_RU)
-   //            iEnuLanguage = ENU_LNG_RU;
-   //         else if(sLanguage == LANG_EN)
-   //            iEnuLanguage = ENU_LNG_EN;
-            
-   //         NodeList nl = eRoot.getChildNodes();
-   //       Node ndChords = nlChords.item(0); 
-   
-            eChords = (Element)eRoot.getElementsByTagName(TAG_CHORDS).item(0);
-            
-            nlChordsVerses = eChords.getElementsByTagName(TAG_CHORDS_VERSE);
-            for(int i = 0; i < nlChordsVerses.getLength(); i++)
-            {
-               ndChordsVerse =  nlChordsVerses.item(i);
-               if(ndChordsVerse instanceof Element)
-               {
-                  oChordsVerse = new CChordsVerse();
-                  oChordsVerse.sID = ndChordsVerse.getAttributes().getNamedItem(ATR_ID).getNodeValue();
-                  nlChordsLines = ((Element) ndChordsVerse).getElementsByTagName(TAG_CHORDS_LINE);
-                  for(int j = 0; j < nlChordsLines.getLength(); j++)
-                  {
-                     ndChordsLine = nlChordsLines.item(j);
-                     if(ndChordsLine instanceof Element)
-                     {
-                        oChordsLine = new CChordsLine();
-                        
-                        nlChords = ((Element) ndChordsLine).getElementsByTagName(TAG_CHORD);
-                        for(int k = 0; k < nlChords.getLength(); k++)
-                        {
-                           ndChord = nlChords.item(k);
-                           if(ndChord instanceof Element)
-                           {
-                              oChord = new CChord(); 
-                              oChord.sName = ((Element) ndChord).getAttribute(ATR_NAME);
-                              oChord.iPosition = Integer.valueOf(((Element) ndChord).getAttribute(ATR_POS));
-   //                           oChordsLine.alChords.add(oChord);
-                              oChordsLine.add(oChord);
-                           }
-                        }
-   //                     oChordsVerse.alChordsLines.add(oChordsLine);
-                        oChordsVerse.add(oChordsLine);
-                     }
-                  }
-                  
-                  alChords.add(oChordsVerse);
-                  htChordsIdNdx.put(oChordsVerse.sID, alChords.size()-1);               
-               }
-            }
-            
-            eText = (Element) eRoot.getElementsByTagName(TAG_TEXT).item(0);
-            nlTextVerses = eText.getElementsByTagName(TAG_TEXT_VERSE);
-            for(int i = 0; i < nlTextVerses.getLength(); i++)
-            {
-               ndTextVerse = nlTextVerses.item(i);
-               if(ndTextVerse instanceof Element)
-               {
-                  oTextVerse = new CTextVerse();
-                  oTextVerse.sChordsVerseID = ((Element) ndTextVerse).getAttribute(ATR_CHORDS_VERSE_ID);
-                  nlTextLines = ((Element) ndTextVerse).getElementsByTagName(TAG_TEXT_LINE);
-                  for(int j = 0; j < nlTextLines.getLength(); j++)
-                  {
-                     ndTextLine = nlTextLines.item(j);
-                     if(ndTextLine instanceof Element)
-                     {
-                        oTextLine = new CTextLine(ndTextLine.getTextContent());
-                        oTextVerse.addTextLine(oTextLine);
-                     }
-                  }
-   //               oText.alTextVerses.add(oTextVerse);
-                  oText.add(oTextVerse);
-               }
-            }
-   
-         } 
-         catch(ParserConfigurationException e)
-         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         } 
-         catch(SAXException e)
-         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         } 
-         catch(IOException e)
-         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         } 
-      }
-
-   //   public void setLanguage(int iEunLanguage)
-   //   {
-   //      this.iEnuLanguage = iEunLanguage;
-   //      
-   //      switch(iEnuLanguage)
-   //      {
-   //         case ENU_LNG_BG:
-   //            sLanguage = LANG_BG;
-   //         break;
-   //         
-   //         case ENU_LNG_RU:
-   //            sLanguage = LANG_RU;
-   //         break;
-   //         
-   //         case ENU_LNG_EN:
-   //         default:
-   //            sLanguage = LANG_EN;
-   //         break;
-   //      }
-   //   }
-      
-      public CSong(String xmlSong, int a)
-         {
-            StringReader sr = new StringReader(xmlSong);
-            try
-            {
-               JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
-               Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-               CSong oSong = (CSong)jaxbUnmarshaller.unmarshal(sr);
-      
-               this.sAuthor = oSong.sAuthor;
-               this.sTitle = oSong.sTitle;
-               this.sLanguage = oSong.sLanguage;
-      //         if(sLanguage == LANG_BG)
-      //            this.iEnuLanguage = ENU_LNG_BG;
-      //         else if(sLanguage == LANG_RU)
-      //            this.iEnuLanguage = ENU_LNG_RU;
-      //         else if(sLanguage == LANG_EN)
-      //            this.iEnuLanguage = ENU_LNG_EN;         
-      //         this.iEnuLanguage = oSong.iEnuLanguage;
-               this.alChords = oSong.alChords;
-               this.oText = oSong.oText;
-               
-               for(CChordsVerse oChordsVerse: this.alChords)
-                  htChordsIdNdx.put(oChordsVerse.sID, alChords.size()-1);
-               
-            } 
-            catch(JAXBException e)
-            {
-               e.printStackTrace();
-            }
-         }
-
-   private void init()
    {
-      sTitle = "";
-      sAuthor = "";
-//      iEnuLanguage = 0;
-      alChords = new ArrayList<CChordsVerse>();
-//      alText = new ArrayList<CTextVerse>();
-//      oText = new CTextVersesSet();
-      oText = new ArrayList<CVerse>();
-      htChordsIdNdx = new Hashtable<String, Integer>();
-//      if(sLanguage == LANG_BG)
-//         iEnuLanguage = ENU_LNG_BG;
-//      else if(sLanguage == LANG_RU)
-//         iEnuLanguage = ENU_LNG_RU;
-//      else if(sLanguage == LANG_EN)
-//         iEnuLanguage = ENU_LNG_EN;
+      StringReader sr = new StringReader(xmlSong);
+      try
+      {
+         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
+         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+         CSong oSong = (CSong)jaxbUnmarshaller.unmarshal(sr);
+
+         this.sAuthor = oSong.sAuthor;
+         this.sTitle = oSong.sTitle;
+         this.sLanguage = oSong.sLanguage;
+         this.alChords = oSong.alChords;
+         this.oText = oSong.oText;
+         
+         for(CChordsVerse oChordsVerse: this.alChords)
+            htChordsIdNdx.put(oChordsVerse.sID, alChords.size()-1);
+         
+      } 
+      catch(JAXBException e)
+      {
+         e.printStackTrace();
+      }
    }
    
    public String toXml()
    {
-      
-      String sSongXml = XML_ID;
-      
-//      switch(iEnuLanguage)
-//      {
-//         case ENU_LNG_BG:
-//            sLanguage = LANG_BG;
-//         break;
-//         
-//         case ENU_LNG_RU:
-//            sLanguage = LANG_RU;
-//         break;
-//         
-//         case ENU_LNG_EN:
-//         default:
-//            sLanguage = LANG_EN;
-//         break;
-//      }
-      
-      sSongXml += "\n" + TAG_OPEN + TAG_SONG + " " + (!sTitle.isEmpty() ? ATR_TITLE + " = \"" + sTitle + "\" " : " ") + (!sAuthor.isEmpty() ? ATR_AUTHOR + " = \"" + sAuthor + "\" " : " ") + ATR_LANG + " = \"" + sLanguage + "\""+ TAG_END + NEW_LINE;
-      if(!alChords.isEmpty())
+      String xmlSong = "";
+      try
       {
-         sSongXml += CRD_OPEN;
-         for(CChordsVerse oChordsVerse : alChords)
-         {
-            sSongXml += String.format(CRD_VERSE, oChordsVerse.sID);
-//            for(CChordsLine oChordsLine: oChordsVerse.alChordsLines)
-            for(CChordsLine oChordsLine: oChordsVerse)
-            {
-//             sSongXml += String.format(CRD_LINE, oChordsLine.toString().replace(", ", " "));
-               sSongXml += CRD_LINE;
-//               for(CChord oChord: oChordsLine.alChords)
-               for(CChord oChord: oChordsLine)
-                  sSongXml += String.format(CRD_CHORD, oChord.sName, oChord.iPosition);
-               
-               sSongXml += CRD_LINE_CLOSE;
-            }
-            sSongXml += CRD_VERSE_CLOSE;
-         }
-         sSongXml += CRD_CLOSE;
-      }
-      
-//      if(!oText.alTextVerses.isEmpty())
-      if(oText.size() != 0)
-      {
-         sSongXml += TXT_OPEN;
-         CTextVerse oTextVerse;
-//         for(CTextVerse oTextVerse: oText.alTextVerses)
-         for(int i = 0; i < oText.size(); i++)
-         {
-            oTextVerse = (CTextVerse) oText.get(i);
-            sSongXml += String.format(TXT_VERSE, oTextVerse.sChordsVerseID);
-            for(CTextLine oTextLine: oTextVerse.alTextLines)
-            {
-               sSongXml += String.format(TXT_LINE, oTextLine.toString());
-            }
-            sSongXml += TXT_VERSE_CLOSE;
-         }
-         sSongXml += TXT_CLOSE;
-      }
-      
-      sSongXml += SONG_CLOSE;
-      
-      return sSongXml;
-   }
+         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
+//       JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class, CChordsVerse.class, CChordsLine.class, CChord.class);
 
-   
-   
-//   public void setLanguage(int iEunLanguage)
-//   {
-//      this.iEnuLanguage = iEunLanguage;
-//      
-//      switch(iEnuLanguage)
-//      {
-//         case ENU_LNG_BG:
-//            sLanguage = LANG_BG;
-//         break;
-//         
-//         case ENU_LNG_RU:
-//            sLanguage = LANG_RU;
-//         break;
-//         
-//         case ENU_LNG_EN:
-//         default:
-//            sLanguage = LANG_EN;
-//         break;
-//      }
-//   }
-   
-   public String toXml2()
+         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+         StringWriter sw = new StringWriter();
+       
+         jaxbMarshaller.marshal(this, sw);
+         xmlSong = sw.toString();     
+      } 
+      catch(JAXBException e)
       {
-         String xmlSong = "";
-         try
-         {
-            JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
-   //       JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class, CChordsVerse.class, CChordsLine.class, CChord.class);
-   
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-   
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-   
-            StringWriter sw = new StringWriter();
-          
-            jaxbMarshaller.marshal(this, sw);
-            xmlSong = sw.toString();     
-         } 
-         catch(JAXBException e)
-         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         }
-         
-         return xmlSong;
+         // TODO Auto-generated catch block
+         e.printStackTrace();
       }
+      
+      return xmlSong;
+   }
 
    public ArrayList<CChordsTextPairVerse> getChordsTextVerses()
    {
@@ -495,9 +135,7 @@ public class CSong
       
       ArrayList<CChordsTextPairVerse> alChordsTextVerses = new ArrayList<CChordsTextPairVerse>();
       
-      
       CTextVerse oTextVerse;
-//      for(CTextVerse oTextVerse: oText.alTextVerses)
       for(int i = 0; i < oText.size(); i++)
       {
          oTextVerse = (CTextVerse) oText.get(i);
@@ -549,29 +187,7 @@ public class CSong
             }
             
          }
-         
-         
-//         for(CChordsVerse oChordsVerse: alChords)
-//         {
-//            
-//            if(oChordsVerse.sID.equals(oTextVerse.sChordsVerseID))
-//            {
-////               oChordsTextPairVerse = new CChordsTextPairVerse();
-//               
-//               for(int i = 0; i < oTextVerse.alTextLines.size(); i++)
-//               {
-//                  oTextLine = oTextVerse.alTextLines.get(i);
-//                  oChordsLine = oChordsVerse.alChordsLines.get(i);
-//                  
-//                  sChordsLine = getChordsLineString(oTextLine.sTextLine, oChordsLine);
-//                  
-//                  oChordsTextPair = new CChordsTextPair(oTextLine.sTextLine, sChordsLine);
-//                  oChordsTextPairVerse.add(oChordsTextPair);
-//               }
-//               
-////               alChordsTextVerses.add(oChordsTextPairVerse);
-//            }
-//         }
+
          alChordsTextVerses.add(oChordsTextPairVerse);
       }
       
@@ -771,7 +387,6 @@ public class CSong
 
    public static void validate(String xml) throws SAXException
    {
-      // load a WXS schema, represented by a Schema instance
       URL schemaFile = CSong.class.getResource("/XMLSchema.xsd");
       Source srcXml = new StreamSource(new StringReader(xml));
       

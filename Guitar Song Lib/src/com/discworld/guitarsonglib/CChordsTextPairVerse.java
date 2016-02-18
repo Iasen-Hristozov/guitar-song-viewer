@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 public class CChordsTextPairVerse extends CVerse
 {
-   public ArrayList<CChordsTextPair> alChordsTextPairs;
+   public ArrayList<CChordsTextPair> alChordsTextPairs = new ArrayList<CChordsTextPair>();
    
    public CChordsTextPairVerse()
    {
-      alChordsTextPairs = new ArrayList<CChordsTextPair>();
    }
    
    public void add(CChordsTextPair oChordsTextPair)
@@ -35,7 +34,6 @@ public class CChordsTextPairVerse extends CVerse
 //      s += "\n";
       return s;
    }
-
 
    @Override
    public int size()

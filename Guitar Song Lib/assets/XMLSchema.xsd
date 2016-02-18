@@ -30,13 +30,13 @@
    <xs:element name="chords-verse">
       <xs:complexType>
          <xs:sequence>
-            <xs:element maxOccurs="unbounded" ref="chord-line" />
+            <xs:element maxOccurs="unbounded" ref="chords-line" />
          </xs:sequence>
          <xs:attribute name="id" type="id" />
       </xs:complexType>
    </xs:element>
    
-   <xs:element name="chord-line">
+   <xs:element name="chords-line">
       <xs:complexType>
          <xs:sequence>
             <xs:element maxOccurs="unbounded" ref="chord"></xs:element>

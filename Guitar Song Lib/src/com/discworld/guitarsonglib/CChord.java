@@ -11,14 +11,12 @@ public class CChord
 {
 
    @XmlAttribute(name = "name", required = true)
-   public String sName;
+   public String sName = "";
    @XmlAttribute(name = "pos", required = true)
-   public int iPosition;
+   public int iPosition = 0;
    
    public CChord()
    {
-      sName = "";
-      iPosition = 0;
    }
    
    public CChord(String sName)

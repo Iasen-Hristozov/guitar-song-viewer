@@ -7,11 +7,10 @@ import javax.xml.bind.annotation.XmlValue;
 public class CTextLine
 {
    @XmlValue
-   public String sTextLine;
+   public String sTextLine = "";
    
    public CTextLine()
    {
-      sTextLine = "";
    }
    
    public CTextLine(String sTextLine)

@@ -6,11 +6,10 @@ import com.discworld.guitarsonglib.CVerse;
 
 public class CVerseSet
 {
-   protected ArrayList<CVerse> alVerses;
+   protected ArrayList<CVerse> alVerses = new ArrayList<CVerse>();
    
    public CVerseSet()
    {
-      alVerses = new ArrayList<CVerse>();
    }
    
    public void add(CVerse oVerse)
@@ -40,8 +39,8 @@ public class CVerseSet
       for(CVerse oVerse: alVerses)
       {
          sVerseSet += (sVerseSet.isEmpty() ? "" : "\n\n") + oVerse.toString();
-//         sVerseSet += oVerse.toString();
       }
+      
       return sVerseSet;      
    }
 }

@@ -2,13 +2,11 @@ package com.discworld.guitarsonglib;
 
 public class CChordsTextPair
 {
-   public String sChordsLine;
-   public String sTextLine;
+   public String sChordsLine = "";
+   public String sTextLine = "";
    
    public CChordsTextPair()
    {
-      sChordsLine = "";
-      sTextLine = "";
    }
    
    public CChordsTextPair(String sTextLine, String sChordsLine)
