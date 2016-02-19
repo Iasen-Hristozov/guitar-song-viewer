@@ -10,46 +10,41 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.Transient;
+import org.simpleframework.xml.core.Persister;
 import org.xml.sax.SAXException;
 
 import com.discworld.englishhyphenator.CEnglishHyphenator;
 
-@XmlRootElement(name = "song")
+@Root(name = "song")
 public class CSong
 {
-   @XmlAttribute(name = "title", required = true)
+   @Attribute(name = "title", required = true)
    public String sTitle = "";
 
-   @XmlAttribute(name = "author", required = true)
+   @Attribute(name = "author", required = true)
    public String sAuthor = "";
    
-   @XmlAttribute(name = "language", required = true)
+   @Attribute(name = "language", required = true)
    public String sLanguage;
    
-   @XmlElementWrapper(name = "chords", required = true)
-   @XmlElementRef()
+   @ElementList(name = "chords", required = true)
    public ArrayList<CChordsVerse> alChords = new ArrayList<CChordsVerse>();
 
-   @XmlElementWrapper(name = "text", required = true)
-   @XmlElementRef()
-   public ArrayList<CVerse> oText = new ArrayList<CVerse>();
+   @ElementList(name = "text", required = true)
+   public ArrayList<CTextVerse> oText = new ArrayList<CTextVerse>();
    
-   @XmlTransient
+   @Transient
    public Hashtable<String, Integer> htChordsIdNdx = new Hashtable<String, Integer>();
    
    public final static String TAG_SONG = "song",
@@ -79,10 +74,9 @@ public class CSong
       StringReader sr = new StringReader(xmlSong);
       try
       {
-         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
-         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-         CSong oSong = (CSong)jaxbUnmarshaller.unmarshal(sr);
-
+         Serializer serializer = new Persister();
+         CSong oSong = serializer.read(CSong.class, sr);
+         
          this.sAuthor = oSong.sAuthor;
          this.sTitle = oSong.sTitle;
          this.sLanguage = oSong.sLanguage;
@@ -93,32 +87,26 @@ public class CSong
             htChordsIdNdx.put(oChordsVerse.sID, alChords.size()-1);
          
       } 
-      catch(JAXBException e)
+      catch(Exception e)
       {
          e.printStackTrace();
       }
+      
    }
    
    public String toXml()
    {
       String xmlSong = "";
+      
       try
       {
-         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
-//       JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class, CChordsVerse.class, CChordsLine.class, CChord.class);
-
-         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
          StringWriter sw = new StringWriter();
-       
-         jaxbMarshaller.marshal(this, sw);
-         xmlSong = sw.toString();     
+         Serializer serializer = new Persister();
+         serializer.write(this, sw);
+         xmlSong = sw.toString();
       } 
-      catch(JAXBException e)
+      catch(Exception e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       
@@ -150,7 +138,6 @@ public class CSong
             
             if(oTextVerse.size() == 0)
             {
-//               for(CChordsLine oChordsLine : oChordsVerse.alChordsLines)
                for(CChordsLine oChordsLine : oChordsVerse)
                {
                   sChordsLine = getChordsLine(oChordsLine);
@@ -168,7 +155,6 @@ public class CSong
                for(int j = 0; j < oTextVerse.alTextLines.size(); j++)
                {
                   oTextLine = oTextVerse.alTextLines.get(j);
-//                  oChordsLine = oChordsVerse.alChordsLines.get(j);
                   oChordsLine = oChordsVerse.get(j);
                   
                   sChordsLine = getChordsLineString(oTextLine.sTextLine, oChordsLine);
@@ -328,7 +314,6 @@ public class CSong
       }
       
       for(CChord oChord: oChordsLine)
-//      for(CChord oChord: oChordsLine.alChords)
       {
          if(oChord.iPosition >= 0)
          {         

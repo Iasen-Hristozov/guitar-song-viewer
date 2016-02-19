@@ -1,18 +1,16 @@
 package com.discworld.guitarsonglib;
 
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlAccessType;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Root;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "chord")
+@Root(name = "chord")
 public class CChord
 {
 
-   @XmlAttribute(name = "name", required = true)
+   @Attribute(name = "name", required = true)
    public String sName = "";
-   @XmlAttribute(name = "pos", required = true)
+
+   @Attribute(name = "pos", required = true)
    public int iPosition = 0;
    
    public CChord()

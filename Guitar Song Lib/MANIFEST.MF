@@ -6,3 +6,5 @@ Specification-Vendor: Discworld
 Implementation-Title: com.discworld.guitarsonglib
 Implementation-Version: 2
 Implementation-Vendor: Discworld
+Class-Path: lib/simple-xml-2.7.1.jar
+Rsrc-Class-Path: lib/simple-xml-2.7.1.jar

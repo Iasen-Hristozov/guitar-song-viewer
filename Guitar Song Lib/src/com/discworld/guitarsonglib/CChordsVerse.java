@@ -2,16 +2,11 @@ package com.discworld.guitarsonglib;
 
 import java.util.ArrayList;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "chords-verse")
-@XmlSeeAlso({CChordsLine.class})
+@Root(name = "chords-verse")
 public class CChordsVerse extends ArrayList<CChordsLine>
 {
    /**
@@ -19,9 +14,13 @@ public class CChordsVerse extends ArrayList<CChordsLine>
     */
    
    private static final long serialVersionUID = -6286896746218963760L;
-   @XmlAttribute(name = "id", required = true)
+   
+   @Attribute(name = "id", required = true)
    public String sID = "";
 
+   @ElementList(name ="cv", inline=true)
+   ArrayList<CChordsLine> oChordsVerse = this;
+   
    public CChordsVerse()
    {
    }
@@ -38,10 +37,9 @@ public class CChordsVerse extends ArrayList<CChordsLine>
       add(oChordsLine);
    }
    
-   @XmlElement(name = "chords-line")
    public ArrayList<CChordsLine> getChordsLines() 
    {
-     return this;
+      return this;
    }
    
    @Override

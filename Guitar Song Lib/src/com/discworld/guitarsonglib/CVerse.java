@@ -2,11 +2,6 @@ package com.discworld.guitarsonglib;
 
 import java.util.ArrayList;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-
-@XmlSeeAlso({CTextVerse.class})
-@XmlRootElement(name = "text-verse")
 public abstract class CVerse
 {
    

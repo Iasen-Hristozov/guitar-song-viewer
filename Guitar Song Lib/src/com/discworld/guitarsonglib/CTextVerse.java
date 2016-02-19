@@ -2,19 +2,17 @@ package com.discworld.guitarsonglib;
 
 import java.util.ArrayList;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
-@XmlRootElement(name = "text-verse")
-@XmlType(name = "text-verse")
+@Root(name = "text-verse")
 public class CTextVerse extends CVerse
 {
-   @XmlAttribute(name = "id-chords-verse", required = true)
+   @Attribute(name = "id-chords-verse", required = true)
    public String sChordsVerseID = "";
    
-   @XmlElement(name = "text-line")
+   @ElementList(inline=true)
    public ArrayList<CTextLine> alTextLines = new ArrayList<CTextLine>();
    
    public CTextVerse()

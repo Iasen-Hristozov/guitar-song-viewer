@@ -1,12 +1,13 @@
 package com.discworld.guitarsonglib;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 
-@XmlRootElement(name = "text-line")
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
+
+@Root(name = "text-line")
 public class CTextLine
 {
-   @XmlValue
+   @Text
    public String sTextLine = "";
    
    public CTextLine()

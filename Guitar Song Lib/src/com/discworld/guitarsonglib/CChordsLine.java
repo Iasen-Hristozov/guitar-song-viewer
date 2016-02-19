@@ -2,8 +2,10 @@ package com.discworld.guitarsonglib;
 
 import java.util.ArrayList;
 
-import javax.xml.bind.annotation.XmlElement;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
+@Root(name = "chords-line")
 public class CChordsLine extends ArrayList<CChord>
 {
    /**
@@ -11,6 +13,9 @@ public class CChordsLine extends ArrayList<CChord>
     */
    private static final long serialVersionUID = -5073417906207483516L;
 
+   @ElementList(inline=true)
+   ArrayList<CChord> oChordsLine = this;
+   
    public CChordsLine()
    {
       super();
@@ -21,7 +26,6 @@ public class CChordsLine extends ArrayList<CChord>
       add(oChord);
    }
    
-   @XmlElement(name = "chord")
    public ArrayList<CChord> getChords() 
    {
      return this;
