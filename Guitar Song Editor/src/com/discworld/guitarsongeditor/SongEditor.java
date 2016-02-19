@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -971,4 +972,43 @@ public class SongEditor extends JFrame implements ActionListener
      
      return oChordsLine;
    }
+   
+//   public String toXml()
+//   {
+//      String xmlSong = "";
+////      try
+////      {
+////         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
+//////       JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class, CChordsVerse.class, CChordsLine.class, CChord.class);
+////
+////         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+////
+////         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+////
+////         StringWriter sw = new StringWriter();
+////       
+////         jaxbMarshaller.marshal(this, sw);
+////         xmlSong = sw.toString();     
+////      } 
+////      catch(JAXBException e)
+////      {
+////         // TODO Auto-generated catch block
+////         e.printStackTrace();
+////      }
+//      
+//      try
+//      {
+//         StringWriter sw = new StringWriter();
+//         Serializer serializer = new Persister();
+//         serializer.write(this, sw);
+//         xmlSong = sw.toString();
+//      } 
+//      catch(Exception e)
+//      {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//      }
+//      
+//      return xmlSong;
+//   }
 }
