@@ -1,5 +1,6 @@
 package com.discworld.guitarsongviewer;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -171,7 +172,7 @@ public class MainPager extends CMain implements IDataExchange
       alPages = new ArrayList<CVerseSet>();
       
 //      ArrayList<? extends CVerse> alVerses = (iEnuDisplayChords == ENU_DISPLAY_CHORDS_ABOVE ? oSong.getChordsTextVerses() : oSong.oText.alTextVerses);
-      ArrayList<? extends CVerse> alVerses = (oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ABOVE ? oApplication.getSong().getChordsTextVerses() : oApplication.getSong().oText.getTextVersesSet());
+      ArrayList<? extends CVerse> alVerses = (oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ABOVE ? oApplication.getSong().getChordsTextVerses() : oApplication.getSong().oText);
       CVerse oVerse;
       
       for(iNdx = 0; iNdx < alVerses.size(); iNdx++)
@@ -233,4 +234,44 @@ public class MainPager extends CMain implements IDataExchange
    {
       return alPages.get(iNdx);
    }
+
+
+//   public String toXml()
+//   {
+//      String xmlSong = "";
+////      try
+////      {
+////         JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class);
+//////       JAXBContext jaxbContext = JAXBContext.newInstance(CSong.class, CChordsVerse.class, CChordsLine.class, CChord.class);
+////
+////         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+////
+////         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+////
+////         StringWriter sw = new StringWriter();
+////       
+////         jaxbMarshaller.marshal(this, sw);
+////         xmlSong = sw.toString();     
+////      } 
+////      catch(JAXBException e)
+////      {
+////         // TODO Auto-generated catch block
+////         e.printStackTrace();
+////      }
+//      
+//      try
+//      {
+//         StringWriter sw = new StringWriter();
+//         Serializer serializer = new Persister();
+//         serializer.write(this, sw);
+//         xmlSong = sw.toString();
+//      } 
+//      catch(Exception e)
+//      {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//      }
+//      
+//      return xmlSong;
+//   }
 }
