@@ -159,7 +159,7 @@ public class MainScroll extends CMain
       if(oApplication.getEnuDisplayChords() == CApplication.ENU_DISPLAY_CHORDS_RELATED)
          tvChordsRelated.setText(null);
       
-      ArrayList<? extends CVerse> alVerses = (oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ABOVE ? oApplication.getSong().getChordsTextVerses() : oApplication.getSong().oText.getTextVersesSet());
+      ArrayList<? extends CVerse> alVerses = (oApplication.getEnuDisplayChords() == ENU_DISPLAY_CHORDS_ABOVE ? oApplication.getSong().getChordsTextVerses() : oApplication.getSong().oText);
       CVerse oVerse;
       
       for(int iNdx = 0; iNdx < alVerses.size(); iNdx++)
