@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.xml.sax.SAXException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 
 import com.discworld.guitarsonglib.CSong;
 import com.discworld.guitarsongviewer.dto.*;
@@ -60,7 +63,18 @@ public class Main extends Activity
          oInputStream.close();
          String xmlSomg = new String(b, "UTF-8");
          
-         oSong = new CSong(xmlSomg);
+//         try
+//         {
+//            CSong.validate(xmlSomg);
+            oSong = new CSong(xmlSomg);
+//         } 
+//         catch(SAXException e)
+//         {
+//            // TODO Auto-generated catch block
+////            e.printStackTrace();
+//            Log.e("CSong", e.getLocalizedMessage());
+//         }
+         
          
       } 
       catch(IOException e)
